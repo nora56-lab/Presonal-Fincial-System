@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人财务中央控制台 (通用模板版)</title>
+    <title>个人财务中央控制台 / Personal Finance Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -22,7 +22,6 @@
         .fcc-input { background-color: #F8FAFC; border: 1px solid #CBD5E1; color: #1E293B; font-weight: 600; transition: all 0.2s; }
         .fcc-input:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); background-color: #FFFFFF; }
         
-        /* 顶部基础设置的输入框无边框样式 */
         .top-input { background: transparent; border: none; border-bottom: 2px dashed rgba(0,0,0,0.2); border-radius: 0; outline: none; padding: 0; width: 100%; transition: border-color 0.3s;}
         .top-input:focus { border-bottom-color: #2563EB; }
 
@@ -40,25 +39,33 @@
             <div class="flex items-center space-x-3 mb-4 md:mb-0">
                 <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-xl text-white shadow-lg shadow-blue-500/30">💎</div>
                 <div>
-                    <h1 class="text-xl font-bold text-blue-900 tracking-tight">FCC 个人财务中央控制台</h1>
-                    <p class="text-xs text-blue-500">Financial Control Center (通用部署版) - 本地数据永久保存</p>
+                    <h1 class="text-xl font-bold text-blue-900 tracking-tight" data-i18n="appTitle">FCC 个人财务中央控制台</h1>
+                    <p class="text-xs text-blue-500" data-i18n="appSub">Financial Control Center (通用部署版) - 本地数据永久保存</p>
                 </div>
             </div>
             
-            <!-- 导航 Tabs -->
-            <div class="flex space-x-2 bg-slate-100 p-1 rounded-lg border border-slate-200 w-full md:w-auto overflow-x-auto">
-                <button onclick="switchTab('tab-monthly')" id="btn-monthly" class="tab-btn active flex-1 md:flex-none whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white">
-                    📅 月度动态追踪
-                </button>
-                <button onclick="switchTab('tab-masterplan')" id="btn-masterplan" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white">
-                    🚀 年度全景推演
-                </button>
-                <button onclick="switchTab('tab-wishlist')" id="btn-wishlist" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white">
-                    🛍️ 心愿单决断
-                </button>
-                <button onclick="switchTab('tab-rules')" id="btn-rules" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white">
-                    ⚡ 系统架构铁律
-                </button>
+            <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-4">
+                <!-- 语言和货币选择器 -->
+                <div class="flex space-x-2 border-r border-slate-200 pr-4">
+                    <select id="lang-selector" onchange="changeLanguage(this.value)" class="text-xs p-1.5 rounded border border-blue-200 text-blue-800 bg-blue-50 focus:outline-none cursor-pointer font-bold">
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                    </select>
+                    <select id="currency-selector" onchange="changeCurrency(this.value)" class="text-xs p-1.5 rounded border border-blue-200 text-blue-800 bg-blue-50 focus:outline-none cursor-pointer font-bold">
+                        <option value="£">GBP (£)</option>
+                        <option value="¥">CNY (¥)</option>
+                        <option value="€">EUR (€)</option>
+                    </select>
+                </div>
+
+                <!-- 导航 Tabs -->
+                <div class="flex space-x-2 bg-slate-100 p-1 rounded-lg border border-slate-200 w-full md:w-auto overflow-x-auto">
+                    <button onclick="switchTab('tab-monthly')" id="btn-monthly" class="tab-btn active flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab1">📅 月度动态追踪</button>
+                    <button onclick="switchTab('tab-masterplan')" id="btn-masterplan" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab2">🚀 年度全景推演</button>
+                    <button onclick="switchTab('tab-wishlist')" id="btn-wishlist" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab3">🛍️ 心愿单决断</button>
+                    <button onclick="switchTab('tab-rules')" id="btn-rules" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab4">⚡ 系统架构铁律</button>
+                </div>
             </div>
         </div>
     </header>
@@ -71,65 +78,65 @@
         <div id="tab-monthly" class="tab-content block space-y-6">
             
             <div class="flex justify-between items-center bg-blue-50 p-4 rounded-xl border border-blue-100">
-                <h2 class="text-lg font-bold text-blue-800 flex items-center"><span class="mr-2">⚙️</span> 顶层战略基石 (点击数字即可修改设定)</h2>
+                <h2 class="text-lg font-bold text-blue-800 flex items-center"><span class="mr-2">⚙️</span> <span data-i18n="topBase">顶层战略基石 (点击数字即可修改设定)</span></h2>
                 <div class="text-sm text-slate-500 flex items-center">
-                    <span id="save-status" class="mr-3 text-xs opacity-0 transition-opacity text-blue-600 font-bold">设定已自动保存!</span>
-                    <button onclick="resetMonthlyData()" class="text-xs text-red-500 hover:text-red-700 underline">重置全部面板</button>
+                    <span id="save-status" class="mr-3 text-xs opacity-0 transition-opacity text-blue-600 font-bold" data-i18n="saveStatus">设定已自动保存!</span>
+                    <button onclick="resetMonthlyData()" class="text-xs text-red-500 hover:text-red-700 underline" data-i18n="resetBtn">重置全部面板</button>
                 </div>
             </div>
 
-            <!-- 顶部总览卡片 (可编辑通用版) -->
+            <!-- 顶部总览卡片 -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-blue-500 relative bg-slate-50">
-                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">预期月总收入</p>
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2" data-i18n="incTitle">预期月总收入</p>
                     <div class="flex items-center text-3xl font-black text-up">
-                        <span class="mr-1">¥</span>
+                        <span class="mr-1 cur-sym">£</span>
                         <input type="number" id="gen-income" value="0" class="top-input text-up" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-1">您每月的固定入账总额</p>
+                    <p class="text-[10px] text-slate-400 mt-1" data-i18n="incDesc">您每月的固定入账总额</p>
                 </div>
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-down relative bg-slate-50">
-                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">硬性流出 (房贷/车等)</p>
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2" data-i18n="fixTitle">硬性流出 (房贷/车等)</p>
                     <div class="flex items-center text-3xl font-black text-down">
-                        <span class="mr-1">¥</span>
+                        <span class="mr-1 cur-sym">£</span>
                         <input type="number" id="gen-fixed" value="0" class="top-input text-down" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-1">不可缩减的刚性支出</p>
+                    <p class="text-[10px] text-slate-400 mt-1" data-i18n="fixDesc">不可缩减的刚性支出</p>
                 </div>
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-up relative bg-red-50/30">
-                    <p class="text-xs text-up font-bold uppercase tracking-wider mb-2">强制储蓄目标</p>
+                    <p class="text-xs text-up font-bold uppercase tracking-wider mb-2" data-i18n="savTitle">强制储蓄目标</p>
                     <div class="flex items-center text-3xl font-black text-up">
-                        <span class="mr-1">¥</span>
+                        <span class="mr-1 cur-sym">£</span>
                         <input type="number" id="gen-savings" value="0" class="top-input text-up" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-red-400 mt-1">每月必须存下的红线资产</p>
+                    <p class="text-[10px] text-red-400 mt-1" data-i18n="savDesc">每月必须存下的红线资产</p>
                 </div>
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-blue-400 bg-blue-50 relative">
-                    <p class="text-xs text-blue-800 font-bold uppercase tracking-wider mb-2">机动生活费总盘子</p>
+                    <p class="text-xs text-blue-800 font-bold uppercase tracking-wider mb-2" data-i18n="budTitle">机动生活费总盘子</p>
                     <div class="flex items-center text-3xl font-black text-blue-600">
-                        <span class="mr-1">¥</span>
+                        <span class="mr-1 cur-sym">£</span>
                         <input type="number" id="gen-budget" value="0" class="top-input text-blue-600" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-blue-500 mt-1">用于吃饭、日用、娱乐的预算</p>
+                    <p class="text-[10px] text-blue-500 mt-1" data-i18n="budDesc">用于吃饭、日用、娱乐的预算</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <!-- 进度条面板 -->
                 <div class="glass-panel rounded-xl p-6">
-                    <h3 class="text-lg font-bold mb-6 flex items-center text-slate-800"><span class="mr-2">🎛️</span> 日常记账与预算分配区 (自定义)</h3>
+                    <h3 class="text-lg font-bold mb-6 flex items-center text-slate-800"><span class="mr-2">🎛️</span> <span data-i18n="dailyArea">日常记账与预算分配区 (自定义)</span></h3>
                     
                     <div class="mb-6 p-5 bg-white rounded-lg border-2 border-slate-200 shadow-sm">
                         <div class="flex justify-between text-sm font-bold text-slate-700 mb-2">
-                            <span>🛡️ 机动生活费总防线 (<span id="disp-total-budget">¥0.00</span>)</span>
-                            <span id="disp-total-remain" class="text-up font-mono text-base">余 ¥0.00</span>
+                            <span><span data-i18n="defenseLine">🛡️ 机动生活费总防线</span> (<span id="disp-total-budget">£0.00</span>)</span>
+                            <span id="disp-total-remain" class="text-up font-mono text-base"><span data-i18n="remain">余</span> £0.00</span>
                         </div>
                         <div class="w-full bg-slate-100 rounded-full h-4 border border-slate-200 overflow-hidden">
                             <div id="bar-total" class="bg-blue-500 h-4 progress-bar relative" style="width: 0%"></div>
                         </div>
                         <div class="flex justify-between text-xs text-slate-500 mt-2">
-                            <span>当前总流出: <span id="disp-total-spent">¥0.00</span></span>
-                            <span>全局消耗进度: <span id="disp-total-pct">0%</span></span>
+                            <span><span data-i18n="totalOut">当前总流出:</span> <span id="disp-total-spent">£0.00</span></span>
+                            <span><span data-i18n="totalPct">全局消耗进度:</span> <span id="disp-total-pct">0%</span></span>
                         </div>
                     </div>
                     
@@ -141,14 +148,14 @@
                             <div class="flex justify-between items-center text-sm mb-3">
                                 <input type="text" id="name-cat1" value="🛒 餐饮/食材" class="font-bold text-slate-700 bg-transparent border-b border-dashed border-slate-400 focus:outline-none w-1/3" onchange="updateMonthlyDashboard()">
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-xs text-slate-500">预算:</span>
+                                    <span class="text-xs text-slate-500" data-i18n="budget">预算:</span>
                                     <input type="number" id="bud-cat1" value="0" class="fcc-input w-16 text-xs p-1 rounded text-center" onchange="updateMonthlyDashboard()">
-                                    <span class="text-xs text-slate-500 ml-2">已花:</span>
+                                    <span class="text-xs text-slate-500 ml-2" data-i18n="spent">已花:</span>
                                     <input type="number" id="exp-cat1" value="0" class="fcc-input w-20 text-sm p-1 rounded text-down font-bold text-center" onchange="updateMonthlyDashboard()">
                                 </div>
                             </div>
                             <div class="flex justify-between text-xs mb-1">
-                                <span id="stat-cat1" class="text-up font-mono font-bold">余 ¥0.00</span>
+                                <span id="stat-cat1" class="text-up font-mono font-bold"><span data-i18n="remain">余</span> £0.00</span>
                             </div>
                             <div class="w-full bg-slate-200 rounded-full h-2">
                                 <div id="bar-cat1" class="bg-blue-400 h-2 rounded-full progress-bar" style="width: 0%"></div>
@@ -160,14 +167,14 @@
                             <div class="flex justify-between items-center text-sm mb-3">
                                 <input type="text" id="name-cat2" value="🧴 杂费/日用" class="font-bold text-slate-700 bg-transparent border-b border-dashed border-slate-400 focus:outline-none w-1/3" onchange="updateMonthlyDashboard()">
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-xs text-slate-500">预算:</span>
+                                    <span class="text-xs text-slate-500" data-i18n="budget">预算:</span>
                                     <input type="number" id="bud-cat2" value="0" class="fcc-input w-16 text-xs p-1 rounded text-center" onchange="updateMonthlyDashboard()">
-                                    <span class="text-xs text-slate-500 ml-2">已花:</span>
+                                    <span class="text-xs text-slate-500 ml-2" data-i18n="spent">已花:</span>
                                     <input type="number" id="exp-cat2" value="0" class="fcc-input w-20 text-sm p-1 rounded text-down font-bold text-center" onchange="updateMonthlyDashboard()">
                                 </div>
                             </div>
                             <div class="flex justify-between text-xs mb-1">
-                                <span id="stat-cat2" class="text-up font-mono font-bold">余 ¥0.00</span>
+                                <span id="stat-cat2" class="text-up font-mono font-bold"><span data-i18n="remain">余</span> £0.00</span>
                             </div>
                             <div class="w-full bg-slate-200 rounded-full h-2">
                                 <div id="bar-cat2" class="bg-blue-400 h-2 rounded-full progress-bar" style="width: 0%"></div>
@@ -179,14 +186,14 @@
                             <div class="flex justify-between items-center text-sm mb-3">
                                 <input type="text" id="name-cat3" value="🎉 娱乐/社交" class="font-bold text-slate-700 bg-transparent border-b border-dashed border-slate-400 focus:outline-none w-1/3" onchange="updateMonthlyDashboard()">
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-xs text-slate-500">预算:</span>
+                                    <span class="text-xs text-slate-500" data-i18n="budget">预算:</span>
                                     <input type="number" id="bud-cat3" value="0" class="fcc-input w-16 text-xs p-1 rounded text-center" onchange="updateMonthlyDashboard()">
-                                    <span class="text-xs text-slate-500 ml-2">已花:</span>
+                                    <span class="text-xs text-slate-500 ml-2" data-i18n="spent">已花:</span>
                                     <input type="number" id="exp-cat3" value="0" class="fcc-input w-20 text-sm p-1 rounded text-down font-bold text-center" onchange="updateMonthlyDashboard()">
                                 </div>
                             </div>
                             <div class="flex justify-between text-xs mb-1">
-                                <span id="stat-cat3" class="text-up font-mono font-bold">余 ¥0.00</span>
+                                <span id="stat-cat3" class="text-up font-mono font-bold"><span data-i18n="remain">余</span> £0.00</span>
                             </div>
                             <div class="w-full bg-slate-200 rounded-full h-2">
                                 <div id="bar-cat3" class="bg-blue-400 h-2 rounded-full progress-bar" style="width: 0%"></div>
@@ -197,7 +204,7 @@
 
                 <!-- 战术建议 -->
                 <div class="glass-panel rounded-xl p-6 bg-blue-50 border border-blue-100 h-full flex flex-col">
-                    <h3 class="text-lg font-bold mb-4 text-blue-900 flex items-center"><span class="mr-2">💡</span> 系统自检报告</h3>
+                    <h3 class="text-lg font-bold mb-4 text-blue-900 flex items-center"><span class="mr-2">💡</span> <span data-i18n="aiReport">系统自检报告</span></h3>
                     <div id="ai-monthly-report" class="space-y-4 flex-grow">
                         <!-- 动态生成的报告 -->
                     </div>
@@ -209,28 +216,28 @@
                 <div class="absolute right-0 top-0 w-32 h-32 bg-emerald-500 opacity-5 rounded-bl-full pointer-events-none"></div>
                 <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4 relative z-10">
                     <div>
-                        <h3 class="text-xl font-bold text-slate-800 flex items-center"><span class="mr-2">🏦</span> 月度存款结算打卡</h3>
-                        <p class="text-xs text-slate-500 mt-1">每月终了，在这里填入您真实存下的金额，生成您的资产复利曲线。</p>
+                        <h3 class="text-xl font-bold text-slate-800 flex items-center"><span class="mr-2">🏦</span> <span data-i18n="savTracker">月度存款结算打卡</span></h3>
+                        <p class="text-xs text-slate-500 mt-1" data-i18n="savDesc2">每月终了，在这里填入您真实存下的金额，生成您的资产复利曲线。</p>
                     </div>
                     <div class="text-right">
-                        <div class="text-xs text-slate-500 mb-1">已打卡积蓄总计</div>
-                        <div class="text-3xl font-black text-up" id="disp-savings-total">¥0.00</div>
+                        <div class="text-xs text-slate-500 mb-1" data-i18n="savTotal">已打卡积蓄总计</div>
+                        <div class="text-3xl font-black text-up" id="disp-savings-total">£0.00</div>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
                     <div class="md:col-span-1 bg-slate-50 p-4 rounded-lg border border-slate-200 h-fit">
-                        <h4 class="font-bold text-slate-700 text-sm mb-3">📍 新增打卡</h4>
+                        <h4 class="font-bold text-slate-700 text-sm mb-3" data-i18n="savNew">📍 新增打卡</h4>
                         <div class="space-y-3">
                             <div>
-                                <label class="block text-xs text-slate-500 mb-1">选择结算月份</label>
+                                <label class="block text-xs text-slate-500 mb-1" data-i18n="savMonth">选择结算月份</label>
                                 <input type="month" id="save-month-input" class="fcc-input w-full p-2 rounded text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs text-slate-500 mb-1">实际存入金额</label>
-                                <input type="number" id="save-amount-input" class="fcc-input w-full p-2 rounded text-sm" placeholder="例如: 2000">
+                                <label class="block text-xs text-slate-500 mb-1" data-i18n="savAmt">实际存入金额</label>
+                                <input type="number" id="save-amount-input" class="fcc-input w-full p-2 rounded text-sm" placeholder="2000">
                             </div>
-                            <button onclick="addSavingsRecord()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition shadow-md">
+                            <button onclick="addSavingsRecord()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition shadow-md" data-i18n="savBtn">
                                 💾 确认入库并更新大盘
                             </button>
                         </div>
@@ -238,8 +245,8 @@
                     
                     <div class="md:col-span-2">
                         <h4 class="font-bold text-slate-700 text-sm mb-3 flex justify-between items-center">
-                            <span>📜 历史存款记录</span>
-                            <button onclick="clearSavingsHistory()" class="text-xs text-red-500 hover:underline font-normal">清空记录</button>
+                            <span data-i18n="savHist">📜 历史存款记录</span>
+                            <button onclick="clearSavingsHistory()" class="text-xs text-red-500 hover:underline font-normal" data-i18n="clearHist">清空记录</button>
                         </h4>
                         <div class="bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
                             <div class="max-h-[200px] overflow-y-auto p-2 space-y-2" id="savings-history-list">
@@ -257,31 +264,31 @@
         <div id="tab-masterplan" class="tab-content hidden space-y-6">
             <div class="glass-panel rounded-xl p-6 md:p-8 border-t-4 border-t-blue-600 bg-white">
                 <div class="max-w-3xl mb-6">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">年度资产复利追踪引擎</h2>
-                    <p class="text-slate-500 text-sm">红线为您打卡生成的真实资产线，虚线为根据您的“目标储蓄”自动生成的理论基准线。</p>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2" data-i18n="planTitle">年度资产复利追踪引擎</h2>
+                    <p class="text-slate-500 text-sm" data-i18n="planDesc">红线为您打卡生成的真实资产线，虚线为根据您的“目标储蓄”自动生成的理论基准线。</p>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-200">
-                        <div class="text-xs text-slate-500 mb-1">预估年总收入 (12月)</div>
-                        <div class="text-xl font-bold text-up" id="proj-income">+¥0</div>
+                        <div class="text-xs text-slate-500 mb-1" data-i18n="projInc">预估年总收入 (12月)</div>
+                        <div class="text-xl font-bold text-up" id="proj-income">+£0</div>
                     </div>
                     <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-200">
-                        <div class="text-xs text-slate-500 mb-1">预估年硬性流出</div>
-                        <div class="text-xl font-bold text-down" id="proj-fixed">-¥0</div>
+                        <div class="text-xs text-slate-500 mb-1" data-i18n="projFix">预估年硬性流出</div>
+                        <div class="text-xl font-bold text-down" id="proj-fixed">-£0</div>
                     </div>
                     <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-200">
-                        <div class="text-xs text-slate-500 mb-1">预估年生活消耗</div>
-                        <div class="text-xl font-bold text-down" id="proj-living">-¥0</div>
+                        <div class="text-xs text-slate-500 mb-1" data-i18n="projLiv">预估年生活消耗</div>
+                        <div class="text-xl font-bold text-down" id="proj-living">-£0</div>
                     </div>
                     <div class="bg-blue-50 p-4 rounded-lg text-center border border-blue-200 shadow-sm border-b-4 border-b-red-500">
-                        <div class="text-xs text-blue-800 font-bold mb-1 uppercase">理论年净增资产</div>
-                        <div class="text-2xl font-black text-up" id="proj-savings">+¥0</div>
+                        <div class="text-xs text-blue-800 font-bold mb-1 uppercase" data-i18n="projSav">理论年净增资产</div>
+                        <div class="text-2xl font-black text-up" id="proj-savings">+£0</div>
                     </div>
                 </div>
 
                 <div class="bg-slate-900 rounded-lg p-4 border border-slate-800 shadow-inner">
-                    <h3 class="text-sm font-bold text-slate-300 mb-4 text-center">双轨追踪：实际净资产(红实线) vs 理论基准(灰虚线)</h3>
+                    <h3 class="text-sm font-bold text-slate-300 mb-4 text-center" data-i18n="chartTitle">双轨追踪：实际净资产(红实线) vs 理论基准(灰虚线)</h3>
                     <div class="relative h-72 w-full">
                         <canvas id="masterPlanChart"></canvas>
                     </div>
@@ -295,26 +302,26 @@
         <div id="tab-wishlist" class="tab-content hidden space-y-6">
             <div class="glass-panel rounded-xl p-6 md:p-8 border-t-4 border-t-indigo-500 bg-white">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-2xl font-bold text-slate-800 flex items-center"><span class="mr-2">🛍️</span> 心愿单决策引擎</h2>
-                    <span class="px-3 py-1 bg-down text-white text-xs rounded-full font-bold shadow-sm">将基于您设定的月度存款目标计算冲击率</span>
+                    <h2 class="text-2xl font-bold text-slate-800 flex items-center"><span class="mr-2">🛍️</span> <span data-i18n="wishTitle">心愿单决策引擎</span></h2>
+                    <span class="px-3 py-1 bg-down text-white text-xs rounded-full font-bold shadow-sm" data-i18n="wishWarn">将基于您设定的月度存款目标计算冲击率</span>
                 </div>
-                <p class="text-slate-500 text-sm mb-6">不只是算账，更是理清你的真实需求。填写数据并写下你的申论，系统会为你出具理智判决。</p>
+                <p class="text-slate-500 text-sm mb-6" data-i18n="wishDesc">不只是算账，更是理清你的真实需求。填写数据并写下你的申论，系统会为你出具理智判决。</p>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- 物品 A -->
                             <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 relative mt-3">
-                                <div class="absolute -top-3 left-6 px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full shadow">备选物品 A</div>
+                                <div class="absolute -top-3 left-6 px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-full shadow" data-i18n="itemA">备选物品 A</div>
                                 <div class="space-y-4 mt-2">
-                                    <div><label class="block text-xs font-bold text-slate-600 mb-1">名称</label><input type="text" id="nameA" class="fcc-input w-full p-2 rounded text-sm" placeholder="例如商品名称"></div>
-                                    <div><label class="block text-xs font-bold text-slate-600 mb-1">价格</label><input type="number" id="priceA" class="fcc-input w-full p-2 rounded text-sm" placeholder="0.00"></div>
+                                    <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="name">名称</label><input type="text" id="nameA" class="fcc-input w-full p-2 rounded text-sm" placeholder="..." data-i18n="name"></div>
+                                    <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="price">价格</label><input type="number" id="priceA" class="fcc-input w-full p-2 rounded text-sm" placeholder="0.00"></div>
                                     <div class="grid grid-cols-2 gap-4">
-                                        <div><label class="block text-xs font-bold text-slate-600 mb-1">年均使用次数</label><input type="number" id="usesA" class="fcc-input w-full p-2 rounded text-sm" placeholder="估算"></div>
-                                        <div><label class="block text-xs font-bold text-slate-600 mb-1">预计寿命(年)</label><input type="number" id="yearsA" class="fcc-input w-full p-2 rounded text-sm" placeholder="估算"></div>
+                                        <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="uses">年均使用次数</label><input type="number" id="usesA" class="fcc-input w-full p-2 rounded text-sm" placeholder="..."></div>
+                                        <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="years">预计寿命(年)</label><input type="number" id="yearsA" class="fcc-input w-full p-2 rounded text-sm" placeholder="..."></div>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-slate-600 mb-1">纯情绪价值 (1-10分)</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="emotion">纯情绪价值 (1-10分)</label>
                                         <input type="range" id="emotionA" min="1" max="10" value="5" class="w-full accent-blue-500" oninput="document.getElementById('emotionA_val').innerText = this.value">
                                         <div class="text-right text-xs text-blue-600 font-bold" id="emotionA_val">5</div>
                                     </div>
@@ -323,16 +330,16 @@
 
                             <!-- 物品 B -->
                             <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 relative mt-3">
-                                <div class="absolute -top-3 left-6 px-3 py-1 bg-indigo-500 text-white text-xs font-bold rounded-full shadow">备选物品 B</div>
+                                <div class="absolute -top-3 left-6 px-3 py-1 bg-indigo-500 text-white text-xs font-bold rounded-full shadow" data-i18n="itemB">备选物品 B</div>
                                 <div class="space-y-4 mt-2">
-                                    <div><label class="block text-xs font-bold text-slate-600 mb-1">名称</label><input type="text" id="nameB" class="fcc-input w-full p-2 rounded text-sm" placeholder="替代品名称"></div>
-                                    <div><label class="block text-xs font-bold text-slate-600 mb-1">价格</label><input type="number" id="priceB" class="fcc-input w-full p-2 rounded text-sm" placeholder="0.00"></div>
+                                    <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="name">名称</label><input type="text" id="nameB" class="fcc-input w-full p-2 rounded text-sm" placeholder="..." data-i18n="name"></div>
+                                    <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="price">价格</label><input type="number" id="priceB" class="fcc-input w-full p-2 rounded text-sm" placeholder="0.00"></div>
                                     <div class="grid grid-cols-2 gap-4">
-                                        <div><label class="block text-xs font-bold text-slate-600 mb-1">年均使用次数</label><input type="number" id="usesB" class="fcc-input w-full p-2 rounded text-sm" placeholder="估算"></div>
-                                        <div><label class="block text-xs font-bold text-slate-600 mb-1">预计寿命(年)</label><input type="number" id="yearsB" class="fcc-input w-full p-2 rounded text-sm" placeholder="估算"></div>
+                                        <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="uses">年均使用次数</label><input type="number" id="usesB" class="fcc-input w-full p-2 rounded text-sm" placeholder="..."></div>
+                                        <div><label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="years">预计寿命(年)</label><input type="number" id="yearsB" class="fcc-input w-full p-2 rounded text-sm" placeholder="..."></div>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-slate-600 mb-1">纯情绪价值 (1-10分)</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1" data-i18n="emotion">纯情绪价值 (1-10分)</label>
                                         <input type="range" id="emotionB" min="1" max="10" value="5" class="w-full accent-indigo-500" oninput="document.getElementById('emotionB_val').innerText = this.value">
                                         <div class="text-right text-xs text-indigo-600 font-bold" id="emotionB_val">5</div>
                                     </div>
@@ -342,13 +349,13 @@
 
                         <!-- 申论输入框 -->
                         <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 relative mt-4 shadow-inner">
-                            <div class="absolute -top-3 left-6 px-3 py-1 bg-slate-700 text-white text-xs font-bold rounded-full shadow flex items-center"><span class="mr-1">💭</span> 购买申论 (The Justification)</div>
-                            <textarea id="justification" class="fcc-input w-full p-3 rounded text-sm h-28 mt-2" placeholder="请诚实写下你的思考：为什么考虑这两个物品？它们分别能解决你什么痛点？是功能刚需，还是情绪补偿？写下这些，有助于你找回理智..."></textarea>
+                            <div class="absolute -top-3 left-6 px-3 py-1 bg-slate-700 text-white text-xs font-bold rounded-full shadow flex items-center"><span class="mr-1">💭</span> <span data-i18n="justificationTitle">购买申论 (The Justification)</span></div>
+                            <textarea id="justification" class="fcc-input w-full p-3 rounded text-sm h-28 mt-2" placeholder="请诚实写下你的思考..." data-i18n="justPlaceholder"></textarea>
                         </div>
 
                         <div class="text-center mt-4">
                             <button onclick="runDecisionAI()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-12 rounded-lg shadow-md transition mx-auto text-lg flex items-center justify-center w-full md:w-auto">
-                                <span class="mr-2">⚖️</span> 递交系统核算判决
+                                <span class="mr-2">⚖️</span> <span data-i18n="submitBtn">递交系统核算判决</span>
                             </button>
                         </div>
 
@@ -356,29 +363,29 @@
                         <div id="decision-result" class="hidden mt-6 p-6 bg-white border border-indigo-200 rounded-xl shadow-lg relative overflow-hidden">
                             <div class="absolute right-0 top-0 w-24 h-24 bg-indigo-500 opacity-5 rounded-bl-full"></div>
                             <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4 relative z-10">
-                                <h3 class="text-lg font-bold text-slate-800">📋 财务与感性综合判决书</h3>
-                                <button onclick="saveToWishlistHistory()" class="text-xs bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-3 py-1.5 rounded font-bold transition shadow-sm">
+                                <h3 class="text-lg font-bold text-slate-800" data-i18n="resultTitle">📋 财务与感性综合判决书</h3>
+                                <button onclick="saveToWishlistHistory()" class="text-xs bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-3 py-1.5 rounded font-bold transition shadow-sm" data-i18n="saveResultBtn">
                                     💾 封存记录入库
                                 </button>
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 relative z-10">
                                 <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                                    <h4 id="resultA-name" class="font-bold text-blue-600 mb-1">物品 A</h4>
-                                    <p class="text-sm text-slate-600">单次使用成本: <strong id="resultA-cpw" class="text-slate-900">0.00</strong></p>
-                                    <p class="text-[10px] text-down mt-1">耗损当月目标存款: <strong id="resultA-impact-text">0%</strong></p>
+                                    <h4 id="resultA-name" class="font-bold text-blue-600 mb-1" data-i18n="itemA">物品 A</h4>
+                                    <p class="text-sm text-slate-600"><span data-i18n="cpw">单次使用成本:</span> <strong class="text-slate-900"><span class="cur-sym">£</span><span id="resultA-cpw">0.00</span></strong></p>
+                                    <p class="text-[10px] text-down mt-1"><span data-i18n="impact">耗损当月目标存款:</span> <strong id="resultA-impact-text">0%</strong></p>
                                 </div>
                                 <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                                    <h4 id="resultB-name" class="font-bold text-indigo-600 mb-1">物品 B</h4>
-                                    <p class="text-sm text-slate-600">单次使用成本: <strong id="resultB-cpw" class="text-slate-900">0.00</strong></p>
-                                    <p class="text-[10px] text-down mt-1">耗损当月目标存款: <strong id="resultB-impact-text">0%</strong></p>
+                                    <h4 id="resultB-name" class="font-bold text-indigo-600 mb-1" data-i18n="itemB">物品 B</h4>
+                                    <p class="text-sm text-slate-600"><span data-i18n="cpw">单次使用成本:</span> <strong class="text-slate-900"><span class="cur-sym">£</span><span id="resultB-cpw">0.00</span></strong></p>
+                                    <p class="text-[10px] text-down mt-1"><span data-i18n="impact">耗损当月目标存款:</span> <strong id="resultB-impact-text">0%</strong></p>
                                 </div>
                             </div>
 
                             <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-lg relative z-10">
                                 <p id="ai-verdict-text" class="text-sm text-indigo-900 leading-relaxed font-medium mb-3 border-b border-indigo-200 pb-3"></p>
                                 <div class="text-xs text-slate-600 italic">
-                                    <strong class="text-slate-700">系统已阅您的申论：</strong>"<span id="result-justification-echo"></span>"
+                                    <strong class="text-slate-700" data-i18n="sysRead">系统已阅您的申论：</strong>"<span id="result-justification-echo"></span>"
                                 </div>
                             </div>
                         </div>
@@ -387,13 +394,13 @@
                     <!-- 右侧：历史记录区域 -->
                     <div class="bg-slate-50 rounded-xl border border-slate-200 p-5 flex flex-col h-[750px]">
                         <h3 class="font-bold text-slate-700 mb-3 flex items-center justify-between">
-                            <span>📚 决策档案库</span>
+                            <span data-i18n="archiveTitle">📚 决策档案库</span>
                             <span id="history-count" class="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">0</span>
                         </h3>
-                        <input type="text" id="search-history" placeholder="🔍 搜索关键词..." class="fcc-input w-full p-2 text-sm rounded mb-4" oninput="renderWishlistHistory()">
+                        <input type="text" id="search-history" placeholder="🔍 搜索关键词..." class="fcc-input w-full p-2 text-sm rounded mb-4" oninput="renderWishlistHistory()" data-i18n="searchArch">
                         
                         <div id="history-list" class="flex-grow overflow-y-auto space-y-3 pr-1">
-                            <div class="text-center text-slate-400 text-sm mt-10">暂无纠结记录。<br>让理智成为习惯。</div>
+                            <div class="text-center text-slate-400 text-sm mt-10" data-i18n="noArch">暂无纠结记录。<br>让理智成为习惯。</div>
                         </div>
                     </div>
                 </div>
@@ -406,28 +413,28 @@
         <div id="tab-rules" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="glass-panel rounded-xl p-6 md:p-8 bg-white">
-                    <h3 class="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">经典三账户分流架构</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3" data-i18n="ruleTitle1">经典三账户分流架构</h3>
                     
                     <div class="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-slate-200">
                         <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
                             <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-slate-100 text-slate-600 shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">💳</div>
                             <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                <h4 class="font-bold text-slate-700">主账户 (Main Balance)</h4>
-                                <p class="text-xs text-slate-500 mt-1">仅存放预设的生活机动资金。日常消费刷卡只看这个极低的数字，利用“稀缺感”克制欲望。</p>
+                                <h4 class="font-bold text-slate-700" data-i18n="ruleMain">主账户 (Main Balance)</h4>
+                                <p class="text-xs text-slate-500 mt-1" data-i18n="ruleMainDesc">仅存放预设的生活机动资金。日常消费刷卡只看这个极低的数字，利用“稀缺感”克制欲望。</p>
                             </div>
                         </div>
                         <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
                             <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-green-100 text-green-600 shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">🏠</div>
                             <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-green-50 p-4 rounded-lg border border-green-200">
-                                <h4 class="font-bold text-down">硬性流出池 (Fixed Bills)</h4>
-                                <p class="text-xs text-green-700 mt-1">发薪日强制转入房贷/车贷/房租等。<strong class="text-down">绝对锁定。</strong> 直到划款日才能解锁。</p>
+                                <h4 class="font-bold text-down" data-i18n="ruleFix">硬性流出池 (Fixed Bills)</h4>
+                                <p class="text-xs text-green-700 mt-1" data-i18n="ruleFixDesc">发薪日强制转入房贷/车贷/房租等。绝对锁定。 直到划款日才能解锁。</p>
                             </div>
                         </div>
                         <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
                             <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-red-100 text-red-600 shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">💎</div>
                             <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-red-50 p-4 rounded-lg border border-red-200">
-                                <h4 class="font-bold text-up">纯存款池 (Savings)</h4>
-                                <p class="text-xs text-red-700 mt-1">雷打不动的储蓄目标。<strong class="text-up">红涨/资产积累。</strong>非紧急情况绝不动用。</p>
+                                <h4 class="font-bold text-up" data-i18n="ruleSav">纯存款池 (Savings)</h4>
+                                <p class="text-xs text-red-700 mt-1" data-i18n="ruleSavDesc">雷打不动的储蓄目标。红涨/资产积累。非紧急情况绝不动用。</p>
                             </div>
                         </div>
                     </div>
@@ -435,11 +442,11 @@
 
                 <div class="space-y-6">
                     <div class="glass-panel rounded-xl p-6 border-l-4 border-l-blue-500 bg-white">
-                        <h3 class="text-lg font-bold text-slate-800 mb-4">⚙️ 核心运行铁律</h3>
+                        <h3 class="text-lg font-bold text-slate-800 mb-4" data-i18n="ruleTitle2">⚙️ 核心运行铁律</h3>
                         <ul class="space-y-4 text-sm text-slate-600">
-                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">🛒</span><div><strong>年度采购协议：</strong> 收藏夹 = 愿望单。非资产类消耗品仅在特定大促集中购买。买前建议先出二手。</div></li>
-                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">⏳</span><div><strong>72小时冷静期：</strong> 超过日均预算的非刚需物品，强制放入购物车等待 3 天。多巴胺退去后自然解毒。</div></li>
-                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">🔧</span><div><strong>维护代替购买：</strong> 旧物破了先缝补、清理。从“保养已有物品”中获取比“购买新品”更持久的成就感。</div></li>
+                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">🛒</span><div><strong data-i18n="rule1">年度采购协议：</strong> <span data-i18n="rule1Desc">收藏夹 = 愿望单。非资产类消耗品仅在特定大促集中购买。买前建议先出二手。</span></div></li>
+                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">⏳</span><div><strong data-i18n="rule2">72小时冷静期：</strong> <span data-i18n="rule2Desc">超过日均预算的非刚需物品，强制放入购物车等待 3 天。多巴胺退去后自然解毒。</span></div></li>
+                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">🔧</span><div><strong data-i18n="rule3">维护代替购买：</strong> <span data-i18n="rule3Desc">旧物破了先缝补、清理。从“保养已有物品”中获取比“购买新品”更持久的成就感。</span></div></li>
                         </ul>
                     </div>
                 </div>
@@ -449,6 +456,150 @@
     </main>
 
     <script>
+        // --- 国际化字典 (i18n) ---
+        const i18n = {
+            zh: {
+                appTitle: "FCC 个人财务中央控制台", appSub: "Financial Control Center (通用部署版) - 本地数据永久保存",
+                tab1: "📅 月度动态追踪", tab2: "🚀 年度全景推演", tab3: "🛍️ 心愿单决断", tab4: "⚡ 系统架构铁律",
+                topBase: "⚙️ 顶层战略基石 (点击数字即可修改设定)", saveStatus: "设定已自动保存!", resetBtn: "重置全部面板",
+                incTitle: "预期月总收入", incDesc: "您每月的固定入账总额", fixTitle: "硬性流出 (房贷/车等)", fixDesc: "不可缩减的刚性支出",
+                savTitle: "强制储蓄目标", savDesc: "每月必须存下的红线资产", budTitle: "机动生活费总盘子", budDesc: "用于吃饭、日用、娱乐的预算",
+                dailyArea: "🎛️ 日常记账与预算分配区 (自定义)", defenseLine: "🛡️ 机动生活费总防线", remain: "余", overspent: "超支", totalOut: "当前总流出:", totalPct: "全局消耗进度:",
+                budget: "预算:", spent: "已花:", aiReport: "💡 系统自检报告",
+                savTracker: "🏦 月度存款结算打卡", savDesc2: "每月终了，在这里填入您真实存下的金额，生成您的资产复利曲线。", savTotal: "已打卡积蓄总计",
+                savNew: "📍 新增打卡", savMonth: "选择结算月份", savAmt: "实际存入金额", savBtn: "💾 确认入库并更新大盘",
+                savHist: "📜 历史存款记录", clearHist: "清空记录", noHist: "暂无打卡记录，请在左侧结算以激活图表。", undo: "撤销",
+                planTitle: "年度资产复利追踪引擎", planDesc: "红线为您打卡生成的真实资产线，虚线为根据您的“目标储蓄”自动生成的理论基准线。",
+                projInc: "预估年总收入 (12月)", projFix: "预估年硬性流出", projLiv: "预估年生活消耗", projSav: "理论年净增资产",
+                chartTitle: "双轨追踪：实际净资产(红实线) vs 理论基准(灰虚线)", chartActual: "实际净资产打卡 (红涨)", chartTheory: "理论基准线 (基于目标储蓄)",
+                wishTitle: "🛍️ 心愿单决策引擎", wishWarn: "将基于您设定的月度存款目标计算冲击率", wishDesc: "不只是算账，更是理清你的真实需求。填写数据并写下你的申论，系统会为你出具理智判决。",
+                itemA: "备选物品 A", itemB: "备选物品 B", name: "名称", price: "价格", uses: "年均使用次数", years: "预计寿命(年)", emotion: "纯情绪价值 (1-10分)",
+                justificationTitle: "💭 购买申论 (The Justification)", justPlaceholder: "请诚实写下你的思考：为什么考虑这两个物品？它们分别能解决你什么痛点？是功能刚需，还是情绪补偿？写下这些，有助于你找回理智...",
+                submitBtn: "⚖️ 递交系统核算判决", resultTitle: "📋 财务与感性综合判决书", saveResultBtn: "💾 封存记录入库",
+                cpw: "单次使用成本:", impact: "耗损当月目标存款:", sysRead: "系统已阅您的申论：",
+                archiveTitle: "📚 决策档案库", searchArch: "🔍 搜索关键词...", noArch: "暂无纠结记录。<br>让理智成为习惯。",
+                ruleTitle1: "经典三账户分流架构", ruleMain: "主账户 (Main Balance)", ruleMainDesc: "仅存放预设的生活机动资金。日常消费刷卡只看这个极低的数字，利用“稀缺感”克制欲望。",
+                ruleFix: "硬性流出池 (Fixed Bills)", ruleFixDesc: "发薪日强制转入房贷/车贷/房租等。绝对锁定。 直到划款日才能解锁。", ruleSav: "纯存款池 (Savings)", ruleSavDesc: "雷打不动的储蓄目标。红涨/资产积累。非紧急情况绝不动用。",
+                ruleTitle2: "⚙️ 核心运行铁律", rule1: "年度采购协议：", rule1Desc: "收藏夹 = 愿望单。非资产类消耗品仅在特定大促集中购买。买前建议先出二手。",
+                rule2: "72小时冷静期：", rule2Desc: "超过日均预算的非刚需物品，强制放入购物车等待 3 天。多巴胺退去后自然解毒。", rule3: "维护代替购买：", rule3Desc: "旧物破了先缝补、清理。从“保养已有物品”中获取比“购买新品”更持久的成就感。",
+                aiTopConflict: "顶层架构冲突", aiTopConflictDesc: "您设定的收入不足以覆盖 (硬流出+储蓄+生活费)。资金缺口: ",
+                aiLivWarn: "生活费高位预警", aiLivWarnDesc: "机动预算已消耗过半，请强制降低消费频率。", aiMelt: "机动资金全面熔断", aiMeltDesc: "已经超支！即日起必须进入极致生存模式。",
+                aiSafe: "资金池健康运转", aiSafeDesc: "目前各项指标符合战略预期，继续保持纪律。",
+                alertSelectMonth: "请选择月份并输入有效的存款金额！", alertOverride: "的记录已存在，是否覆盖更新？", alertClearAll: "确定要清空所有的存款打卡记录吗？此操作不可恢复。", alertEnterItem: "请输入物品信息！", alertSaved: "决策及申论已封存入库！", alertReset: "将清空所有设定和已花金额恢复默认，确认重置吗？",
+                winDataA: "👑 数值胜出者：[A] (单次成本更低)", winDataB: "👑 数值胜出者：[B] (单次成本更低)", winTie: "⚖️ 数据僵局，请完全遵循申论中的内心情绪。",
+                wishWarnText: "🚨 严重警告：两者均超过月度储蓄目标的50%，对系统冲击极大。", wishWait: "⏳ 强制指令：消耗较大，请加入购物车执行 72小时冷静期，同时复看您的申论。", wishOk: "✅ 额度可控，若申论中的刚需成立，允许购入。",
+                totalExceed: "总超支"
+            },
+            en: {
+                appTitle: "FCC Personal Finance Central Console", appSub: "Financial Control Center (Universal) - Local Data Saved Permanently",
+                tab1: "📅 Monthly Tracker", tab2: "🚀 Yearly Masterplan", tab3: "🛍️ Wishlist Decision", tab4: "⚡ System Rules",
+                topBase: "⚙️ Top-Level Strategy (Click numbers to edit)", saveStatus: "Settings saved!", resetBtn: "Reset All Panels",
+                incTitle: "Expected Monthly Income", incDesc: "Your fixed monthly inflow", fixTitle: "Fixed Outflows (Rent/Car)", fixDesc: "Non-reducible rigid expenses",
+                savTitle: "Mandatory Savings Target", savDesc: "Red-line assets saved monthly", budTitle: "Flexible Living Budget", budDesc: "Budget for food, daily, entertainment",
+                dailyArea: "🎛️ Daily Accounting & Budget Allocation (Custom)", defenseLine: "🛡️ Living Budget Defense Line", remain: "Left", overspent: "Overspent", totalOut: "Current Total Outflow:", totalPct: "Global Consumption:",
+                budget: "Budget:", spent: "Spent:", aiReport: "💡 System Self-Check Report",
+                savTracker: "🏦 Monthly Savings Tracker", savDesc2: "At month-end, enter your actual savings to generate your compound asset curve.", savTotal: "Total Savings Tracked",
+                savNew: "📍 Add Record", savMonth: "Select Month", savAmt: "Actual Amount Saved", savBtn: "💾 Confirm & Update Chart",
+                savHist: "📜 Savings History", clearHist: "Clear History", noHist: "No records yet. Settle on the left to activate chart.", undo: "Undo",
+                planTitle: "Yearly Asset Compound Tracking Engine", planDesc: "Red line is actual assets. Dashed line is theoretical baseline based on target.",
+                projInc: "Est. Yearly Income (12mo)", projFix: "Est. Yearly Fixed", projLiv: "Est. Yearly Living", projSav: "Theoretical Yearly Net Add",
+                chartTitle: "Dual-Track: Actual Net Assets (Red) vs Theoretical Baseline (Grey Dashed)", chartActual: "Actual Net Assets (Red)", chartTheory: "Theoretical Baseline (Based on Target)",
+                wishTitle: "🛍️ Wishlist Decision Engine", wishWarn: "Impact calculated based on monthly savings target", wishDesc: "More than math, it clarifies real needs. Fill data & justification, AI gives rational verdict.",
+                itemA: "Item A", itemB: "Item B", name: "Name", price: "Price", uses: "Uses per Year", years: "Est. Lifespan (Yrs)", emotion: "Emotional Value (1-10)",
+                justificationTitle: "💭 The Justification", justPlaceholder: "Be honest: Why these two? What pain point do they solve? Is it a functional need or emotional compensation?...",
+                submitBtn: "⚖️ Submit for System Verdict", resultTitle: "📋 Financial & Emotional Verdict", saveResultBtn: "💾 Archive Record",
+                cpw: "Cost Per Use:", impact: "Impact on Monthly Target:", sysRead: "System read your justification: ",
+                archiveTitle: "📚 Decision Archive", searchArch: "🔍 Search keywords...", noArch: "No records.<br>Make rationality a habit.",
+                ruleTitle1: "Classic 3-Account Architecture", ruleMain: "Main Balance", ruleMainDesc: "Holds flexible living funds. Card swipes only see this low number to curb desire.",
+                ruleFix: "Fixed Bills", ruleFixDesc: "Forced transfers for rent/loans on payday. Absolutely locked until deduction day.", ruleSav: "Savings", ruleSavDesc: "Unshakeable savings target. Red growth. Never touch unless emergency.",
+                ruleTitle2: "⚙️ Core Operational Rules", rule1: "Annual Procurement Protocol:", rule1Desc: "Wishlist = Favorites. Non-asset consumables bought only during major sales. Sell old before buying new.",
+                rule2: "72-Hour Cooling Off:", rule2Desc: "Non-essentials > daily budget wait 3 days in cart. Dopamine fades naturally.", rule3: "Repair over Replace:", rule3Desc: "Mend and clean old items first. Derive longer pride from maintaining.",
+                aiTopConflict: "Top-Level Conflict", aiTopConflictDesc: "Income doesn't cover Fixed+Savings+Budget. Deficit: ",
+                aiLivWarn: "Living Budget Warning", aiLivWarnDesc: "Flexible budget over 50% consumed, reduce frequency.", aiMelt: "Fund Meltdown", aiMeltDesc: "Overspent! Enter extreme survival mode immediately.",
+                aiSafe: "Healthy Operation", aiSafeDesc: "Metrics meet strategic expectations. Keep discipline.",
+                alertSelectMonth: "Please select month and enter valid savings amount!", alertOverride: " record exists. Overwrite?", alertClearAll: "Clear all savings records? Cannot be undone.", alertEnterItem: "Please enter item info!", alertSaved: "Decision archived!", alertReset: "Clear all settings and spent amounts to default. Confirm?",
+                winDataA: "👑 Data Winner: [A] (Lower CPW)", winDataB: "👑 Data Winner: [B] (Lower CPW)", winTie: "⚖️ Data tie. Follow your heart based on justification.",
+                wishWarnText: "🚨 SEVERE WARNING: Both exceed 50% of monthly savings target.", wishWait: "⏳ FORCED DIRECTIVE: High cost. Add to cart & execute 72h cooling off. Review justification.", wishOk: "✅ Manageable. If justification holds, purchase allowed.",
+                totalExceed: "Total Overspent"
+            },
+            ru: {
+                appTitle: "FCC Консоль личных финансов", appSub: "Financial Control Center (Универсальный) - Данные сохранены",
+                tab1: "📅 Ежемесячно", tab2: "🚀 Годовой план", tab3: "🛍️ Решения", tab4: "⚡ Правила",
+                topBase: "⚙️ Стратегия верхнего уровня (Нажмите для ред.)", saveStatus: "Сохранено!", resetBtn: "Сбросить все панели",
+                incTitle: "Ожидаемый доход в месяц", incDesc: "Ваш фиксированный приток", fixTitle: "Фиксированные расходы", fixDesc: "Жесткие расходы (Аренда/Авто)",
+                savTitle: "Обязательные сбережения", savDesc: "Активы, сохраняемые ежемесячно", budTitle: "Гибкий бюджет на жизнь", budDesc: "Бюджет на еду, быт, развлечения",
+                dailyArea: "🎛️ Ежедневный учет и распределение (Настраиваемый)", defenseLine: "🛡️ Общая линия защиты бюджета", remain: "Остаток", overspent: "Перерасход", totalOut: "Текущий общий отток:", totalPct: "Глобальное потребление:",
+                budget: "Бюджет:", spent: "Потрачено:", aiReport: "💡 Отчет о самопроверке системы",
+                savTracker: "🏦 Ежемесячный трекер сбережений", savDesc2: "В конце месяца введите фактические сбережения для создания кривой активов.", savTotal: "Всего накоплено",
+                savNew: "📍 Добавить запись", savMonth: "Выберите месяц", savAmt: "Фактическая сумма", savBtn: "💾 Подтвердить и обновить",
+                savHist: "📜 История сбережений", clearHist: "Очистить", noHist: "Нет записей. Заполните слева для активации графика.", undo: "Отмена",
+                planTitle: "Механизм отслеживания сложных активов", planDesc: "Красная линия - факт. Пунктирная - теория на основе цели.",
+                projInc: "Ожид. доход (12м)", projFix: "Ожид. фикс. расходы", projLiv: "Ожид. расходы на жизнь", projSav: "Теор. чистый прирост",
+                chartTitle: "Фактические активы (Красный) vs Базовый уровень (Серый)", chartActual: "Факт. чистые активы", chartTheory: "Теор. база (на основе цели)",
+                wishTitle: "🛍️ Механизм решений списка желаний", wishWarn: "Влияние рассчитывается на основе цели сбережений", wishDesc: "Заполните данные и обоснуйте, ИИ вынесет рациональный вердикт.",
+                itemA: "Товар A", itemB: "Товар B", name: "Название", price: "Цена", uses: "Исп. в год", years: "Ожид. срок (лет)", emotion: "Эмоц. ценность (1-10)",
+                justificationTitle: "💭 Обоснование", justPlaceholder: "Будьте честны: Почему именно они? Какую боль они решают? Это функциональная потребность или эмоциональная компенсация?...",
+                submitBtn: "⚖️ Отправить на вердикт системы", resultTitle: "📋 Финансовый и эмоциональный вердикт", saveResultBtn: "💾 Сохранить в архив",
+                cpw: "Стоимость за исп.:", impact: "Влияние на цель:", sysRead: "Система прочитала ваше обоснование: ",
+                archiveTitle: "📚 Архив решений", searchArch: "🔍 Поиск...", noArch: "Нет записей.<br>Сделайте рациональность привычкой.",
+                ruleTitle1: "Классическая 3-счетовая архитектура", ruleMain: "Основной баланс", ruleMainDesc: "Для гибких расходов. Виден только этот низкий баланс для сдерживания желаний.",
+                ruleFix: "Фиксированные счета", ruleFixDesc: "Принудительные переводы на аренду/кредиты. Абсолютно заблокированы до дня списания.", ruleSav: "Сбережения", ruleSavDesc: "Непоколебимая цель. Накопление активов. Не трогать без экстренной нужды.",
+                ruleTitle2: "⚙️ Основные правила", rule1: "Годовой протокол закупок:", rule1Desc: "Покупки неактивов только на распродажах. Продай старое перед покупкой нового.",
+                rule2: "72 часа на охлаждение:", rule2Desc: "Несущественные покупки ждут 3 дня в корзине.", rule3: "Ремонт вместо замены:", rule3Desc: "Сначала чини. Гордость за поддержание вещей.",
+                aiTopConflict: "Конфликт верхнего уровня", aiTopConflictDesc: "Доход не покрывает Фикс+Сбережения+Бюджет. Дефицит: ",
+                aiLivWarn: "Предупреждение бюджета", aiLivWarnDesc: "Гибкий бюджет израсходован более чем на 50%, снизьте частоту.", aiMelt: "Крах фонда", aiMeltDesc: "Перерасход! Немедленно перейдите в режим выживания.",
+                aiSafe: "Здоровая работа", aiSafeDesc: "Показатели в норме. Соблюдайте дисциплину.",
+                alertSelectMonth: "Выберите месяц и введите сумму!", alertOverride: " запись существует. Перезаписать?", alertClearAll: "Очистить все записи? Необратимо.", alertEnterItem: "Введите информацию о товаре!", alertSaved: "Решение сохранено!", alertReset: "Сбросить все настройки? Подтвердить?",
+                winDataA: "👑 Победитель: [A] (Ниже стоимость исп.)", winDataB: "👑 Победитель: [B] (Ниже стоимость исп.)", winTie: "⚖️ Ничья. Следуйте сердцу.",
+                wishWarnText: "🚨 СЕРЬЕЗНО: Оба превышают 50% цели сбережений.", wishWait: "⏳ ПРИНУДИТЕЛЬНО: В корзину на 72 часа. Перечитайте обоснование.", wishOk: "✅ Допустимо. Если обоснование верно, покупка разрешена.",
+                totalExceed: "Общий перерасход"
+            }
+        };
+
+        // --- 全局状态 ---
+        let currentLang = localStorage.getItem('fcc_lang') || 'zh';
+        let currentCur = localStorage.getItem('fcc_cur') || '£';
+
+        function t(key) {
+            return i18n[currentLang][key] || i18n['zh'][key] || key;
+        }
+
+        function formatMoney(amount) {
+            return `${currentCur}${parseFloat(amount).toFixed(2)}`;
+        }
+
+        function changeLanguage(lang, updateData = true) {
+            currentLang = lang;
+            localStorage.setItem('fcc_lang', lang);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    if (el.placeholder) el.placeholder = t(key);
+                } else {
+                    el.innerHTML = t(key);
+                }
+            });
+            if (updateData) {
+                updateMonthlyDashboard(false);
+                renderSavingsTracker();
+                renderWishlistHistory();
+                if(typeof savingsRecords !== 'undefined') updateMasterChart(savingsRecords);
+            }
+        }
+
+        function changeCurrency(cur, updateData = true) {
+            currentCur = cur;
+            localStorage.setItem('fcc_cur', cur);
+            document.querySelectorAll('.cur-sym').forEach(el => el.innerText = cur);
+            if (updateData) {
+                updateMonthlyDashboard(false);
+                renderSavingsTracker();
+                renderWishlistHistory();
+                if(typeof savingsRecords !== 'undefined') updateMasterChart(savingsRecords);
+            }
+        }
+
+        // --- Tab 切换逻辑 ---
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
             document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('active', 'bg-white', 'text-blue-600', 'shadow-sm'); el.classList.add('text-slate-600'); });
@@ -462,11 +613,11 @@
         const getStr = (id) => document.getElementById(id).value || '';
 
         // --- 月度追踪 ---
-        const genericStorageKey = 'fcc_generic_monthly_v1';
+        const genericStorageKey = 'fcc_generic_monthly_v2';
         const defaultMonthly = { 
-            g_inc: 10000, g_fix: 4000, g_sav: 3000, g_bud: 3000, 
-            n_cat1: '🛒 餐饮/食材', n_cat2: '🧴 杂费/日用', n_cat3: '🎉 娱乐/社交',
-            b_cat1: 1500, b_cat2: 500, b_cat3: 1000, 
+            g_inc: 1900, g_fix: 1000, g_sav: 600, g_bud: 300, 
+            n_cat1: '🛒 餐饮/食材 Food', n_cat2: '🧴 杂费/日用 Misc', n_cat3: '🎉 娱乐/社交 Ent',
+            b_cat1: 200, b_cat2: 50, b_cat3: 50, 
             e_cat1: 0, e_cat2: 0, e_cat3: 0 
         };
 
@@ -497,7 +648,7 @@
         }
 
         function resetMonthlyData() {
-            if(confirm("将清空所有设定和已花金额恢复默认，确认重置吗？")) {
+            if(confirm(t('alertReset'))) {
                 localStorage.removeItem(genericStorageKey); loadMonthlyData();
             }
         }
@@ -520,8 +671,8 @@
                 const remain = bud - exp; const safePct = Math.min(bud > 0 ? (exp / bud * 100) : 100, 100);
                 document.getElementById(barId).style.width = safePct + '%';
                 const statEl = document.getElementById(statId); const barEl = document.getElementById(barId);
-                if (remain >= 0) { statEl.innerText = `余 ¥${remain.toFixed(2)}`; statEl.className = 'text-up font-mono font-bold'; barEl.className = `h-2 rounded-full progress-bar bg-blue-400`; } 
-                else { statEl.innerText = `超支 ¥${Math.abs(remain).toFixed(2)}`; statEl.className = 'text-down font-mono font-bold'; barEl.className = `h-2 rounded-full progress-bar bg-down`; }
+                if (remain >= 0) { statEl.innerText = `${t('remain')} ${formatMoney(remain)}`; statEl.className = 'text-up font-mono font-bold'; barEl.className = `h-2 rounded-full progress-bar bg-blue-400`; } 
+                else { statEl.innerText = `${t('overspent')} ${formatMoney(Math.abs(remain))}`; statEl.className = 'text-down font-mono font-bold'; barEl.className = `h-2 rounded-full progress-bar bg-down`; }
             };
 
             updateRow(data.b_cat1, data.e_cat1, 'bar-cat1', 'stat-cat1');
@@ -533,38 +684,35 @@
             const totalRemain = totalBudget - totalExp; 
             const totalPct = totalBudget > 0 ? (totalExp / totalBudget) * 100 : 0;
             
-            document.getElementById('disp-total-budget').innerText = `¥${totalBudget.toFixed(2)}`;
-            document.getElementById('disp-total-spent').innerText = `¥${totalExp.toFixed(2)}`; 
+            document.getElementById('disp-total-budget').innerText = formatMoney(totalBudget);
+            document.getElementById('disp-total-spent').innerText = formatMoney(totalExp); 
             document.getElementById('disp-total-pct').innerText = `${totalPct.toFixed(1)}%`;
             
             const totalRemainEl = document.getElementById('disp-total-remain'); const totalBarEl = document.getElementById('bar-total');
             document.getElementById('bar-total').style.width = Math.min(totalPct, 100) + '%';
-            if (totalRemain >= 0) { totalRemainEl.innerText = `余 ¥${totalRemain.toFixed(2)}`; totalRemainEl.className = 'text-up font-mono text-base font-bold'; totalBarEl.className = 'bg-blue-500 h-4 progress-bar relative'; } 
-            else { totalRemainEl.innerText = `总超支 ¥${Math.abs(totalRemain).toFixed(2)}`; totalRemainEl.className = 'text-down font-mono text-base font-bold'; totalBarEl.className = 'bg-down h-4 progress-bar relative'; }
+            if (totalRemain >= 0) { totalRemainEl.innerText = `${t('remain')} ${formatMoney(totalRemain)}`; totalRemainEl.className = 'text-up font-mono text-base font-bold'; totalBarEl.className = 'bg-blue-500 h-4 progress-bar relative'; } 
+            else { totalRemainEl.innerText = `${t('totalExceed')} ${formatMoney(Math.abs(totalRemain))}`; totalRemainEl.className = 'text-down font-mono text-base font-bold'; totalBarEl.className = 'bg-down h-4 progress-bar relative'; }
 
             generateAIReport(data, totalRemain, totalPct, totalBudget);
-            
-            // Sync Master Plan projections based on inputs
             updateMasterPlanProjections(data.g_inc, data.g_fix, data.g_bud, data.g_sav);
         }
 
         function generateAIReport(data, totalRemain, totalPct, totalBudget) {
             const reportContainer = document.getElementById('ai-monthly-report'); let html = '';
             
-            // Check top level consistency
             const logicRemain = data.g_inc - data.g_fix - data.g_sav - data.g_bud;
             if (logicRemain < 0) {
-                html += `<div class="flex items-start bg-white p-3 rounded border-l-4 border-down shadow-sm"><span class="mr-2 text-lg">⚠️</span><div><p class="text-sm font-bold text-slate-800">顶层架构冲突</p><p class="text-xs text-slate-600 mt-1">您设定的收入不足以覆盖 (硬流出+储蓄+生活费)。资金缺口: ¥${Math.abs(logicRemain)}</p></div></div>`;
+                html += `<div class="flex items-start bg-white p-3 rounded border-l-4 border-down shadow-sm"><span class="mr-2 text-lg">⚠️</span><div><p class="text-sm font-bold text-slate-800">${t('aiTopConflict')}</p><p class="text-xs text-slate-600 mt-1">${t('aiTopConflictDesc')} ${formatMoney(Math.abs(logicRemain))}</p></div></div>`;
             }
 
-            if (totalPct > 80 && totalRemain > 0) html += `<div class="flex items-start bg-white p-3 rounded border-l-4 border-orange-400 shadow-sm"><span class="mr-2 text-lg">🛒</span><div><p class="text-sm font-bold text-slate-800">生活费高位预警</p><p class="text-xs text-slate-600 mt-1">机动预算已消耗过半，请强制降低消费频率。</p></div></div>`;
-            if (totalRemain <= 0 && totalBudget > 0) html += `<div class="flex items-start bg-white p-3 rounded border-l-4 border-down shadow-sm"><span class="mr-2 text-lg">💥</span><div><p class="text-sm font-bold text-slate-800">机动资金全面熔断</p><p class="text-xs text-slate-600 mt-1">已经超支！即日起必须进入极致生存模式。</p></div></div>`;
+            if (totalPct > 80 && totalRemain > 0) html += `<div class="flex items-start bg-white p-3 rounded border-l-4 border-orange-400 shadow-sm"><span class="mr-2 text-lg">🛒</span><div><p class="text-sm font-bold text-slate-800">${t('aiLivWarn')}</p><p class="text-xs text-slate-600 mt-1">${t('aiLivWarnDesc')}</p></div></div>`;
+            if (totalRemain <= 0 && totalBudget > 0) html += `<div class="flex items-start bg-white p-3 rounded border-l-4 border-down shadow-sm"><span class="mr-2 text-lg">💥</span><div><p class="text-sm font-bold text-slate-800">${t('aiMelt')}</p><p class="text-xs text-slate-600 mt-1">${t('aiMeltDesc')}</p></div></div>`;
             
-            if(html === '') html = `<div class="flex items-start bg-white p-3 rounded border-l-4 border-up shadow-sm"><span class="mr-2 text-lg">🛡️</span><div><p class="text-sm font-bold text-slate-800">资金池健康运转</p><p class="text-xs text-slate-600 mt-1">目前各项指标符合战略预期，继续保持纪律。</p></div></div>`;
+            if(html === '') html = `<div class="flex items-start bg-white p-3 rounded border-l-4 border-up shadow-sm"><span class="mr-2 text-lg">🛡️</span><div><p class="text-sm font-bold text-slate-800">${t('aiSafe')}</p><p class="text-xs text-slate-600 mt-1">${t('aiSafeDesc')}</p></div></div>`;
             reportContainer.innerHTML = html;
         }
 
-        // --- 全局数据计算与图表引擎 (动态12个月) ---
+        // --- 全局数据计算与图表引擎 ---
         Chart.defaults.color = '#94A3B8'; 
         Chart.defaults.font.family = "'Noto Sans SC', sans-serif";
         let myChart = null;
@@ -572,20 +720,23 @@
         function getNext12Months() {
             let labels = [];
             let today = new Date();
+            let langMap = { 'zh': 'zh-CN', 'en': 'en-GB', 'ru': 'ru-RU' };
             for(let i=0; i<12; i++) {
                 let d = new Date(today.getFullYear(), today.getMonth() + i, 1);
-                labels.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+                labels.push({
+                    key: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,
+                    display: d.toLocaleString(langMap[currentLang], { month: 'short', year: '2-digit' })
+                });
             }
             return labels;
         }
 
         function updateMasterPlanProjections(inc, fix, bud, sav) {
-            document.getElementById('proj-income').innerText = `+¥${(inc * 12).toLocaleString()}`;
-            document.getElementById('proj-fixed').innerText = `-¥${(fix * 12).toLocaleString()}`;
-            document.getElementById('proj-living').innerText = `-¥${(bud * 12).toLocaleString()}`;
-            document.getElementById('proj-savings').innerText = `+¥${(sav * 12).toLocaleString()}`;
+            document.getElementById('proj-income').innerText = `+${formatMoney(inc * 12)}`;
+            document.getElementById('proj-fixed').innerText = `-${formatMoney(fix * 12)}`;
+            document.getElementById('proj-living').innerText = `-${formatMoney(bud * 12)}`;
+            document.getElementById('proj-savings').innerText = `+${formatMoney(sav * 12)}`;
             
-            // 只要输入改变，就需要重新绘图
             if(typeof savingsRecords !== 'undefined') {
                  updateMasterChart(savingsRecords);
             }
@@ -596,34 +747,24 @@
             if (!ctx) return;
 
             const targetSav = getVal('gen-savings');
-            const monthLabels = getNext12Months();
-            const displayLabels = monthLabels.map(m => {
-                let parts = m.split('-');
-                return `${parts[1]}月`;
-            });
+            const monthData = getNext12Months();
+            const monthKeys = monthData.map(m => m.key);
+            const displayLabels = monthData.map(m => m.display);
 
-            // 1. 理论基准线计算
-            let projectedData = []; 
-            let pAsset = 0; 
-            for(let i=0; i<12; i++) { 
-                pAsset += targetSav; 
-                projectedData.push(pAsset); 
-            } 
+            let projectedData = []; let pAsset = 0; 
+            for(let i=0; i<12; i++) { pAsset += targetSav; projectedData.push(pAsset); } 
 
-            // 2. 实际打卡线计算
-            let actualData = [];
-            let cumulative = 0; 
-            let lastRecordedIndex = -1;
+            let actualData = []; let cumulative = 0; let lastRecordedIndex = -1;
 
-            for(let i=0; i<monthLabels.length; i++) {
-                if(savingsArr.find(r => r.month === monthLabels[i])) {
+            for(let i=0; i<monthKeys.length; i++) {
+                if(savingsArr.find(r => r.month === monthKeys[i])) {
                     lastRecordedIndex = i;
                 }
             }
 
-            for(let i=0; i<monthLabels.length; i++) {
+            for(let i=0; i<monthKeys.length; i++) {
                 if (i <= lastRecordedIndex) {
-                    let record = savingsArr.find(r => r.month === monthLabels[i]);
+                    let record = savingsArr.find(r => r.month === monthKeys[i]);
                     let added = record ? record.amount : 0; 
                     cumulative += added;
                     actualData.push(cumulative);
@@ -639,12 +780,12 @@
                     labels: displayLabels,
                     datasets: [
                         {
-                            label: '实际净资产打卡 (红涨)', data: actualData, borderColor: '#EF4444', 
+                            label: t('chartActual'), data: actualData, borderColor: '#EF4444', 
                             backgroundColor: 'rgba(239, 68, 68, 0.1)', borderWidth: 4, pointBackgroundColor: '#EF4444',
                             pointBorderColor: '#fff', pointRadius: 5, fill: true, tension: 0.1
                         },
                         {
-                            label: '理论基准线 (基于目标储蓄)', data: projectedData, borderColor: '#94A3B8', borderDash: [5, 5],
+                            label: t('chartTheory'), data: projectedData, borderColor: '#94A3B8', borderDash: [5, 5],
                             borderWidth: 2, pointRadius: 0, fill: false, tension: 0.1
                         }
                     ]
@@ -657,7 +798,7 @@
         }
 
         // --- 实际存款打卡逻辑 ---
-        const savingsStorageKey = 'fcc_generic_savings_v1';
+        const savingsStorageKey = 'fcc_generic_savings_v2';
         let savingsRecords = [];
 
         function loadSavingsTracker() {
@@ -677,11 +818,11 @@
         function addSavingsRecord() {
             const monthInput = document.getElementById('save-month-input').value;
             const amountInput = parseFloat(document.getElementById('save-amount-input').value);
-            if (!monthInput || isNaN(amountInput)) { alert("请选择月份并输入有效的存款金额！"); return; }
+            if (!monthInput || isNaN(amountInput)) { alert(t('alertSelectMonth')); return; }
 
             const existingIndex = savingsRecords.findIndex(r => r.month === monthInput);
             if (existingIndex !== -1) {
-                if(confirm(`${monthInput} 的记录已存在(¥${savingsRecords[existingIndex].amount})，是否覆盖更新？`)) {
+                if(confirm(`${monthInput} ${t('alertOverride')}`)) {
                     savingsRecords[existingIndex].amount = amountInput;
                 } else return;
             } else {
@@ -701,7 +842,7 @@
         }
 
         function clearSavingsHistory() {
-            if(confirm("确定要清空所有的存款打卡记录吗？此操作不可恢复。")) {
+            if(confirm(t('alertClearAll'))) {
                 savingsRecords = []; localStorage.setItem(savingsStorageKey, JSON.stringify(savingsRecords)); renderSavingsTracker();
             }
         }
@@ -713,7 +854,7 @@
 
             let total = 0; let html = '';
             if (savingsRecords.length === 0) {
-                html = `<div class="text-center text-slate-400 text-xs py-4">暂无打卡记录，请在左侧结算以激活图表。</div>`;
+                html = `<div class="text-center text-slate-400 text-xs py-4">${t('noHist')}</div>`;
             } else {
                 savingsRecords.forEach(record => {
                     total += record.amount;
@@ -721,20 +862,20 @@
                     <div class="flex justify-between items-center bg-white p-2 rounded border border-slate-100 shadow-sm group">
                         <div class="flex items-center space-x-3">
                             <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded">${record.month}</span>
-                            <span class="font-bold text-slate-700">¥${record.amount.toFixed(2)}</span>
+                            <span class="font-bold text-slate-700">${formatMoney(record.amount)}</span>
                         </div>
-                        <button onclick="deleteSavingsRecord(${record.id})" class="text-xs text-red-400 hover:text-red-600 hidden group-hover:block transition px-2">撤销</button>
+                        <button onclick="deleteSavingsRecord(${record.id})" class="text-xs text-red-400 hover:text-red-600 hidden group-hover:block transition px-2">${t('undo')}</button>
                     </div>`;
                 });
             }
             listEl.innerHTML = html;
-            totalEl.innerText = `¥${total.toFixed(2)}`;
+            totalEl.innerText = formatMoney(total);
             
             updateMasterChart(savingsRecords);
         }
 
         // --- 心愿单：申论与决断 ---
-        const wishlistStorageKey = 'fcc_generic_wishlist_v1';
+        const wishlistStorageKey = 'fcc_generic_wishlist_v2';
         let wishlistHistory = [];
         let currentDecision = null;
 
@@ -747,14 +888,14 @@
         }
 
         function runDecisionAI() {
-            const getName = (id) => document.getElementById(id).value || '未命名';
-            const justification = document.getElementById('justification').value || '未提供申论，仅作数值判断。';
-            const targetSav = getVal('gen-savings') || 1; // 避免除以0
+            const getName = (id) => document.getElementById(id).value || 'Item';
+            const justification = document.getElementById('justification').value || '...';
+            const targetSav = getVal('gen-savings') || 1; 
 
             const itemA = { name: getName('nameA'), price: getVal('priceA'), uses: getVal('usesA'), years: getVal('yearsA'), emotion: getVal('emotionA') };
             const itemB = { name: getName('nameB'), price: getVal('priceB'), uses: getVal('usesB'), years: getVal('yearsB'), emotion: getVal('emotionB') };
 
-            if (itemA.price === 0 && itemB.price === 0) { alert("请输入物品信息！"); return; }
+            if (itemA.price === 0 && itemB.price === 0) { alert(t('alertEnterItem')); return; }
 
             const calcMetrics = (item) => {
                 const totalUses = item.uses * item.years;
@@ -769,23 +910,23 @@
             
             const updateResultUI = (suffix, item, metrics) => {
                 document.getElementById(`result${suffix}-name`).innerText = item.name;
-                document.getElementById(`result${suffix}-cpw`).innerText = metrics.cpw.toFixed(2);
+                document.getElementById(`result${suffix}-cpw`).innerText = formatMoney(metrics.cpw);
                 document.getElementById(`result${suffix}-impact-text`).innerText = metrics.savingsImpact.toFixed(1) + '%';
             };
             updateResultUI('A', itemA, metricsA); updateResultUI('B', itemB, metricsB);
 
             let verdict = ""; let winnerStr = "";
-            if (metricsA.savingsImpact > 50 && metricsB.savingsImpact > 50) verdict += "🚨 <strong class='text-down'>严重警告：</strong> 两者均超过月度储蓄目标的50%，对系统冲击极大。<br>";
+            if (metricsA.savingsImpact > 50 && metricsB.savingsImpact > 50) verdict += `${t('wishWarnText')}<br>`;
 
-            if (metricsA.cpw < metricsB.cpw) winnerStr = `👑 数值胜出者：[${itemA.name}] (单次成本更低)`;
-            else if (metricsB.cpw < metricsA.cpw) winnerStr = `👑 数值胜出者：[${itemB.name}] (单次成本更低)`;
-            else winnerStr = `⚖️ 数据僵局，请完全遵循申论中的内心情绪。`;
+            if (metricsA.cpw < metricsB.cpw) winnerStr = t('winDataA').replace('[A]', itemA.name);
+            else if (metricsB.cpw < metricsA.cpw) winnerStr = t('winDataB').replace('[B]', itemB.name);
+            else winnerStr = t('winTie');
             
             verdict += winnerStr + "<br>";
 
             const expensiveItem = Math.max(itemA.price, itemB.price);
-            if (expensiveItem > (targetSav * 0.2)) verdict += `⏳ <strong class='text-blue-600'>强制指令：</strong>消耗较大，请加入购物车执行 72小时冷静期，同时复看您的申论。`;
-            else verdict += `✅ 额度可控，若申论中的刚需成立，允许购入。`;
+            if (expensiveItem > (targetSav * 0.2)) verdict += t('wishWait');
+            else verdict += t('wishOk');
 
             document.getElementById('ai-verdict-text').innerHTML = verdict;
             document.getElementById('result-justification-echo').innerText = justification;
@@ -801,7 +942,7 @@
             if (!currentDecision) return;
             wishlistHistory.unshift(currentDecision); 
             localStorage.setItem(wishlistStorageKey, JSON.stringify(wishlistHistory));
-            renderWishlistHistory(); alert("决策及申论已封存入库！");
+            renderWishlistHistory(); alert(t('alertSaved'));
         }
 
         function deleteHistory(id) {
@@ -823,7 +964,7 @@
             );
 
             countEl.innerText = filtered.length;
-            if (filtered.length === 0) { listEl.innerHTML = `<div class="text-center text-slate-400 text-sm mt-10">暂无纠结记录。<br>让理智成为习惯。</div>`; return; }
+            if (filtered.length === 0) { listEl.innerHTML = `<div class="text-center text-slate-400 text-sm mt-10">${t('noArch')}</div>`; return; }
 
             let html = '';
             filtered.forEach(record => {
@@ -832,23 +973,32 @@
                     <button onclick="deleteHistory(${record.id})" class="absolute top-2 right-2 text-slate-300 hover:text-red-500 hidden group-hover:block transition">✖</button>
                     <div class="text-[10px] text-slate-400 mb-2">${record.date}</div>
                     <div class="flex justify-between items-center mb-2 bg-slate-50 p-2 rounded">
-                        <span class="text-xs font-bold text-blue-600 truncate w-1/2">${record.itemA.name} (¥${record.itemA.price})</span>
+                        <span class="text-xs font-bold text-blue-600 truncate w-1/2">${record.itemA.name} (${formatMoney(record.itemA.price)})</span>
                         <span class="text-xs text-slate-400 mx-2">vs</span>
-                        <span class="text-xs font-bold text-indigo-600 truncate w-1/2 text-right">(¥${record.itemB.price}) ${record.itemB.name}</span>
+                        <span class="text-xs font-bold text-indigo-600 truncate w-1/2 text-right">(${formatMoney(record.itemB.price)}) ${record.itemB.name}</span>
                     </div>
                     <div class="text-xs text-slate-700 bg-blue-50 border border-blue-100 p-2 rounded mb-2 font-medium">
                         ${record.winner}
                     </div>
                     <div class="text-xs text-slate-500 italic border-l-2 border-slate-300 pl-2 mt-2">
-                        " ${record.just || '未填写申论'} "
+                        " ${record.just || '...'} "
                     </div>
                 </div>`;
             });
             listEl.innerHTML = html;
         }
 
+        // --- 初始化 ---
         window.onload = () => {
             setTimeout(() => {
+                // 初始化选择器状态
+                document.getElementById('lang-selector').value = currentLang;
+                document.getElementById('currency-selector').value = currentCur;
+                
+                // 执行初始化翻译和加载
+                changeLanguage(currentLang, false);
+                changeCurrency(currentCur, false);
+                
                 loadMonthlyData();
                 loadWishlistHistory();
                 loadSavingsTracker();
