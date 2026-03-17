@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans SC', sans-serif; background-color: #F0F4F8; color: #1E293B; }
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #F0F4F8; color: #1E293B; transition: font-family 0.3s ease; }
         .glass-panel { background: #FFFFFF; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #E2E8F0; }
         .tab-btn.active { background-color: #2563EB; color: white; border-color: #2563EB; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
         .tab-btn { transition: all 0.3s ease; }
@@ -22,8 +22,17 @@
         .fcc-input { background-color: #F8FAFC; border: 1px solid #CBD5E1; color: #1E293B; font-weight: 600; transition: all 0.2s; }
         .fcc-input:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); background-color: #FFFFFF; }
         
-        .top-input { background: transparent; border: none; border-bottom: 2px dashed rgba(0,0,0,0.2); border-radius: 0; outline: none; padding: 0; width: 100%; transition: border-color 0.3s;}
-        .top-input:focus { border-bottom-color: #2563EB; }
+        /* 强化输入框的视觉效果，让它一眼就能看出是可以编辑的 */
+        .top-input { 
+            background: #FFFFFF; 
+            border: 2px solid #CBD5E1; 
+            border-radius: 6px; 
+            outline: none; 
+            padding: 4px 8px; 
+            width: 100%; 
+            transition: all 0.3s;
+        }
+        .top-input:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
 
         .text-up { color: #EF4444; } 
         .text-down { color: #10B981; } 
@@ -61,10 +70,9 @@
 
                 <!-- 导航 Tabs -->
                 <div class="flex space-x-2 bg-slate-100 p-1 rounded-lg border border-slate-200 w-full md:w-auto overflow-x-auto">
-                    <button onclick="switchTab('tab-monthly')" id="btn-monthly" class="tab-btn active flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab1">📅 月度动态追踪</button>
-                    <button onclick="switchTab('tab-masterplan')" id="btn-masterplan" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab2">🚀 年度全景推演</button>
-                    <button onclick="switchTab('tab-wishlist')" id="btn-wishlist" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab3">🛍️ 心愿单决断</button>
-                    <button onclick="switchTab('tab-rules')" id="btn-rules" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab4">⚡ 系统架构铁律</button>
+                    <button onclick="switchTab('tab-monthly')" id="btn-monthly" class="tab-btn active flex-1 md:flex-none whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab1">📅 月度动态追踪</button>
+                    <button onclick="switchTab('tab-masterplan')" id="btn-masterplan" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab2">🚀 年度全景推演</button>
+                    <button onclick="switchTab('tab-wishlist')" id="btn-wishlist" class="tab-btn flex-1 md:flex-none whitespace-nowrap px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-blue-600 hover:bg-white" data-i18n="tab3">🛍️ 心愿单决断</button>
                 </div>
             </div>
         </div>
@@ -78,54 +86,54 @@
         <div id="tab-monthly" class="tab-content block space-y-6">
             
             <div class="flex justify-between items-center bg-blue-50 p-4 rounded-xl border border-blue-100">
-                <h2 class="text-lg font-bold text-blue-800 flex items-center"><span class="mr-2">⚙️</span> <span data-i18n="topBase">顶层战略基石 (点击数字即可修改设定)</span></h2>
+                <h2 class="text-lg font-bold text-blue-800 flex items-center"><span class="mr-2">⚙️</span> <span data-i18n="topBase">顶层战略基石 (点击框内数字即可修改设定)</span></h2>
                 <div class="text-sm text-slate-500 flex items-center">
                     <span id="save-status" class="mr-3 text-xs opacity-0 transition-opacity text-blue-600 font-bold" data-i18n="saveStatus">设定已自动保存!</span>
                     <button onclick="resetMonthlyData()" class="text-xs text-red-500 hover:text-red-700 underline" data-i18n="resetBtn">重置全部面板</button>
                 </div>
             </div>
 
-            <!-- 顶部总览卡片 (增加第五个框) -->
+            <!-- 顶部总览卡片 -->
             <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-indigo-500 relative bg-indigo-50/30">
                     <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2" data-i18n="iniTitle">当前初始净资产</p>
-                    <div class="flex items-center text-3xl font-black text-indigo-600">
+                    <div class="flex items-center text-xl font-black text-indigo-600">
                         <span class="mr-1 cur-sym">£</span>
-                        <input type="number" id="gen-initial" value="0" class="top-input text-indigo-600" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-initial" value="0" class="top-input text-indigo-600 font-bold" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-1" data-i18n="iniDesc">推演图表的起步资金</p>
+                    <p class="text-[10px] text-slate-400 mt-2" data-i18n="iniDesc">推演图表的起步资金</p>
                 </div>
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-blue-500 relative bg-slate-50">
                     <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2" data-i18n="incTitle">预期月总收入</p>
-                    <div class="flex items-center text-3xl font-black text-up">
+                    <div class="flex items-center text-xl font-black text-up">
                         <span class="mr-1 cur-sym">£</span>
-                        <input type="number" id="gen-income" value="0" class="top-input text-up" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-income" value="0" class="top-input text-up font-bold" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-1" data-i18n="incDesc">您每月的固定入账总额</p>
+                    <p class="text-[10px] text-slate-400 mt-2" data-i18n="incDesc">您每月的固定入账总额</p>
                 </div>
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-down relative bg-slate-50">
                     <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2" data-i18n="fixTitle">硬性流出 (房贷/车等)</p>
-                    <div class="flex items-center text-3xl font-black text-down">
+                    <div class="flex items-center text-xl font-black text-down">
                         <span class="mr-1 cur-sym">£</span>
-                        <input type="number" id="gen-fixed" value="0" class="top-input text-down" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-fixed" value="0" class="top-input text-down font-bold" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-1" data-i18n="fixDesc">不可缩减的刚性支出</p>
+                    <p class="text-[10px] text-slate-400 mt-2" data-i18n="fixDesc">不可缩减的刚性支出</p>
                 </div>
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-up relative bg-red-50/30">
                     <p class="text-xs text-up font-bold uppercase tracking-wider mb-2" data-i18n="savTitle">强制储蓄目标</p>
-                    <div class="flex items-center text-3xl font-black text-up">
+                    <div class="flex items-center text-xl font-black text-up">
                         <span class="mr-1 cur-sym">£</span>
-                        <input type="number" id="gen-savings" value="0" class="top-input text-up" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-savings" value="0" class="top-input text-up font-bold" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-red-400 mt-1" data-i18n="savDesc">每月必须存下的红线资产</p>
+                    <p class="text-[10px] text-red-400 mt-2" data-i18n="savDesc">每月必须存下的红线资产</p>
                 </div>
                 <div class="glass-panel rounded-xl p-5 border-t-4 border-t-blue-400 bg-blue-50 relative">
                     <p class="text-xs text-blue-800 font-bold uppercase tracking-wider mb-2" data-i18n="budTitle">机动生活费总盘子</p>
-                    <div class="flex items-center text-3xl font-black text-blue-600">
+                    <div class="flex items-center text-xl font-black text-blue-600">
                         <span class="mr-1 cur-sym">£</span>
-                        <input type="number" id="gen-budget" value="0" class="top-input text-blue-600" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-budget" value="0" class="top-input text-blue-600 font-bold" onchange="updateMonthlyDashboard()">
                     </div>
-                    <p class="text-[10px] text-blue-500 mt-1" data-i18n="budDesc">用于吃饭、日用、娱乐的预算</p>
+                    <p class="text-[10px] text-blue-500 mt-2" data-i18n="budDesc">用于吃饭、日用、娱乐的预算</p>
                 </div>
             </div>
 
@@ -273,25 +281,34 @@
             <div class="glass-panel rounded-xl p-6 md:p-8 border-t-4 border-t-blue-600 bg-white">
                 <div class="max-w-3xl mb-6">
                     <h2 class="text-2xl font-bold text-slate-800 mb-2" data-i18n="planTitle">年度资产复利追踪引擎</h2>
-                    <p class="text-blue-600 font-medium text-sm bg-blue-50 inline-block px-3 py-1 rounded mb-2" data-i18n="planNote">💡 年度推演数据由【月度动态追踪】中的顶层战略基石自动推算 (参数 x 12个月) 得出。</p>
+                    <p class="text-blue-600 font-medium text-sm bg-blue-50 inline-block px-3 py-1 rounded mb-2" data-i18n="planNote">💡 年度推演数据可直接修改，系统将自动换算并同步至【月度动态追踪】。</p>
                     <p class="text-slate-500 text-xs" data-i18n="planDesc">红线为您打卡生成的真实资产线，虚线为根据您的“目标储蓄”自动生成的理论基准线。</p>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-200">
-                        <div class="text-xs text-slate-500 mb-1" data-i18n="projInc">预估年总收入 (12月)</div>
-                        <div class="text-xl font-bold text-up" id="proj-income">+£0</div>
+                        <div class="text-xs text-slate-500 mb-2" data-i18n="projInc">预估年总收入 (12月)</div>
+                        <div class="flex items-center justify-center text-xl font-bold text-up">
+                            <span class="mr-1">+<span class="cur-sym">£</span></span>
+                            <input type="number" id="proj-income-inp" class="top-input text-up text-center w-24 font-bold" onchange="updateFromYearly()">
+                        </div>
                     </div>
                     <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-200">
-                        <div class="text-xs text-slate-500 mb-1" data-i18n="projFix">预估年硬性流出</div>
-                        <div class="text-xl font-bold text-down" id="proj-fixed">-£0</div>
+                        <div class="text-xs text-slate-500 mb-2" data-i18n="projFix">预估年硬性流出</div>
+                        <div class="flex items-center justify-center text-xl font-bold text-down">
+                            <span class="mr-1">-<span class="cur-sym">£</span></span>
+                            <input type="number" id="proj-fixed-inp" class="top-input text-down text-center w-24 font-bold" onchange="updateFromYearly()">
+                        </div>
                     </div>
                     <div class="bg-slate-50 p-4 rounded-lg text-center border border-slate-200">
-                        <div class="text-xs text-slate-500 mb-1" data-i18n="projLiv">预估年生活消耗</div>
-                        <div class="text-xl font-bold text-down" id="proj-living">-£0</div>
+                        <div class="text-xs text-slate-500 mb-2" data-i18n="projLiv">预估年生活消耗</div>
+                        <div class="flex items-center justify-center text-xl font-bold text-down">
+                            <span class="mr-1">-<span class="cur-sym">£</span></span>
+                            <input type="number" id="proj-living-inp" class="top-input text-down text-center w-24 font-bold" onchange="updateFromYearly()">
+                        </div>
                     </div>
                     <div class="bg-blue-50 p-4 rounded-lg text-center border border-blue-200 shadow-sm border-b-4 border-b-red-500">
-                        <div class="text-xs text-blue-800 font-bold mb-1 uppercase" data-i18n="projSav">12月后期末总资产</div>
+                        <div class="text-xs text-blue-800 font-bold mb-2 uppercase" data-i18n="projSav">12月后期末总资产</div>
                         <div class="text-2xl font-black text-slate-800" id="proj-savings">£0</div>
                     </div>
                 </div>
@@ -416,52 +433,6 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 4: 系统运行铁律 -->
-        <!-- ========================================== -->
-        <div id="tab-rules" class="tab-content hidden space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="glass-panel rounded-xl p-6 md:p-8 bg-white">
-                    <h3 class="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3" data-i18n="ruleTitle1">经典三账户分流架构</h3>
-                    
-                    <div class="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-slate-200">
-                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-slate-100 text-slate-600 shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">💳</div>
-                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                <h4 class="font-bold text-slate-700" data-i18n="ruleMain">主账户 (Main Balance)</h4>
-                                <p class="text-xs text-slate-500 mt-1" data-i18n="ruleMainDesc">仅存放预设的生活机动资金。日常消费刷卡只看这个极低的数字，利用“稀缺感”克制欲望。</p>
-                            </div>
-                        </div>
-                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-green-100 text-green-600 shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">🏠</div>
-                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-green-50 p-4 rounded-lg border border-green-200">
-                                <h4 class="font-bold text-down" data-i18n="ruleFix">硬性流出池 (Fixed Bills)</h4>
-                                <p class="text-xs text-green-700 mt-1" data-i18n="ruleFixDesc">发薪日强制转入房贷/车贷/房租等。绝对锁定。 直到划款日才能解锁。</p>
-                            </div>
-                        </div>
-                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-red-100 text-red-600 shadow-md shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">💎</div>
-                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-red-50 p-4 rounded-lg border border-red-200">
-                                <h4 class="font-bold text-up" data-i18n="ruleSav">纯存款池 (Savings)</h4>
-                                <p class="text-xs text-red-700 mt-1" data-i18n="ruleSavDesc">雷打不动的储蓄目标。红涨/资产积累。非紧急情况绝不动用。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <div class="glass-panel rounded-xl p-6 border-l-4 border-l-blue-500 bg-white">
-                        <h3 class="text-lg font-bold text-slate-800 mb-4" data-i18n="ruleTitle2">⚙️ 核心运行铁律</h3>
-                        <ul class="space-y-4 text-sm text-slate-600">
-                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">🛒</span><div><strong data-i18n="rule1">年度采购协议：</strong> <span data-i18n="rule1Desc">收藏夹 = 愿望单。非资产类消耗品仅在特定大促集中购买。买前建议先出二手。</span></div></li>
-                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">⏳</span><div><strong data-i18n="rule2">72小时冷静期：</strong> <span data-i18n="rule2Desc">超过日均预算的非刚需物品，强制放入购物车等待 3 天。多巴胺退去后自然解毒。</span></div></li>
-                            <li class="flex items-start"><span class="bg-blue-100 text-blue-600 p-1 rounded mr-3">🔧</span><div><strong data-i18n="rule3">维护代替购买：</strong> <span data-i18n="rule3Desc">旧物破了先缝补、清理。从“保养已有物品”中获取比“购买新品”更持久的成就感。</span></div></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </main>
 
     <script>
@@ -469,8 +440,8 @@
         const i18n = {
             zh: {
                 appTitle: "FCC 个人财务中央控制台", appSub: "Financial Control Center (通用部署版) - 本地数据永久保存",
-                tab1: "📅 月度动态追踪", tab2: "🚀 年度全景推演", tab3: "🛍️ 心愿单决断", tab4: "⚡ 系统架构铁律",
-                topBase: "⚙️ 顶层战略基石 (点击数字即可修改设定)", saveStatus: "设定已自动保存!", resetBtn: "重置全部面板",
+                tab1: "📅 月度动态追踪", tab2: "🚀 年度全景推演", tab3: "🛍️ 心愿单决断",
+                topBase: "⚙️ 顶层战略基石 (点击框内数字即可修改设定)", saveStatus: "设定已自动保存!", resetBtn: "重置全部面板",
                 iniTitle: "当前初始净资产", iniDesc: "推演图表的起步资金",
                 incTitle: "预期月总收入", incDesc: "您每月的固定入账总额", fixTitle: "硬性流出 (房贷/车等)", fixDesc: "不可缩减的刚性支出",
                 savTitle: "强制储蓄目标", savDesc: "每月必须存下的红线资产", budTitle: "机动生活费总盘子", budDesc: "用于吃饭、日用、娱乐的预算",
@@ -479,7 +450,7 @@
                 savTracker: "🏦 月度存款结算打卡", savDesc2: "每月终了，在这里填入您真实存下的金额，生成您的资产复利曲线。", savTotal: "当前账面总净资产",
                 savNew: "📍 新增打卡", savMonth: "选择结算月份", savAmt: "实际存入金额", savBtn: "💾 确认入库并更新大盘",
                 savHist: "📜 历史存款记录", clearHist: "清空记录", noHist: "暂无打卡记录，请在左侧结算以激活图表。", undo: "撤销",
-                planTitle: "年度资产复利追踪引擎", planNote: "💡 年度推演数据由【月度动态追踪】中的顶层战略基石自动推算 (参数 x 12个月) 得出。", planDesc: "红线为您打卡生成的真实资产线，虚线为根据您的“目标储蓄”自动生成的理论基准线。",
+                planTitle: "年度资产复利追踪引擎", planNote: "💡 年度推演数据可直接修改，系统将自动换算并同步至【月度动态追踪】。", planDesc: "红线为您打卡生成的真实资产线，虚线为根据您的“目标储蓄”自动生成的理论基准线。",
                 projInc: "预估年总收入 (12月)", projFix: "预估年硬性流出", projLiv: "预估年生活消耗", projSav: "12月后期末总资产",
                 chartTitle: "双轨追踪：实际净资产(红实线) vs 理论基准(灰虚线)", chartActual: "实际净资产打卡 (红涨)", chartTheory: "理论基准线 (基于目标储蓄)",
                 wishTitle: "🛍️ 心愿单决策引擎", wishWarn: "将基于您设定的月度存款目标计算冲击率", wishDesc: "不只是算账，更是理清你的真实需求。填写数据并写下你的申论，系统会为你出具理智判决。",
@@ -488,10 +459,6 @@
                 submitBtn: "⚖️ 递交系统核算判决", resultTitle: "📋 财务与感性综合判决书", saveResultBtn: "💾 封存记录入库",
                 cpw: "单次使用成本:", impact: "耗损当月目标存款:", sysRead: "系统已阅您的申论：",
                 archiveTitle: "📚 决策档案库", searchArch: "🔍 搜索关键词...", noArch: "暂无纠结记录。<br>让理智成为习惯。",
-                ruleTitle1: "经典三账户分流架构", ruleMain: "主账户 (Main Balance)", ruleMainDesc: "仅存放预设的生活机动资金。日常消费刷卡只看这个极低的数字，利用“稀缺感”克制欲望。",
-                ruleFix: "硬性流出池 (Fixed Bills)", ruleFixDesc: "发薪日强制转入房贷/车贷/房租等。绝对锁定。 直到划款日才能解锁。", ruleSav: "纯存款池 (Savings)", ruleSavDesc: "雷打不动的储蓄目标。红涨/资产积累。非紧急情况绝不动用。",
-                ruleTitle2: "⚙️ 核心运行铁律", rule1: "年度采购协议：", rule1Desc: "收藏夹 = 愿望单。非资产类消耗品仅在特定大促集中购买。买前建议先出二手。",
-                rule2: "72小时冷静期：", rule2Desc: "超过日均预算的非刚需物品，强制放入购物车等待 3 天。多巴胺退去后自然解毒。", rule3: "维护代替购买：", rule3Desc: "旧物破了先缝补、清理。从“保养已有物品”中获取比“购买新品”更持久的成就感。",
                 aiTopConflict: "顶层架构冲突", aiTopConflictDesc: "您设定的收入不足以覆盖 (硬流出+储蓄+生活费)。资金缺口: ",
                 aiLivWarn: "生活费高位预警", aiLivWarnDesc: "机动预算已消耗过半，请强制降低消费频率。", aiMelt: "机动资金全面熔断", aiMeltDesc: "已经超支！即日起必须进入极致生存模式。",
                 aiSafe: "资金池健康运转", aiSafeDesc: "目前各项指标符合战略预期，继续保持纪律。",
@@ -502,7 +469,7 @@
             },
             en: {
                 appTitle: "FCC Personal Finance Central Console", appSub: "Financial Control Center (Universal) - Local Data Saved Permanently",
-                tab1: "📅 Monthly Tracker", tab2: "🚀 Yearly Masterplan", tab3: "🛍️ Wishlist Decision", tab4: "⚡ System Rules",
+                tab1: "📅 Monthly Tracker", tab2: "🚀 Yearly Masterplan", tab3: "🛍️ Wishlist Decision",
                 topBase: "⚙️ Top-Level Strategy (Click numbers to edit)", saveStatus: "Settings saved!", resetBtn: "Reset All Panels",
                 iniTitle: "Initial Net Assets", iniDesc: "Starting point for projections",
                 incTitle: "Expected Monthly Income", incDesc: "Your fixed monthly inflow", fixTitle: "Fixed Outflows (Rent/Car)", fixDesc: "Non-reducible rigid expenses",
@@ -512,7 +479,7 @@
                 savTracker: "🏦 Monthly Savings Tracker", savDesc2: "At month-end, enter your actual savings to generate your compound asset curve.", savTotal: "Current Total Net Assets",
                 savNew: "📍 Add Record", savMonth: "Select Month", savAmt: "Actual Amount Saved", savBtn: "💾 Confirm & Update Chart",
                 savHist: "📜 Savings History", clearHist: "Clear History", noHist: "No records yet. Settle on the left to activate chart.", undo: "Undo",
-                planTitle: "Yearly Asset Compound Tracking Engine", planNote: "💡 Yearly projections are automatically calculated (x 12 months) from top-level settings.", planDesc: "Red line is actual assets. Dashed line is theoretical baseline based on target.",
+                planTitle: "Yearly Asset Compound Tracking Engine", planNote: "💡 Yearly projections can be edited directly. Changes will automatically sync to Monthly Tracker.", planDesc: "Red line is actual assets. Dashed line is theoretical baseline based on target.",
                 projInc: "Est. Yearly Income (12mo)", projFix: "Est. Yearly Fixed", projLiv: "Est. Yearly Living", projSav: "Theoretical Total Assets (12mo)",
                 chartTitle: "Dual-Track: Actual Net Assets (Red) vs Theoretical Baseline (Grey Dashed)", chartActual: "Actual Net Assets (Red)", chartTheory: "Theoretical Baseline (Based on Target)",
                 wishTitle: "🛍️ Wishlist Decision Engine", wishWarn: "Impact calculated based on monthly savings target", wishDesc: "More than math, it clarifies real needs. Fill data & justification, AI gives rational verdict.",
@@ -521,10 +488,6 @@
                 submitBtn: "⚖️ Submit for System Verdict", resultTitle: "📋 Financial & Emotional Verdict", saveResultBtn: "💾 Archive Record",
                 cpw: "Cost Per Use:", impact: "Impact on Monthly Target:", sysRead: "System read your justification: ",
                 archiveTitle: "📚 Decision Archive", searchArch: "🔍 Search keywords...", noArch: "No records.<br>Make rationality a habit.",
-                ruleTitle1: "Classic 3-Account Architecture", ruleMain: "Main Balance", ruleMainDesc: "Holds flexible living funds. Card swipes only see this low number to curb desire.",
-                ruleFix: "Fixed Bills", ruleFixDesc: "Forced transfers for rent/loans on payday. Absolutely locked until deduction day.", ruleSav: "Savings", ruleSavDesc: "Unshakeable savings target. Red growth. Never touch unless emergency.",
-                ruleTitle2: "⚙️ Core Operational Rules", rule1: "Annual Procurement Protocol:", rule1Desc: "Wishlist = Favorites. Non-asset consumables bought only during major sales. Sell old before buying new.",
-                rule2: "72-Hour Cooling Off:", rule2Desc: "Non-essentials > daily budget wait 3 days in cart. Dopamine fades naturally.", rule3: "Repair over Replace:", rule3Desc: "Mend and clean old items first. Derive longer pride from maintaining.",
                 aiTopConflict: "Top-Level Conflict", aiTopConflictDesc: "Income doesn't cover Fixed+Savings+Budget. Deficit: ",
                 aiLivWarn: "Living Budget Warning", aiLivWarnDesc: "Flexible budget over 50% consumed, reduce frequency.", aiMelt: "Fund Meltdown", aiMeltDesc: "Overspent! Enter extreme survival mode immediately.",
                 aiSafe: "Healthy Operation", aiSafeDesc: "Metrics meet strategic expectations. Keep discipline.",
@@ -535,7 +498,7 @@
             },
             ru: {
                 appTitle: "FCC Консоль личных финансов", appSub: "Financial Control Center (Универсальный) - Данные сохранены",
-                tab1: "📅 Ежемесячно", tab2: "🚀 Годовой план", tab3: "🛍️ Решения", tab4: "⚡ Правила",
+                tab1: "📅 Ежемесячно", tab2: "🚀 Годовой план", tab3: "🛍️ Решения",
                 topBase: "⚙️ Стратегия верхнего уровня (Нажмите для ред.)", saveStatus: "Сохранено!", resetBtn: "Сбросить все панели",
                 iniTitle: "Начальные чистые активы", iniDesc: "Начальная точка для графиков",
                 incTitle: "Ожидаемый доход в месяц", incDesc: "Ваш фиксированный приток", fixTitle: "Фиксированные расходы", fixDesc: "Жесткие расходы (Аренда/Авто)",
@@ -545,7 +508,7 @@
                 savTracker: "🏦 Ежемесячный трекер сбережений", savDesc2: "В конце месяца введите фактические сбережения для создания кривой активов.", savTotal: "Текущие общие чистые активы",
                 savNew: "📍 Добавить запись", savMonth: "Выберите месяц", savAmt: "Фактическая сумма", savBtn: "💾 Подтвердить и обновить",
                 savHist: "📜 История сбережений", clearHist: "Очистить", noHist: "Нет записей. Заполните слева для активации графика.", undo: "Отмена",
-                planTitle: "Механизм отслеживания сложных активов", planNote: "💡 Годовые прогнозы автоматически рассчитываются (х 12 мес.) из базовых настроек.", planDesc: "Красная линия - факт. Пунктирная - теория на основе цели.",
+                planTitle: "Механизм отслеживания сложных активов", planNote: "💡 Годовые прогнозы можно редактировать. Изменения синхронизируются с Ежемесячным трекером.", planDesc: "Красная линия - факт. Пунктирная - теория на основе цели.",
                 projInc: "Ожид. доход (12м)", projFix: "Ожид. фикс. расходы", projLiv: "Ожид. расходы на жизнь", projSav: "Теор. общие активы (12м)",
                 chartTitle: "Фактические активы (Красный) vs Базовый уровень (Серый)", chartActual: "Факт. чистые активы", chartTheory: "Теор. база (на основе цели)",
                 wishTitle: "🛍️ Механизм решений списка желаний", wishWarn: "Влияние рассчитывается на основе цели сбережений", wishDesc: "Заполните данные и обоснуйте, ИИ вынесет рациональный вердикт.",
@@ -554,10 +517,6 @@
                 submitBtn: "⚖️ Отправить на вердикт системы", resultTitle: "📋 Финансовый и эмоциональный вердикт", saveResultBtn: "💾 Сохранить в архив",
                 cpw: "Стоимость за исп.:", impact: "Влияние на цель:", sysRead: "Система прочитала ваше обоснование: ",
                 archiveTitle: "📚 Архив решений", searchArch: "🔍 Поиск...", noArch: "Нет записей.<br>Сделайте рациональность привычкой.",
-                ruleTitle1: "Классическая 3-счетовая архитектура", ruleMain: "Основной баланс", ruleMainDesc: "Для гибких расходов. Виден только этот низкий баланс для сдерживания желаний.",
-                ruleFix: "Фиксированные счета", ruleFixDesc: "Принудительные переводы на аренду/кредиты. Абсолютно заблокированы до дня списания.", ruleSav: "Сбережения", ruleSavDesc: "Непоколебимая цель. Накопление активов. Не трогать без экстренной нужды.",
-                ruleTitle2: "⚙️ Основные правила", rule1: "Годовой протокол закупок:", rule1Desc: "Покупки неактивов только на распродажах. Продай старое перед покупкой нового.",
-                rule2: "72 часа на охлаждение:", rule2Desc: "Несущественные покупки ждут 3 дня в корзине.", rule3: "Ремонт вместо замены:", rule3Desc: "Сначала чини. Гордость за поддержание вещей.",
                 aiTopConflict: "Конфликт верхнего уровня", aiTopConflictDesc: "Доход не покрывает Фикс+Сбережения+Бюджет. Дефицит: ",
                 aiLivWarn: "Предупреждение бюджета", aiLivWarnDesc: "Гибкий бюджет израсходован более чем на 50%, снизьте частоту.", aiMelt: "Крах фонда", aiMeltDesc: "Перерасход! Немедленно перейдите в режим выживания.",
                 aiSafe: "Здоровая работа", aiSafeDesc: "Показатели в норме. Соблюдайте дисциплину.",
@@ -583,6 +542,16 @@
         function changeLanguage(lang, updateData = true) {
             currentLang = lang;
             localStorage.setItem('fcc_lang', lang);
+            
+            // 动态切换字体逻辑
+            if (lang === 'en') {
+                document.body.style.fontFamily = "'Calibri', sans-serif";
+            } else if (lang === 'ru') {
+                document.body.style.fontFamily = "'Roboto', sans-serif";
+            } else {
+                document.body.style.fontFamily = "'Noto Sans SC', sans-serif";
+            }
+
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
@@ -625,7 +594,7 @@
         const getStr = (id) => document.getElementById(id).value || '';
 
         // --- 月度追踪 ---
-        const genericStorageKey = 'fcc_generic_monthly_v3';
+        const genericStorageKey = 'fcc_generic_monthly_v4';
         const defaultMonthly = { 
             g_ini: 120, g_inc: 1900, g_fix: 1000, g_sav: 500, g_bud: 300, 
             n_cat1: '🛒 餐饮/食材 Food', n_cat2: '🧴 杂费/日用 Misc', n_cat3: '🎉 娱乐/社交 Ent',
@@ -709,10 +678,21 @@
             generateAIReport(data, totalRemain, totalPct, totalBudget);
             updateMasterPlanProjections(data.g_inc, data.g_fix, data.g_bud, data.g_sav, data.g_ini);
             
-            // 如果在Tab 1修改了起步资金，也要同步刷新打卡总计
             if(typeof savingsRecords !== 'undefined') {
                 renderSavingsTracker(); 
             }
+        }
+
+        function updateFromYearly() {
+            const yInc = parseFloat(document.getElementById('proj-income-inp').value) || 0;
+            const yFix = parseFloat(document.getElementById('proj-fixed-inp').value) || 0;
+            const yLiv = parseFloat(document.getElementById('proj-living-inp').value) || 0;
+            
+            document.getElementById('gen-income').value = (yInc / 12).toFixed(2);
+            document.getElementById('gen-fixed').value = (yFix / 12).toFixed(2);
+            document.getElementById('gen-budget').value = (yLiv / 12).toFixed(2);
+            
+            updateMonthlyDashboard(true);
         }
 
         function generateAIReport(data, totalRemain, totalPct, totalBudget) {
@@ -732,7 +712,6 @@
 
         // --- 全局数据计算与图表引擎 ---
         Chart.defaults.color = '#94A3B8'; 
-        Chart.defaults.font.family = "'Noto Sans SC', sans-serif";
         let myChart = null;
         
         function getNext12Months() {
@@ -750,10 +729,9 @@
         }
 
         function updateMasterPlanProjections(inc, fix, bud, sav, ini) {
-            document.getElementById('proj-income').innerText = `+${formatMoney(inc * 12)}`;
-            document.getElementById('proj-fixed').innerText = `-${formatMoney(fix * 12)}`;
-            document.getElementById('proj-living').innerText = `-${formatMoney(bud * 12)}`;
-            // 期末总资产 = 初始净资产 + (每月储蓄 * 12)
+            document.getElementById('proj-income-inp').value = (inc * 12).toFixed(2);
+            document.getElementById('proj-fixed-inp').value = (fix * 12).toFixed(2);
+            document.getElementById('proj-living-inp').value = (bud * 12).toFixed(2);
             document.getElementById('proj-savings').innerText = `${formatMoney(ini + (sav * 12))}`;
             
             if(typeof savingsRecords !== 'undefined') {
@@ -771,11 +749,9 @@
             const monthKeys = monthData.map(m => m.key);
             const displayLabels = monthData.map(m => m.display);
 
-            // 1. 理论基准线计算 (包含初始资金)
             let projectedData = []; let pAsset = initialAsset; 
             for(let i=0; i<12; i++) { pAsset += targetSav; projectedData.push(pAsset); } 
 
-            // 2. 实际打卡线计算 (包含初始资金)
             let actualData = []; let cumulative = initialAsset; let lastRecordedIndex = -1;
 
             for(let i=0; i<monthKeys.length; i++) {
@@ -796,6 +772,11 @@
             }
 
             if (myChart) myChart.destroy();
+            
+            // 动态设置图表字体
+            let chartFont = currentLang === 'en' ? "'Calibri', sans-serif" : (currentLang === 'ru' ? "'Roboto', sans-serif" : "'Noto Sans SC', sans-serif");
+            Chart.defaults.font.family = chartFont;
+
             myChart = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: {
@@ -814,13 +795,13 @@
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
-                    scales: { y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } }, x: { grid: { display: false } } }
+                    scales: { y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, beginAtZero: true }, x: { grid: { display: false } } }
                 }
             });
         }
 
         // --- 实际存款打卡逻辑 ---
-        const savingsStorageKey = 'fcc_generic_savings_v2';
+        const savingsStorageKey = 'fcc_generic_savings_v4';
         let savingsRecords = [];
 
         function loadSavingsTracker() {
@@ -875,7 +856,7 @@
             if (!listEl || !totalEl) return;
 
             const initialAsset = getVal('gen-initial');
-            let total = initialAsset; // 打卡总计包含初始起步资金
+            let total = initialAsset; 
             let html = '';
             
             if (savingsRecords.length === 0) {
@@ -900,7 +881,7 @@
         }
 
         // --- 心愿单：申论与决断 ---
-        const wishlistStorageKey = 'fcc_generic_wishlist_v2';
+        const wishlistStorageKey = 'fcc_generic_wishlist_v4';
         let wishlistHistory = [];
         let currentDecision = null;
 
@@ -1016,11 +997,9 @@
         // --- 初始化 ---
         window.onload = () => {
             setTimeout(() => {
-                // 初始化选择器状态
                 document.getElementById('lang-selector').value = currentLang;
                 document.getElementById('currency-selector').value = currentCur;
                 
-                // 执行初始化翻译和加载
                 changeLanguage(currentLang, false);
                 changeCurrency(currentCur, false);
                 
