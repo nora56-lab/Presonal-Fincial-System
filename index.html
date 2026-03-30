@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTFx-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人财务控制台 / L'Élégance Financière</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,12 +25,17 @@
         }
 
         body { 
-            font-family: 'Lato', sans-serif; 
+            font-family: 'Lato', 'Roboto', 'Noto Sans SC', sans-serif; 
             background-color: var(--bg-color); 
             color: var(--text-main); 
             -webkit-font-smoothing: antialiased;
             letter-spacing: 0.02em;
             overflow-x: hidden;
+        }
+
+        .font-num, input[type="number"] {
+            font-family: 'Montserrat', sans-serif !important;
+            letter-spacing: 0;
         }
 
         h1, h2, h3, h4, .serif {
@@ -39,7 +44,6 @@
         }
 
         input, select, textarea {
-            font-family: 'Lato', sans-serif;
             background: transparent;
             color: var(--text-main);
         }
@@ -91,7 +95,6 @@
             border: none; 
             border-bottom: 1px solid transparent;
             color: var(--text-main);
-            font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             padding: 0; 
             width: 100%; 
@@ -182,7 +185,7 @@
         select.elegant-select:hover { color: var(--text-main); }
         
         /* ==========================================
-           🐾 宠物系统 CSS 🐾
+           🐾 宠物系统 CSS (游戏化交互 & 多重状态) 🐾
            ========================================== */
         
         #pet-modal {
@@ -225,32 +228,84 @@
             height: 80px;
             z-index: 9998;
             pointer-events: none; 
-            transition: transform 4s ease-in-out; 
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08));
             display: none; 
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
         #wandering-pet.active {
             display: block;
         }
+
+        #pet-flipper {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes petWalk {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-4deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(4deg); }
+        }
+        .pet-walking {
+            animation: petWalk 0.5s infinite;
+        }
+
+        /* 炸毛抖动动画 */
+        @keyframes petShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px) rotate(-3deg); }
+            75% { transform: translateX(3px) rotate(3deg); }
+        }
+        .animate-shake {
+            animation: petShake 0.3s infinite;
+        }
+
+        #pet-action-menu {
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        #pet-action-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col relative">
+<body class="min-h-screen flex flex-col relative" onclick="closePetMenu()">
 
     <div id="pet-modal">
-        <h2 class="text-3xl text-main serif italic mb-2">Choose Your Companion</h2>
+        <h2 class="text-3xl text-main mb-2 font-bold" data-i18n="choosePetTitle">Choose Your Companion</h2>
         <p class="text-sm text-[#8A8782] mb-12 tracking-widest uppercase">选择一只陪伴你记账的小生灵</p>
         
         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-8 px-6 max-w-5xl" id="pet-roster">
         </div>
     </div>
 
-    <div id="wandering-pet"></div>
+    <div id="wandering-pet">
+        <div id="pet-chat" class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white border border-[#EAE8E3] rounded-lg px-3 py-1.5 text-xs font-bold text-[#8A8782] shadow-sm opacity-0 transition-opacity whitespace-nowrap z-20 pointer-events-none"></div>
+        
+        <div id="pet-action-menu" class="absolute -top-12 left-1/2 -translate-x-1/2 bg-white/95 border border-[#EAE8E3] rounded-full px-3 py-1.5 shadow-md flex gap-3 opacity-0 pointer-events-none z-20">
+            <span class="cursor-pointer hover:scale-125 transition-transform" onclick="doPetAction('eat', event)">🍖</span>
+            <span class="cursor-pointer hover:scale-125 transition-transform" onclick="doPetAction('drink', event)">💧</span>
+            <span class="cursor-pointer hover:scale-125 transition-transform" onclick="doPetAction('sleep', event)">💤</span>
+            <span class="cursor-pointer hover:scale-125 transition-transform" onclick="doPetAction('play', event)">🎾</span>
+        </div>
+
+        <div id="pet-flipper" class="w-full h-full pointer-events-auto cursor-pointer" onclick="togglePetMenu(event)">
+            <div id="pet-sprite" class="w-full h-full"></div>
+        </div>
+    </div>
 
     <header class="header-glass sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-center">
             <div class="flex flex-col items-center md:items-start mb-4 md:mb-0">
-                <h1 class="text-2xl text-main tracking-wide serif" data-i18n="appTitle">L'Élégance Financière</h1>
-                <p class="text-[10px] text-muted uppercase tracking-widest mt-1" data-i18n="appSub">Personal Finance Control Center</p>
+                <div class="flex items-center space-x-3">
+                    <svg class="w-8 h-8 text-[#C2A878]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2c-1.103 0-2 .897-2 2v1H8c-1.103 0-2 .897-2 2v3h12V7c0-1.103-.897-2-2-2h-2V4c0-1.103-.897-2-2-2zm-1 3V4h2v1h-2zm-3 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-8 6v4c0 1.103.897 2 2 2h8c1.103 0 2-.897 2-2v-4H6z"/>
+                    </svg>
+                    <div>
+                        <h1 class="text-xl text-main font-bold tracking-wide" data-i18n="appSub">Financial Control Center</h1>
+                    </div>
+                </div>
             </div>
             
             <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
@@ -281,7 +336,7 @@
         <div id="tab-monthly" class="tab-content block space-y-10">
             
             <div class="flex justify-between items-end px-2 border-b border-[#EAE8E3] pb-4">
-                <h2 class="text-xl text-main serif italic"><span data-i18n="topBase">Strategic Parameters</span></h2>
+                <h2 class="text-xl text-main font-bold"><span data-i18n="topBase">Strategic Parameters</span></h2>
                 <div class="text-xs flex items-center space-x-4">
                     <span id="save-status" class="opacity-0 transition-opacity text-[#8B9E8B] tracking-wider uppercase text-[10px]" data-i18n="saveStatus">Saved</span>
                     <button onclick="resetMonthlyData()" class="btn-ghost text-[10px] tracking-wider uppercase pb-0.5" data-i18n="resetBtn">
@@ -295,21 +350,21 @@
                     <p class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-4" data-i18n="iniTitle">Initial Assets</p>
                     <div class="flex items-center">
                         <span class="mr-1 cur-sym text-[#8A8782] text-sm font-light">£</span>
-                        <input type="number" id="gen-initial" value="0" class="top-input text-[#8CA6B4]" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-initial" value="0" class="top-input font-num text-[#8CA6B4]" onchange="updateMonthlyDashboard()">
                     </div>
                 </div>
                 <div class="bg-white p-8 flex flex-col justify-center">
                     <p class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-4" data-i18n="incTitle">Monthly Income</p>
                     <div class="flex items-center">
                         <span class="mr-1 cur-sym text-[#8A8782] text-sm font-light">£</span>
-                        <input type="number" id="gen-income" value="1900" class="top-input" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-income" value="1900" class="top-input font-num" onchange="updateMonthlyDashboard()">
                     </div>
                 </div>
                 <div class="bg-white p-8 flex flex-col justify-center">
                     <p class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-4" data-i18n="fixRent">Fixed Outflow</p>
                     <div class="flex items-center">
                         <span class="mr-1 cur-sym text-[#8A8782] text-sm font-light">£</span>
-                        <input type="number" id="gen-fixed" value="880" class="top-input text-[#C98A8A]" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-fixed" value="880" class="top-input font-num text-[#C98A8A]" onchange="updateMonthlyDashboard()">
                     </div>
                 </div>
                 <div class="bg-white p-8 flex flex-col justify-center">
@@ -318,33 +373,33 @@
                     </p>
                     <div class="flex items-center">
                         <span class="mr-1 cur-sym text-[#8A8782] text-sm font-light">£</span>
-                        <input type="number" id="gen-savings" value="500" class="top-input text-[#8B9E8B]" readonly>
+                        <input type="number" id="gen-savings" value="500" class="top-input font-num text-[#8B9E8B]" readonly>
                     </div>
                 </div>
                 <div class="bg-white p-8 flex flex-col justify-center relative shadow-inner">
                     <p class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-4" data-i18n="budTitle">Living Budget</p>
                     <div class="flex items-center">
                         <span class="mr-1 cur-sym text-[#8A8782] text-sm font-light">£</span>
-                        <input type="number" id="gen-budget" value="520" class="top-input text-[#C2A878]" onchange="updateMonthlyDashboard()">
+                        <input type="number" id="gen-budget" value="520" class="top-input font-num text-[#C2A878]" onchange="updateMonthlyDashboard()">
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
                 <div class="french-panel lg:col-span-7">
-                    <h3 class="text-lg text-main serif italic mb-8" data-i18n="dailyArea">Detailed Allocation</h3>
+                    <h3 class="text-lg text-main font-bold mb-8" data-i18n="dailyArea">Detailed Allocation</h3>
                     
                     <div class="mb-10">
                         <div class="flex justify-between text-xs uppercase tracking-widest text-[#8A8782] mb-3">
                             <span data-i18n="defenseLine">Total Budget</span>
-                            <span id="disp-total-remain" class="text-[#8B9E8B]">余 520.00</span>
+                            <span id="disp-total-remain" class="text-[#8B9E8B] font-num">余 520.00</span>
                         </div>
                         <div class="progress-wrapper mb-3">
                             <div id="bar-total" class="progress-bar" style="width: 0%"></div>
                         </div>
                         <div class="flex justify-between text-[10px] text-[#8A8782]">
-                            <span><span data-i18n="totalOut">Outflow:</span> <span id="disp-total-spent" class="font-bold text-[#2D2C2A]">0.00</span></span>
-                            <span><span data-i18n="totalPct">Consumed:</span> <span id="disp-total-pct" class="font-bold text-[#2D2C2A]">0%</span></span>
+                            <span><span data-i18n="totalOut">Outflow:</span> <span id="disp-total-spent" class="font-bold text-[#2D2C2A] font-num">0.00</span></span>
+                            <span><span data-i18n="totalPct">Consumed:</span> <span id="disp-total-pct" class="font-bold text-[#2D2C2A] font-num">0%</span></span>
                         </div>
                     </div>
 
@@ -355,18 +410,18 @@
                                 <div class="group">
                                     <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-2 gap-2">
                                         <div class="flex-1 border-b border-transparent group-hover:border-[#EAE8E3] transition-colors pb-1">
-                                            <input type="text" id="name-cat${index}" value="${defaultName}" class="bg-transparent border-none text-sm text-[#2D2C2A] w-full focus:outline-none" onchange="updateMonthlyDashboard()">
+                                            <input type="text" id="name-cat${index}" value="${defaultName}" class="bg-transparent border-none text-sm text-[#2D2C2A] font-bold w-full focus:outline-none" onchange="updateMonthlyDashboard()">
                                         </div>
                                         <div class="flex items-center space-x-4 text-xs pb-1">
                                             <div class="flex items-center text-[#8A8782]">
                                                 <span class="mr-2" data-i18n="budget">Bud.</span>
-                                                <input type="number" id="bud-cat${index}" value="${defaultBud}" class="fcc-input w-14 text-center" onchange="updateMonthlyDashboard()">
+                                                <input type="number" id="bud-cat${index}" value="${defaultBud}" class="fcc-input font-num w-14 text-center" onchange="updateMonthlyDashboard()">
                                             </div>
                                             <div class="flex items-center text-[#8A8782]">
                                                 <span class="mr-2" data-i18n="spent">Spn.</span>
-                                                <input type="number" id="exp-cat${index}" value="0" class="fcc-input w-16 text-center text-[#C98A8A]" onchange="updateMonthlyDashboard()">
+                                                <input type="number" id="exp-cat${index}" value="0" class="fcc-input font-num w-16 text-center text-[#C98A8A]" onchange="updateMonthlyDashboard()">
                                             </div>
-                                            <span id="stat-cat${index}" class="text-[#8B9E8B] w-12 text-right"><span data-i18n="remain">余</span> 0</span>
+                                            <span id="stat-cat${index}" class="text-[#8B9E8B] font-num w-16 text-right"><span data-i18n="remain">余</span> 0.00</span>
                                         </div>
                                     </div>
                                     <div class="progress-wrapper">
@@ -396,20 +451,18 @@
                         <h3 class="text-sm text-[#8A8782] uppercase tracking-widest mb-1 w-full text-center" data-i18n="petTitle">Companion Status</h3>
                         <p class="text-[10px] text-[#D1CEC7] mb-6 w-full text-center" data-i18n="petDesc">Your Financial Pet</p>
                         
-                        <!-- 修复：补回显示宠物SVG的主容器 -->
-                        <div class="h-20 w-20 flex items-center justify-center mb-4 transition-all duration-500" id="pet-visual">
+                        <div class="h-20 w-20 flex items-center justify-center mb-4 transition-all duration-500" id="pet-visual-static">
                         </div>
                         
                         <div class="text-center w-full">
-                            <!-- 修复：补回显示宠物名字的元素 -->
-                            <p class="text-sm font-bold text-[#8B9E8B] mb-2 font-serif italic" id="pet-name"></p>
+                            <p class="text-sm font-bold text-[#8B9E8B] mb-2" id="pet-name"></p>
                             <p class="text-xs text-[#8A8782]" id="pet-dialogue">...</p>
                         </div>
                         
                         <div class="w-full mt-6">
                             <div class="flex justify-between text-[8px] text-[#D1CEC7] uppercase tracking-widest mb-1">
-                                <span>Level <span id="pet-level">1</span></span>
-                                <span>Next: <span id="pet-next-goal">1000</span></span>
+                                <span>Level <span id="pet-level" class="font-num">1</span></span>
+                                <span>Next: <span id="pet-next-goal" class="font-num">1000</span></span>
                             </div>
                             <div class="progress-wrapper !h-1 !bg-[#EAE8E3]">
                                 <div id="pet-exp-bar" class="progress-bar !bg-[#C2A878]" style="width: 0%"></div>
@@ -433,12 +486,12 @@
             <div class="french-panel mt-6 relative overflow-hidden">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b border-[#EAE8E3] pb-6">
                     <div>
-                        <h3 class="text-2xl text-main serif italic mb-2"><span data-i18n="savTracker">Monthly Savings Record</span></h3>
+                        <h3 class="text-2xl text-main font-bold mb-2"><span data-i18n="savTracker">Monthly Savings Record</span></h3>
                         <p class="text-xs text-[#8A8782] tracking-wide" data-i18n="savDesc2">Log true savings to build the compound curve.</p>
                     </div>
                     <div class="mt-4 md:mt-0 text-left md:text-right">
                         <div class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-1" data-i18n="savTotal">Net Asset Value</div>
-                        <div class="text-3xl font-light text-[#8B9E8B]" id="disp-savings-total">£0.00</div>
+                        <div class="text-3xl font-light text-[#8B9E8B] font-num" id="disp-savings-total">£0.00</div>
                     </div>
                 </div>
                 
@@ -448,11 +501,11 @@
                         <div class="space-y-5">
                             <div>
                                 <label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-2" data-i18n="savMonth">Month</label>
-                                <input type="month" id="save-month-input" class="fcc-input w-full text-sm">
+                                <input type="month" id="save-month-input" class="fcc-input font-num w-full text-sm">
                             </div>
                             <div>
                                 <label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-2" data-i18n="savAmt">Amount Saved</label>
-                                <input type="number" id="save-amount-input" class="fcc-input w-full text-sm" placeholder="0.00">
+                                <input type="number" id="save-amount-input" class="fcc-input font-num w-full text-sm" placeholder="0.00">
                             </div>
                             <div class="pt-4">
                                 <button onclick="addSavingsRecord()" class="btn-chic w-full" data-i18n="savBtn">
@@ -469,7 +522,7 @@
                         </h4>
                         <div class="flex-grow">
                             <div class="max-h-[220px] overflow-y-auto space-y-px" id="savings-history-list">
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -479,7 +532,7 @@
         <div id="tab-masterplan" class="tab-content hidden space-y-8">
             <div class="french-panel">
                 <div class="max-w-3xl mb-12">
-                    <h2 class="text-3xl text-main serif italic mb-4" data-i18n="planTitle">The Masterplan Radar</h2>
+                    <h2 class="text-3xl text-main font-bold mb-4" data-i18n="planTitle">The Masterplan Radar</h2>
                     <p class="text-[#8A8782] text-xs uppercase tracking-widest" data-i18n="planDesc">Actual vs. Theoretical Trajectory</p>
                 </div>
 
@@ -488,35 +541,35 @@
                         <div class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-3" data-i18n="projInc">Yearly Income</div>
                         <div class="flex justify-center text-lg">
                             <span class="mr-1 cur-sym text-[#8CA6B4] font-light">£</span>
-                            <input type="number" id="proj-income-inp" class="top-input text-center text-[#8CA6B4]" onchange="updateFromYearly()">
+                            <input type="number" id="proj-income-inp" class="top-input font-num text-center text-[#8CA6B4]" onchange="updateFromYearly()">
                         </div>
                     </div>
                     <div class="bg-white p-6 text-center">
                         <div class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-3" data-i18n="projFix">Yearly Fixed</div>
                         <div class="flex justify-center text-lg">
                             <span class="mr-1 cur-sym text-[#C98A8A] font-light">£</span>
-                            <input type="number" id="proj-fixed-inp" class="top-input text-center text-[#C98A8A]" onchange="updateFromYearly()">
+                            <input type="number" id="proj-fixed-inp" class="top-input font-num text-center text-[#C98A8A]" onchange="updateFromYearly()">
                         </div>
                     </div>
                     <div class="bg-white p-6 text-center">
                         <div class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-3" data-i18n="projLiv">Yearly Living</div>
                         <div class="flex justify-center text-lg">
                             <span class="mr-1 cur-sym text-[#C2A878] font-light">£</span>
-                            <input type="number" id="proj-living-inp" class="top-input text-center text-[#C2A878]" onchange="updateFromYearly()">
+                            <input type="number" id="proj-living-inp" class="top-input font-num text-center text-[#C2A878]" onchange="updateFromYearly()">
                         </div>
                     </div>
                     <div class="bg-white p-6 text-center">
                         <div class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-3" data-i18n="projBonus">Extra Yield</div>
                         <div class="flex justify-center text-lg">
                             <span class="mr-1 cur-sym text-[#8CA6B4] font-light">£</span>
-                            <input type="number" id="proj-bonus-inp" value="0" class="top-input text-center text-[#8CA6B4]" onchange="updateFromYearly()">
+                            <input type="number" id="proj-bonus-inp" value="0" class="top-input font-num text-center text-[#8CA6B4]" onchange="updateFromYearly()">
                         </div>
                     </div>
                     <div class="bg-[#FAF9F6] p-6 text-center">
                         <div class="text-[10px] text-[#8B9E8B] uppercase tracking-widest font-bold mb-3" data-i18n="projSav">Term Asset Target</div>
                         <div class="flex justify-center text-2xl mt-1">
                             <span class="mr-1 cur-sym text-[#8B9E8B] font-light">£</span>
-                            <span id="proj-savings" class="text-[#8B9E8B] font-light">0.00</span>
+                            <span id="proj-savings" class="text-[#8B9E8B] font-light font-num">0.00</span>
                         </div>
                     </div>
                 </div>
@@ -531,7 +584,7 @@
             <div class="french-panel">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-[#EAE8E3] pb-6">
                     <div>
-                        <h2 class="text-3xl text-main serif italic mb-2" data-i18n="wishTitle">Rational Appraiser</h2>
+                        <h2 class="text-3xl text-main font-bold mb-2" data-i18n="wishTitle">Rational Appraiser</h2>
                         <p class="text-[#8A8782] text-xs tracking-wide" data-i18n="wishDesc">Submit attributes & justification for an objective verdict.</p>
                     </div>
                     <div class="mt-4 md:mt-0">
@@ -545,16 +598,16 @@
                             <div>
                                 <h4 class="text-[#8CA6B4] text-xs font-bold uppercase tracking-widest mb-4 pb-2 border-b border-[#EAE8E3]" data-i18n="itemA">Option A</h4>
                                 <div class="space-y-4">
-                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameA" class="fcc-input w-full" data-i18n="name"></div>
-                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="price">Price</label><input type="number" id="priceA" class="fcc-input w-full" placeholder="0"></div>
+                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameA" class="fcc-input font-bold w-full" data-i18n="name"></div>
+                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="price">Price</label><input type="number" id="priceA" class="fcc-input font-num w-full" placeholder="0"></div>
                                     <div class="grid grid-cols-2 gap-4">
-                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="uses">Uses/Yr</label><input type="number" id="usesA" class="fcc-input w-full" placeholder="0"></div>
-                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="years">Years</label><input type="number" id="yearsA" class="fcc-input w-full" placeholder="0"></div>
+                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="uses">Uses/Yr</label><input type="number" id="usesA" class="fcc-input font-num w-full" placeholder="0"></div>
+                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="years">Years</label><input type="number" id="yearsA" class="fcc-input font-num w-full" placeholder="0"></div>
                                     </div>
                                     <div class="pt-2">
                                         <div class="flex justify-between items-center mb-2">
                                             <label class="text-[10px] text-[#8A8782] uppercase tracking-wider" data-i18n="emotion">Desire (1-10)</label>
-                                            <span class="text-[#8CA6B4] text-sm font-bold" id="emotionA_val">5</span>
+                                            <span class="text-[#8CA6B4] text-sm font-bold font-num" id="emotionA_val">5</span>
                                         </div>
                                         <input type="range" id="emotionA" min="1" max="10" value="5" class="w-full accent-[#8CA6B4] cursor-pointer" oninput="document.getElementById('emotionA_val').innerText = this.value">
                                     </div>
@@ -564,16 +617,16 @@
                             <div>
                                 <h4 class="text-[#C2A878] text-xs font-bold uppercase tracking-widest mb-4 pb-2 border-b border-[#EAE8E3]" data-i18n="itemB">Option B</h4>
                                 <div class="space-y-4">
-                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameB" class="fcc-input w-full" data-i18n="name"></div>
-                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="price">Price</label><input type="number" id="priceB" class="fcc-input w-full" placeholder="0"></div>
+                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameB" class="fcc-input font-bold w-full" data-i18n="name"></div>
+                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="price">Price</label><input type="number" id="priceB" class="fcc-input font-num w-full" placeholder="0"></div>
                                     <div class="grid grid-cols-2 gap-4">
-                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="uses">Uses/Yr</label><input type="number" id="usesB" class="fcc-input w-full" placeholder="0"></div>
-                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="years">Years</label><input type="number" id="yearsB" class="fcc-input w-full" placeholder="0"></div>
+                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="uses">Uses/Yr</label><input type="number" id="usesB" class="fcc-input font-num w-full" placeholder="0"></div>
+                                        <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="years">Years</label><input type="number" id="yearsB" class="fcc-input font-num w-full" placeholder="0"></div>
                                     </div>
                                     <div class="pt-2">
                                         <div class="flex justify-between items-center mb-2">
                                             <label class="text-[10px] text-[#8A8782] uppercase tracking-wider" data-i18n="emotion">Desire (1-10)</label>
-                                            <span class="text-[#C2A878] text-sm font-bold" id="emotionB_val">5</span>
+                                            <span class="text-[#C2A878] text-sm font-bold font-num" id="emotionB_val">5</span>
                                         </div>
                                         <input type="range" id="emotionB" min="1" max="10" value="5" class="w-full accent-[#C2A878] cursor-pointer" oninput="document.getElementById('emotionB_val').innerText = this.value">
                                     </div>
@@ -594,7 +647,7 @@
 
                         <div id="decision-result" class="hidden mt-10 p-8 bg-[#FAF9F6] border border-[#EAE8E3]">
                             <div class="flex justify-between items-end mb-8 border-b border-[#EAE8E3] pb-4">
-                                <h3 class="text-xl text-main serif italic" data-i18n="resultTitle">Appraisal Result</h3>
+                                <h3 class="text-xl text-main font-bold" data-i18n="resultTitle">Appraisal Result</h3>
                                 <button onclick="saveToWishlistHistory()" class="btn-ghost text-[10px]" data-i18n="saveResultBtn">
                                     Archive
                                 </button>
@@ -605,22 +658,22 @@
                                     <h4 id="resultA-name" class="text-[#8CA6B4] font-bold text-sm mb-3" data-i18n="itemA">Option A</h4>
                                     <div class="flex justify-between text-xs text-[#8A8782] mb-1">
                                         <span data-i18n="cpw">CPW:</span>
-                                        <span class="text-[#2D2C2A] font-bold"><span class="cur-sym text-[10px] font-normal">£</span><span id="resultA-cpw">0.00</span></span>
+                                        <span class="text-[#2D2C2A] font-bold"><span class="cur-sym text-[10px] font-normal">£</span><span id="resultA-cpw" class="font-num">0.00</span></span>
                                     </div>
                                     <div class="flex justify-between text-xs text-[#8A8782]">
                                         <span data-i18n="impact">Impact:</span>
-                                        <span id="resultA-impact-text" class="text-[#C98A8A] font-bold">0%</span>
+                                        <span id="resultA-impact-text" class="text-[#C98A8A] font-bold font-num">0%</span>
                                     </div>
                                 </div>
                                 <div>
                                     <h4 id="resultB-name" class="text-[#C2A878] font-bold text-sm mb-3" data-i18n="itemB">Option B</h4>
                                     <div class="flex justify-between text-xs text-[#8A8782] mb-1">
                                         <span data-i18n="cpw">CPW:</span>
-                                        <span class="text-[#2D2C2A] font-bold"><span class="cur-sym text-[10px] font-normal">£</span><span id="resultB-cpw">0.00</span></span>
+                                        <span class="text-[#2D2C2A] font-bold"><span class="cur-sym text-[10px] font-normal">£</span><span id="resultB-cpw" class="font-num">0.00</span></span>
                                     </div>
                                     <div class="flex justify-between text-xs text-[#8A8782]">
                                         <span data-i18n="impact">Impact:</span>
-                                        <span id="resultB-impact-text" class="text-[#C98A8A] font-bold">0%</span>
+                                        <span id="resultB-impact-text" class="text-[#C98A8A] font-bold font-num">0%</span>
                                     </div>
                                 </div>
                             </div>
@@ -637,7 +690,7 @@
                     <div class="lg:col-span-5 flex flex-col h-[800px] border-l border-[#EAE8E3] pl-8">
                         <h3 class="text-[#2D2C2A] font-bold text-xs uppercase tracking-widest mb-6 flex justify-between items-center">
                             <span data-i18n="archiveTitle">Archive</span>
-                            <span id="history-count" class="text-[#8A8782] font-light">0</span>
+                            <span id="history-count" class="text-[#8A8782] font-light font-num">0</span>
                         </h3>
                         <input type="text" id="search-history" placeholder="Search..." class="fcc-input w-full mb-6 text-sm" oninput="renderWishlistHistory()" data-i18n="searchArch">
                         
@@ -744,28 +797,41 @@
         const petTexts = {
             zh: {
                 title: "Le Compagnon", desc: "您的财务伴侣",
-                moodSurplus: "状态：安逸沉睡", moodWarn: "状态：警觉注视", moodDanger: "状态：炸毛警告",
-                txtSurplus: "它正安详地睡在您的结余上...", txtWarn: "它察觉到您的预算正在飞速流失...", txtDanger: "它因您的超支而愤怒炸毛！",
-                lv1: "L'Enfant (幼崽)", lv2: "Le Flâneur (漫步者)", lv3: "L'Aristocrate (贵族)", lv4: "Le Baron (男爵)"
+                txtRich: "它戴上了墨镜，觉得你是个富豪！",
+                txtHappy: "存款充足，它现在非常开心！",
+                txtAngry: "存款不足500，它焦虑得炸毛了！",
+                txtSleep: "存款归零，它陷入了安逸的沉睡...",
+                txtDead: "负债累累，它已经 dead 了 (RIP)...",
+                actEat: "美味的加餐！", actDrink: "吨吨吨...", actSleep: "Zzz...", actPlay: "好开心！",
+                lv1: "L'Enfant (幼崽)", lv2: "Le Flâneur (漫步者)", lv3: "L'Aristocrate (贵族)", lv4: "Le Baron (大亨)"
             },
             en: {
                 title: "Le Compagnon", desc: "Your Financial Companion",
-                moodSurplus: "Status: Sleeping peacefully", moodWarn: "Status: Staring intently", moodDanger: "Status: Hissing",
-                txtSurplus: "Sleeping peacefully on your savings...", txtWarn: "Staring intently at your draining budget...", txtDanger: "Hissing at your overspending!",
+                txtRich: "It put on shades, feeling like a boss!",
+                txtHappy: "Plenty of savings, very happy!",
+                txtAngry: "Savings < 500, it's getting frizzy!",
+                txtSleep: "Zero savings, sleeping peacefully...",
+                txtDead: "In debt... It has passed away (RIP).",
+                actEat: "Yummy!", actDrink: "Glug glug...", actSleep: "Zzz...", actPlay: "So fun!",
                 lv1: "L'Enfant", lv2: "Le Flâneur", lv3: "L'Aristocrate", lv4: "Le Baron"
             },
             ru: {
                 title: "Le Compagnon", desc: "Ваш питомец",
-                moodSurplus: "Статус: Спит", moodWarn: "Статус: Смотрит", moodDanger: "Статус: Шипит",
-                txtSurplus: "Спит на ваших сбережениях...", txtWarn: "Смотрит на ваш тающий бюджет...", txtDanger: "Шипит из-за перерасхода!",
+                txtRich: "Надел очки, чувствует себя богачом!",
+                txtHappy: "Сбережений много, он очень рад!",
+                txtAngry: "Сбережений < 500, он нервничает!",
+                txtSleep: "Сбережения на нуле, он спит...",
+                txtDead: "В долгах... Он покинул нас (RIP).",
+                actEat: "Вкусно!", actDrink: "Буль-буль...", actSleep: "Zzz...", actPlay: "Весело!",
                 lv1: "Котёнок", lv2: "Бродяга", lv3: "Аристократ", lv4: "Барон"
             }
         };
 
         const i18n = {
             zh: {
-                appTitle: "L'Élégance Financière", appSub: "Personal Finance Control Center",
+                appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
                 tab1: "月度追踪", tab2: "全景推演", tab3: "决断引擎",
+                choosePetTitle: "选择您的财务伴侣",
                 topBase: "战略基石 (参数设定)", saveStatus: "已保存", resetBtn: "重置",
                 iniTitle: "初始底仓", iniDesc: "推演起步金",
                 incTitle: "月度总入账", incDesc: "固定薪水", 
@@ -795,11 +861,14 @@
                 winDataA: "更具性价比：[A] (CPW更低)", winDataB: "更具性价比：[B] (CPW更低)", winTie: "数据平局。请遵从内心的真实渴望。",
                 wishWarnText: "警报：两项均超过月储蓄的50%，将对财务系统造成重创。", wishWait: "建议：标价较高，请搁置72小时后再做定夺。", wishOk: "安全：在预算承受范围内，若非冲动可允许购入。",
                 totalExceed: "全局超支",
+                petDeadAlert: "宠物已经 dead 了 (RIP)，无法互动...",
+                petSleepAlert: "宠物正在沉睡，除了陪它睡觉外不要吵醒它...",
                 cat1: "I. 交通出行 (Transport)", cat2: "II. 餐饮食材 (Groceries)", cat3: "III. 护肤消耗 (Personal Care)", cat4: "IV. 衣物服饰 (Lifestyle)", cat5: "V. 社交外食 (Dining Out)"
             },
             en: {
-                appTitle: "L'Élégance Financière", appSub: "Personal Finance Control Center",
+                appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
                 tab1: "Tracker", tab2: "Masterplan", tab3: "Appraise",
+                choosePetTitle: "Choose Your Companion",
                 topBase: "Strategic Parameters", saveStatus: "Saved", resetBtn: "Reset",
                 iniTitle: "Initial Base", iniDesc: "Starting point",
                 incTitle: "Monthly Income", incDesc: "Fixed inflow", 
@@ -829,11 +898,14 @@
                 winDataA: "Better Value: [A] (Lower CPW)", winDataB: "Better Value: [B] (Lower CPW)", winTie: "Tie in value. Follow your genuine desire.",
                 wishWarnText: "ALERT: Both exceed 50% of savings goal.", wishWait: "ADVICE: High cost. Enforce 72h cooldown.", wishOk: "SAFE: Within acceptable limits. Proceed if justified.",
                 totalExceed: "Total Deficit",
+                petDeadAlert: "The pet has passed away (RIP), cannot interact...",
+                petSleepAlert: "The pet is sleeping, don't wake it up except to sleep with it...",
                 cat1: "I. Transport", cat2: "II. Groceries", cat3: "III. Personal Care", cat4: "IV. Lifestyle", cat5: "V. Dining Out"
             },
             ru: {
-                appTitle: "L'Élégance Financière", appSub: "Personal Finance Control Center",
+                appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
                 tab1: "Трекер", tab2: "План", tab3: "Оценка",
+                choosePetTitle: "Выберите питомца",
                 topBase: "Стратегия", saveStatus: "Сохранено", resetBtn: "Сброс",
                 iniTitle: "База", iniDesc: "Старт",
                 incTitle: "Доход", incDesc: "Приток", 
@@ -863,6 +935,8 @@
                 winDataA: "Выгоднее: [A]", winDataB: "Выгоднее: [B]", winTie: "Ничья. Слушайте сердце.",
                 wishWarnText: "АЛЕРТ: > 50% сбережений.", wishWait: "СОВЕТ: Дорого. Ждите 72ч.", wishOk: "БЕЗОПАСНО: Можно брать.",
                 totalExceed: "Дефицит",
+                petDeadAlert: "Питомец уже мертв (RIP), взаимодействие невозможно...",
+                petSleepAlert: "Питомец спит, не будите его...",
                 cat1: "I. Транспорт", cat2: "II. Продукты", cat3: "III. Уход за собой", cat4: "IV. Одежда и стиль", cat5: "V. Развлечения"
             }
         };
@@ -873,6 +947,8 @@
         
         let currentPet = localStorage.getItem('fcc_selected_pet');
         let wanderingInterval = null;
+        let isPetMenuOpen = false;
+        let isPetBusy = false;
 
         function t(key) { return i18n[currentLang][key] || i18n['zh'][key] || key; }
         function formatMoney(amount) { return `${parseFloat(amount).toFixed(2)}`; }
@@ -882,12 +958,12 @@
             localStorage.setItem('fcc_lang', lang);
             
             if (lang === 'en') {
-                document.body.style.fontFamily = "'Lato', sans-serif";
+                document.body.style.fontFamily = "'Lato', 'Roboto', sans-serif";
                 document.querySelectorAll('.serif').forEach(el => el.style.fontFamily = "'Playfair Display', serif");
             } else if (lang === 'ru') {
-                document.body.style.fontFamily = "'Roboto', sans-serif";
+                document.body.style.fontFamily = "'Roboto', 'Lato', sans-serif";
             } else {
-                document.body.style.fontFamily = "'Lato', 'Noto Sans SC', sans-serif";
+                document.body.style.fontFamily = "'Lato', 'Roboto', 'Noto Sans SC', sans-serif";
                 document.querySelectorAll('.serif').forEach(el => el.style.fontFamily = "'Playfair Display', 'Noto Sans SC', serif");
             }
 
@@ -941,7 +1017,7 @@
         const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
         const getStr = (id) => document.getElementById(id).value || '';
 
-        const genericStorageKey = 'fcc_french_monthly_v8';
+        const genericStorageKey = 'fcc_french_monthly_v12';
         const defaultMonthly = { 
             g_ini: 120, g_inc: 1900, g_fix: 880, g_bud: 520, g_bon: 0,
             n_cat1: 'I. 交通出行 (Transport)', n_cat2: 'II. 餐饮食材 (Groceries)', n_cat3: 'III. 护肤消耗 (Personal Care)', n_cat4: 'IV. 衣物服饰 (Lifestyle)', n_cat5: 'V. 社交外食 (Dining Out)',
@@ -978,6 +1054,41 @@
             }
         }
 
+        // --- 🐾 宠物系统逻辑 (带五阶资产状态) 🐾 ---
+        
+        function getPetVisualHTML(petType, totalAssets) {
+            let svgHtml = petSVGs[petType] || '';
+            let overlayHtml = '';
+            let svgStyle = '';
+
+            if (totalAssets > 5000) {
+                // 富豪墨镜
+                overlayHtml = `<span class="absolute text-[3rem]" style="top: 48%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10;">🕶️</span>`;
+                svgStyle = 'filter: drop-shadow(0 0 12px rgba(194, 168, 120, 0.8));';
+            } else if (totalAssets >= 500) {
+                // 开心
+                overlayHtml = `<span class="absolute text-2xl" style="top: 0; right: -10px; pointer-events: none; z-index: 10;">✨</span>`;
+            } else if (totalAssets > 0) {
+                // 炸毛
+                overlayHtml = `<span class="absolute text-2xl" style="top: 0; right: -10px; pointer-events: none; z-index: 10;">💢</span>`;
+            } else if (totalAssets === 0) {
+                // 沉睡
+                overlayHtml = `<span class="absolute text-3xl text-blue-300" style="top: -10px; right: -15px; pointer-events: none; z-index: 10;">💤</span>`;
+                svgStyle = 'filter: brightness(0.8) sepia(0.3) hue-rotate(180deg);';
+            } else {
+                // Dead
+                overlayHtml = `<span class="absolute text-4xl" style="top: -30px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 10;">👼</span>`;
+                svgStyle = 'transform: scaleY(-1); filter: grayscale(1) opacity(0.7);';
+            }
+
+            return `
+                <div class="relative w-full h-full flex items-center justify-center transition-all duration-500" style="${svgStyle}">
+                    ${svgHtml}
+                    ${overlayHtml}
+                </div>
+            `;
+        }
+
         function initPetSystem() {
             const roster = document.getElementById('pet-roster');
             roster.innerHTML = '';
@@ -1010,64 +1121,215 @@
             const wanderEl = document.getElementById('wandering-pet');
             if (!currentPet) return;
             
-            wanderEl.innerHTML = petSVGs[currentPet];
             wanderEl.classList.add('active');
-            
             if (wanderingInterval) clearInterval(wanderingInterval);
             
             let posX = window.innerWidth / 2;
             let posY = window.innerHeight / 2;
+            wanderEl.style.transform = `translate(${posX}px, ${posY}px)`;
             
+            let currentFlipped = false;
+
             function move() {
+                if (isPetBusy) {
+                    wanderingInterval = setTimeout(move, 2000);
+                    return;
+                }
+
+                let totalAssets = getVal('gen-initial');
+                if (typeof savingsRecords !== 'undefined' && savingsRecords && savingsRecords.length > 0) {
+                    totalAssets += savingsRecords.reduce((sum, rec) => sum + rec.amount, 0);
+                }
+
+                if (totalAssets <= 0) {
+                    // 如果死了或者沉睡，停止游荡，躺在屏幕底部
+                    const targetX = window.innerWidth / 2;
+                    const targetY = window.innerHeight - 120;
+                    wanderEl.style.transition = `transform 3s ease-in-out`;
+                    wanderEl.style.transform = `translate(${targetX}px, ${targetY}px)`;
+                    
+                    const sprite = document.getElementById('pet-sprite');
+                    if(sprite) sprite.classList.remove('pet-walking', 'animate-shake');
+
+                    wanderingInterval = setTimeout(move, 5000);
+                    return;
+                }
+
                 const maxX = window.innerWidth - 100;
-                const maxY = window.innerHeight - 100;
+                // 限制活动高度在屏幕上方 80% 以防遮挡太多底部
+                const maxY = window.innerHeight - 100; 
                 const targetX = Math.max(20, Math.random() * maxX);
-                const targetY = Math.max(20, Math.random() * maxY);
+                const targetY = Math.max(20, Math.random() * Math.min(maxY, window.innerHeight * 0.8)); 
                 
                 const isFlipped = targetX < posX; 
+                const dist = Math.hypot(targetX - posX, targetY - posY);
+                const speed = 60; // 慢速优雅步调
+                const duration = Math.max(1, dist / speed);
                 
-                wanderEl.style.transform = `translate(${targetX}px, ${targetY}px) scaleX(${isFlipped ? -1 : 1})`;
+                wanderEl.style.transition = `transform ${duration}s linear`;
+                wanderEl.style.transform = `translate(${targetX}px, ${targetY}px)`;
+                
+                // 3D圆滚滚转身效果：跳一下再转身
+                const flipper = document.getElementById('pet-flipper');
+                if (flipper && currentFlipped !== isFlipped) {
+                    flipper.style.transition = 'transform 0.15s ease-out';
+                    flipper.classList.add('-translate-y-4');
+                    setTimeout(() => {
+                        flipper.style.transform = `scaleX(${isFlipped ? -1 : 1})`;
+                        flipper.classList.remove('-translate-y-4');
+                    }, 150);
+                    currentFlipped = isFlipped;
+                }
+                
+                const sprite = document.getElementById('pet-sprite');
+                if(sprite) {
+                    sprite.classList.add('pet-walking');
+                    sprite.classList.remove('animate-shake'); // 行走时不炸毛抖动
+                }
                 
                 posX = targetX;
                 posY = targetY;
                 
-                wanderingInterval = setTimeout(move, 4000 + Math.random() * 4000);
+                setTimeout(() => {
+                    if(sprite) {
+                        sprite.classList.remove('pet-walking');
+                        // 如果停下来且属于炸毛状态，恢复抖动
+                        if (totalAssets > 0 && totalAssets < 500) {
+                            sprite.classList.add('animate-shake');
+                        }
+                    }
+                }, duration * 1000);
+
+                wanderingInterval = setTimeout(move, duration * 1000 + 4000 + Math.random() * 4000);
             }
             
             setTimeout(move, 500);
         }
 
-        function updatePetStatus(totalRemain, totalBudget, totalAssets) {
-            if (!currentPet) return;
-            
-            const pct = totalBudget > 0 ? (totalRemain / totalBudget) : 0;
-            const petLang = petTexts[currentLang];
-            
-            let moodObj = { face: petLang.moodSurplus, text: petLang.txtSurplus, color: '#8B9E8B' }; 
-            
-            if (totalRemain < 0) {
-                moodObj = { face: petLang.moodDanger, text: petLang.txtDanger, color: '#C98A8A' }; 
-            } else if (pct < 0.2) {
-                moodObj = { face: petLang.moodWarn, text: petLang.txtWarn, color: '#C2A878' }; 
+        function togglePetMenu(e) {
+            e.stopPropagation();
+            if (isPetBusy) return;
+            const menu = document.getElementById('pet-action-menu');
+            isPetMenuOpen = !isPetMenuOpen;
+            if (isPetMenuOpen) {
+                menu.classList.remove('opacity-0', 'pointer-events-none');
+                menu.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                menu.classList.add('opacity-0', 'pointer-events-none');
+                menu.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        }
+
+        function closePetMenu() {
+            if (isPetMenuOpen) {
+                isPetMenuOpen = false;
+                const menu = document.getElementById('pet-action-menu');
+                if(menu) {
+                    menu.classList.add('opacity-0', 'pointer-events-none');
+                    menu.classList.remove('opacity-100', 'pointer-events-auto');
+                }
+            }
+        }
+
+        function doPetAction(action, e) {
+            e.stopPropagation();
+            closePetMenu();
+
+            let totalAssets = getVal('gen-initial');
+            if (typeof savingsRecords !== 'undefined' && savingsRecords) {
+                totalAssets += savingsRecords.reduce((sum, rec) => sum + rec.amount, 0);
             }
 
-            const visualEl = document.getElementById('pet-visual');
+            if (totalAssets < 0) {
+                alert(t('petDeadAlert'));
+                return;
+            } else if (totalAssets === 0 && action !== 'sleep') {
+                alert(t('petSleepAlert'));
+                return;
+            }
+
+            isPetBusy = true;
+            const chat = document.getElementById('pet-chat');
+            const petLang = petTexts[currentLang];
+
+            let msg = '';
+            let emote = '';
+            if(action === 'eat') { msg = petLang.actEat; emote = '🍖 냠냠...'; }
+            if(action === 'drink') { msg = petLang.actDrink; emote = '💧 咕噜咕噜...'; }
+            if(action === 'sleep') { msg = petLang.actSleep; emote = '💤 Zzz...'; }
+            if(action === 'play') { msg = petLang.actPlay; emote = '🎾 开心！'; }
+
+            chat.innerText = emote;
+            chat.style.opacity = '1';
+
+            const dialogueEl = document.getElementById('pet-dialogue');
+            if(dialogueEl) dialogueEl.innerText = msg;
+
+            const flipper = document.getElementById('pet-flipper');
+            if(flipper && totalAssets > 0) {
+                flipper.classList.add('animate-bounce');
+            }
+            
+            setTimeout(() => {
+                if(flipper) flipper.classList.remove('animate-bounce');
+                chat.style.opacity = '0';
+                isPetBusy = false;
+                updateMonthlyDashboard(false); // 恢复默认心情对话
+            }, 3000);
+        }
+
+        function updatePetStatus(totalRemain, totalBudget, totalAssets) {
+            if (!currentPet || isPetBusy) return;
+            
+            const petLang = petTexts[currentLang];
+            let moodObj = {};
+            let extraClasses = '';
+
+            // 五阶资产状态判定
+            if (totalAssets > 5000) {
+                moodObj = { face: "😎", text: petLang.txtRich, color: '#C2A878' };
+            } else if (totalAssets >= 500) {
+                moodObj = { face: "🥰", text: petLang.txtHappy, color: '#8B9E8B' };
+            } else if (totalAssets > 0) {
+                moodObj = { face: "💢", text: petLang.txtAngry, color: '#C98A8A' };
+                extraClasses = 'animate-shake';
+            } else if (totalAssets === 0) {
+                moodObj = { face: "💤", text: petLang.txtSleep, color: '#8A8782' };
+            } else {
+                moodObj = { face: "👻", text: petLang.txtDead, color: '#475569' };
+            }
+
+            // 更新静态面板头像
+            const visualEl = document.getElementById('pet-visual-static');
             if (visualEl) {
-                visualEl.innerHTML = petSVGs[currentPet] || '';
-                visualEl.className = `h-20 flex items-center justify-center mb-4 transition-all duration-500 ${totalRemain < 0 ? 'animate-bounce' : ''}`;
-                visualEl.style.color = moodObj.color;
+                visualEl.innerHTML = getPetVisualHTML(currentPet, totalAssets);
+                visualEl.className = `h-20 w-20 flex items-center justify-center mb-4 transition-all duration-500 ${extraClasses}`;
+            }
+            
+            // 更新游荡宠物头像
+            const wanderSprite = document.getElementById('pet-sprite');
+            if (wanderSprite) {
+                wanderSprite.innerHTML = getPetVisualHTML(currentPet, totalAssets);
+                if (totalAssets > 0 && totalAssets < 500) {
+                    wanderSprite.classList.add('animate-shake');
+                } else {
+                    wanderSprite.classList.remove('animate-shake');
+                }
             }
             
             const dialogueEl = document.getElementById('pet-dialogue');
-            if (dialogueEl) dialogueEl.innerText = moodObj.face + " " + moodObj.text;
+            if (dialogueEl) {
+                dialogueEl.innerText = moodObj.face + " " + moodObj.text;
+                dialogueEl.style.color = moodObj.color;
+            }
 
-            let levelInfo = { lv: 1, name: petLang.lv1, next: 1000, currentExp: totalAssets };
-            if (totalAssets >= 10000) {
-                levelInfo = { lv: 4, name: petLang.lv4, next: 50000, currentExp: totalAssets };
-            } else if (totalAssets >= 5000) {
-                levelInfo = { lv: 3, name: petLang.lv3, next: 10000, currentExp: totalAssets };
+            let levelInfo = { lv: 1, name: petLang.lv1, next: 500 };
+            if (totalAssets > 5000) {
+                levelInfo = { lv: 4, name: petLang.lv4, next: 10000 };
             } else if (totalAssets >= 1000) {
-                levelInfo = { lv: 2, name: petLang.lv2, next: 5000, currentExp: totalAssets };
+                levelInfo = { lv: 3, name: petLang.lv3, next: 5000 };
+            } else if (totalAssets >= 500) {
+                levelInfo = { lv: 2, name: petLang.lv2, next: 1000 };
             }
 
             const nameEl = document.getElementById('pet-name');
@@ -1080,9 +1342,9 @@
             if (goalEl) goalEl.innerText = formatMoney(levelInfo.next);
             
             let prevCap = 0;
-            if(levelInfo.lv === 2) prevCap = 1000;
-            if(levelInfo.lv === 3) prevCap = 5000;
-            if(levelInfo.lv === 4) prevCap = 10000;
+            if(levelInfo.lv === 2) prevCap = 500;
+            if(levelInfo.lv === 3) prevCap = 1000;
+            if(levelInfo.lv === 4) prevCap = 5000;
             
             const expRange = levelInfo.next - prevCap;
             const expGained = totalAssets - prevCap;
@@ -1119,8 +1381,8 @@
                 const remain = bud - exp; const safePct = Math.min(bud > 0 ? (exp / bud * 100) : 100, 100);
                 document.getElementById(barId).style.width = safePct + '%';
                 const statEl = document.getElementById(statId); const barEl = document.getElementById(barId);
-                if (remain >= 0) { statEl.innerHTML = `${t('remain')} ${formatMoney(remain)}`; statEl.className = 'text-[#8B9E8B] text-xs font-bold w-16 text-right'; barEl.className = `progress-bar bg-up`; } 
-                else { statEl.innerHTML = `${t('overspent')} ${formatMoney(Math.abs(remain))}`; statEl.className = 'text-[#C98A8A] text-xs font-bold w-16 text-right'; barEl.className = `progress-bar bg-down`; }
+                if (remain >= 0) { statEl.innerHTML = `<span data-i18n="remain">余</span> ${formatMoney(remain)}`; statEl.className = 'text-[#8B9E8B] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-up`; } 
+                else { statEl.innerHTML = `<span data-i18n="overspent">超支</span> ${formatMoney(Math.abs(remain))}`; statEl.className = 'text-[#C98A8A] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-down`; }
             };
 
             let totalExp = 0;
@@ -1141,8 +1403,8 @@
             
             const totalRemainEl = document.getElementById('disp-total-remain'); const totalBarEl = document.getElementById('bar-total');
             document.getElementById('bar-total').style.width = Math.min(totalPct, 100) + '%';
-            if (totalRemain >= 0) { totalRemainEl.innerText = `${t('remain')} ` + formatMoney(totalRemain); totalRemainEl.className = 'text-[#8B9E8B]'; totalBarEl.className = 'progress-bar bg-up'; } 
-            else { totalRemainEl.innerText = `${t('totalExceed')} ` + formatMoney(Math.abs(totalRemain)); totalRemainEl.className = 'text-[#C98A8A]'; totalBarEl.className = 'progress-bar bg-down'; }
+            if (totalRemain >= 0) { totalRemainEl.innerHTML = `<span data-i18n="remain">余</span> ${formatMoney(totalRemain)}`; totalRemainEl.className = 'text-[#8B9E8B] font-num font-bold'; totalBarEl.className = 'progress-bar bg-up'; } 
+            else { totalRemainEl.innerHTML = `<span data-i18n="totalExceed">总超支</span> ${formatMoney(Math.abs(totalRemain))}`; totalRemainEl.className = 'text-[#C98A8A] font-num font-bold'; totalBarEl.className = 'progress-bar bg-down'; }
 
             let totalAssets = data.g_ini;
             if (typeof savingsRecords !== 'undefined' && savingsRecords && savingsRecords.length > 0) {
@@ -1156,7 +1418,6 @@
             generateAIReport(data, totalRemain, totalPct, totalBudget);
             updateMasterPlanProjections(data.g_inc, data.g_fix, data.g_bud, data.g_sav, data.g_ini, data.g_bon);
             updatePieChart(data); 
-            
         }
 
         function updatePieChart(data) {
@@ -1181,7 +1442,7 @@
                     colors.push(palette[i-1]);
                 }
             }
-            
+
             let chartFont = currentLang === 'en' ? "'Lato', sans-serif" : "'Lato', 'Noto Sans SC', sans-serif";
 
             new Chart(ctx.getContext('2d'), {
@@ -1209,7 +1470,7 @@
                             borderColor: '#EAE8E3',
                             borderWidth: 1,
                             titleFont: { family: chartFont, size: 11 },
-                            bodyFont: { family: chartFont, size: 11 },
+                            bodyFont: { family: "'Montserrat', sans-serif", size: 11 },
                             padding: 10,
                             cornerRadius: 2,
                             callbacks: {
@@ -1244,13 +1505,13 @@
             let html = '';
             const logicRemain = data.g_inc - data.g_fix - data.g_sav - data.g_bud;
             if (logicRemain < 0) {
-                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiTopConflict')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiTopConflictDesc')} ${formatMoney(Math.abs(logicRemain))}</p></div>`;
+                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiTopConflict')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiTopConflictDesc')} <span class="font-num">${formatMoney(Math.abs(logicRemain))}</span></p></div>`;
             }
 
             let currentTotalBudget = 0;
             for(let i=1; i<=5; i++) currentTotalBudget += data[`b_cat${i}`];
             if (currentTotalBudget > data.g_bud) {
-                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">Budget Overflow</p><p class="text-xs text-[#8A8782] mt-1">下方分类预算总和 (${formatMoney(currentTotalBudget)}) 已超过设定的生活总盘子 (${formatMoney(data.g_bud)})，请调整以免透支。</p></div>`;
+                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">Budget Overflow</p><p class="text-xs text-[#8A8782] mt-1">下方分类预算总和 (<span class="font-num">${formatMoney(currentTotalBudget)}</span>) 已超过设定的生活总盘子 (<span class="font-num">${formatMoney(data.g_bud)}</span>)，请调整以免透支。</p></div>`;
             }
 
             if (totalPct > 80 && totalRemain > 0) html += `<div class="border-l border-[#C2A878] pl-4 mb-3"><p class="text-xs font-bold text-[#C2A878] uppercase tracking-widest">${t('aiLivWarn')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiLivWarnDesc')}</p></div>`;
@@ -1328,7 +1589,7 @@
             
             let chartFont = currentLang === 'en' ? "'Lato', sans-serif" : "'Lato', 'Noto Sans SC', sans-serif";
 
-            new Chart(ctx.getContext('2d'), {
+            myChart = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: displayLabels,
@@ -1349,10 +1610,10 @@
                     responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { position: 'top', align: 'end', labels: { font: { family: chartFont, size: 10 }, color: '#8A8782', boxWidth: 10, usePointStyle: true } },
-                        tooltip: { backgroundColor: '#FFFFFF', titleColor: '#2D2C2A', bodyColor: '#8A8782', borderColor: '#EAE8E3', borderWidth: 1, padding: 10, cornerRadius: 2, titleFont: { family: chartFont }, bodyFont: { family: chartFont } }
+                        tooltip: { backgroundColor: '#FFFFFF', titleColor: '#2D2C2A', bodyColor: '#8A8782', borderColor: '#EAE8E3', borderWidth: 1, padding: 10, cornerRadius: 2, titleFont: { family: chartFont }, bodyFont: { family: "'Montserrat', sans-serif" } }
                     },
                     scales: { 
-                        y: { grid: { color: '#F0EEE9', drawBorder: false }, border: { dash: [4, 4] }, beginAtZero: true, ticks: { font: { family: chartFont, size: 10 }, color: '#8A8782' } }, 
+                        y: { grid: { color: '#F0EEE9', drawBorder: false }, border: { dash: [4, 4] }, beginAtZero: true, ticks: { font: { family: "'Montserrat', sans-serif", size: 10 }, color: '#8A8782' } }, 
                         x: { grid: { display: false }, ticks: { font: { family: chartFont, size: 10 }, color: '#8A8782' } } 
                     }
                 }
@@ -1428,8 +1689,8 @@
                     html += `
                     <div class="flex justify-between items-center py-3 border-b border-[#EAE8E3] group">
                         <div class="flex items-center space-x-6">
-                            <span class="text-[#8A8782] text-xs tracking-wider">${record.month}</span>
-                            <span class="font-bold text-[#2D2C2A] text-sm">${currentCur}${formatMoney(record.amount)}</span>
+                            <span class="text-[#8A8782] text-xs tracking-wider font-num">${record.month}</span>
+                            <span class="font-bold text-[#2D2C2A] text-sm font-num">${currentCur}${formatMoney(record.amount)}</span>
                         </div>
                         <button onclick="deleteSavingsRecord(${record.id})" class="text-[10px] text-[#8A8782] hover:text-[#C98A8A] transition-colors uppercase tracking-widest hidden group-hover:block">${t('undo')}</button>
                     </div>`;
@@ -1440,7 +1701,6 @@
             updateMasterChart(savingsRecords);
         }
 
-        // --- 心愿单：申论与决断 ---
         const wishlistStorageKey = 'fcc_french_wishlist_v4';
         let wishlistHistory = [];
         let currentDecision = null;
@@ -1537,11 +1797,11 @@
                 html += `
                 <div class="py-5 border-b border-[#EAE8E3] group relative">
                     <button onclick="deleteHistory(${record.id})" class="absolute top-5 right-0 text-[10px] text-[#8A8782] hover:text-[#C98A8A] hidden group-hover:block transition-colors uppercase tracking-widest">Remove</button>
-                    <div class="text-[10px] text-[#8A8782] font-bold tracking-wider uppercase mb-3">${record.date}</div>
+                    <div class="text-[10px] text-[#8A8782] font-bold tracking-wider uppercase mb-3 font-num">${record.date}</div>
                     <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold text-[#8CA6B4] truncate w-[45%]">${record.itemA.name} (${currentCur}${formatMoney(record.itemA.price)})</span>
+                        <span class="text-xs font-bold text-[#8CA6B4] truncate w-[45%]">${record.itemA.name} (<span class="font-num">${currentCur}${formatMoney(record.itemA.price)}</span>)</span>
                         <span class="text-[10px] font-light text-[#D1CEC7] uppercase tracking-widest mx-1">vs</span>
-                        <span class="text-xs font-bold text-[#C2A878] truncate w-[45%] text-right">(${currentCur}${formatMoney(record.itemB.price)}) ${record.itemB.name}</span>
+                        <span class="text-xs font-bold text-[#C2A878] truncate w-[45%] text-right">(<span class="font-num">${currentCur}${formatMoney(record.itemB.price)}</span>) ${record.itemB.name}</span>
                     </div>
                     <div class="text-xs text-[#2D2C2A] mb-2 font-medium">
                         ${record.winner}
@@ -1554,7 +1814,6 @@
             listEl.innerHTML = html;
         }
 
-        // --- 初始化 ---
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('lang-selector').value = currentLang;
