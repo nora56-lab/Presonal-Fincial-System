@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人财务控制台 / L'Élégance Financière</title>
+    <title>个人财务中央控制台 (Financial Control Center v5.3)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700;900&family=Montserrat:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         /* ==========================================
            🥐 FRENCH MINIMALIST CSS 🥐
@@ -171,7 +171,6 @@
             border-color: var(--accent-rose);
         }
 
-        /* 滚动条极简 */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); }
@@ -284,9 +283,20 @@
 
     <!-- 🐾 启动界面：宠物领养模态框 🐾 -->
     <div id="pet-modal">
-        <h2 class="text-3xl text-main mb-2 font-bold" data-i18n="choosePetTitle">Choose Your Companion</h2>
-        <p class="text-sm text-[#8A8782] mb-12 tracking-widest uppercase">选择一只陪伴你记账的小生灵</p>
-        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-8 px-6 max-w-5xl" id="pet-roster"></div>
+        <!-- 前置语言选择器 -->
+        <div class="absolute top-6 right-6 md:top-8 md:right-8 z-50">
+            <select id="lang-selector-modal" onchange="changeLanguage(this.value)" class="elegant-select bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-[#EAE8E3] shadow-sm text-xs font-bold text-main cursor-pointer outline-none">
+                <option value="zh">ZH 中文</option>
+                <option value="en">EN English</option>
+                <option value="ru">RU Русский</option>
+            </select>
+        </div>
+
+        <h2 class="text-3xl md:text-4xl text-main mb-3 font-bold text-center px-6 leading-snug" data-i18n="choosePetTitle">Choose Your Companion</h2>
+        <p class="text-xs md:text-sm text-[#8A8782] mb-10 md:mb-12 tracking-widest uppercase text-center px-6 max-w-xl leading-relaxed" data-i18n="choosePetDesc">选择一只陪伴你记账的小生灵</p>
+        
+        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6 md:gap-8 px-6 max-w-5xl" id="pet-roster">
+        </div>
     </div>
 
     <!-- 🐾 游荡宠物实体 🐾 -->
@@ -319,7 +329,7 @@
             
             <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
                 <div class="flex space-x-4 border-r border-[#EAE8E3] pr-6">
-                    <select id="lang-selector" onchange="changeLanguage(this.value)" class="elegant-select">
+                    <select id="lang-selector" onchange="changeLanguage(this.value)" class="elegant-select hidden md:block">
                         <option value="zh">ZH</option>
                         <option value="en">EN</option>
                         <option value="ru">RU</option>
@@ -521,7 +531,7 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 2: 年度全景推演 (The Master Plan) -->
+        <!-- TAB 2: 全景推演 (The Master Plan) -->
         <!-- ========================================== -->
         <div id="tab-masterplan" class="tab-content hidden space-y-8">
             <div class="french-panel">
@@ -645,7 +655,9 @@
                         <div id="decision-result" class="hidden mt-10 p-8 bg-[#FAF9F6] border border-[#EAE8E3]">
                             <div class="flex justify-between items-end mb-8 border-b border-[#EAE8E3] pb-4">
                                 <h3 class="text-xl text-main font-bold" data-i18n="resultTitle">Appraisal Result</h3>
-                                <button onclick="saveToWishlistHistory()" class="btn-ghost text-[10px]" data-i18n="saveResultBtn">Archive</button>
+                                <button onclick="saveToWishlistHistory()" class="btn-ghost text-[10px]" data-i18n="saveResultBtn">
+                                    Archive
+                                </button>
                             </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
@@ -688,6 +700,7 @@
                             <span id="history-count" class="text-[#8A8782] font-light font-num">0</span>
                         </h3>
                         <input type="text" id="search-history" placeholder="Search..." class="fcc-input w-full mb-6 text-sm" oninput="renderWishlistHistory()" data-i18n="searchArch">
+                        
                         <div id="history-list" class="flex-grow overflow-y-auto space-y-px">
                             <div class="text-center text-[#8A8782] text-xs mt-12 py-8 italic" data-i18n="noArch">The archive is empty.</div>
                         </div>
@@ -744,7 +757,7 @@
         const i18n = {
             zh: {
                 appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
-                tab1: "月度追踪", tab2: "全景推演", tab3: "决断引擎", choosePetTitle: "选择您的财务伴侣",
+                tab1: "月度追踪", tab2: "全景推演", tab3: "决断引擎", choosePetTitle: "选择您的财务伴侣", choosePetDesc: "选择一只陪伴你记账的小生灵",
                 topBase: "战略基石 (参数设定)", saveStatus: "已保存", resetBtn: "重置",
                 iniTitle: "初始底仓", iniDesc: "推演起步金", incTitle: "月度总入账", incDesc: "固定薪水", 
                 fixRent: "刚性支出", fixRentDesc: "房租等绝对开销", savTitle: "战略储蓄", savDesc: "系统自算结余", 
@@ -780,7 +793,7 @@
             },
             en: {
                 appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
-                tab1: "Tracker", tab2: "Masterplan", tab3: "Appraise", choosePetTitle: "Choose Your Companion",
+                tab1: "Tracker", tab2: "Masterplan", tab3: "Appraise", choosePetTitle: "Choose Your Companion", choosePetDesc: "Select a little companion for your financial journey",
                 topBase: "Strategic Parameters", saveStatus: "Saved", resetBtn: "Reset",
                 iniTitle: "Initial Base", iniDesc: "Starting point", incTitle: "Monthly Income", incDesc: "Fixed inflow", 
                 fixRent: "Fixed Outflow", fixRentDesc: "Rent & rigid costs", savTitle: "Target Savings", savDesc: "Auto-calculated", 
@@ -814,7 +827,7 @@
             },
             ru: {
                 appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
-                tab1: "Трекер", tab2: "План", tab3: "Оценка", choosePetTitle: "Выберите питомца",
+                tab1: "Трекер", tab2: "План", tab3: "Оценка", choosePetTitle: "Выберите компаньона", choosePetDesc: "Выберите маленького спутника для ваших финансов",
                 topBase: "Стратегия", saveStatus: "Сохранено", resetBtn: "Сброс",
                 iniTitle: "База", iniDesc: "Старт", incTitle: "Доход", incDesc: "Приток", 
                 fixRent: "Обязат.", fixRentDesc: "Жесткие траты", savTitle: "Сбережения", savDesc: "Авторасчет", 
@@ -886,6 +899,12 @@
             currentLang = lang;
             localStorage.setItem('fcc_lang', lang);
             
+            // 同步模态框和顶部导航栏的语言选择器
+            const selMain = document.getElementById('lang-selector');
+            const selModal = document.getElementById('lang-selector-modal');
+            if (selMain) selMain.value = lang;
+            if (selModal) selModal.value = lang;
+            
             if (lang === 'en') {
                 document.body.style.fontFamily = "'Lato', 'Roboto', sans-serif";
                 document.querySelectorAll('.serif').forEach(el => el.style.fontFamily = "'Playfair Display', serif");
@@ -945,8 +964,45 @@
             btn.classList.add('active'); 
         }
 
-        const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
-        const getStr = (id) => document.getElementById(id).value || '';
+        const getVal = (id) => {
+            const el = document.getElementById(id);
+            return el ? parseFloat(el.value) || 0 : 0;
+        };
+        const getStr = (id) => {
+            const el = document.getElementById(id);
+            return el ? el.value || '' : '';
+        };
+
+        function renderCategories() {
+            const container = document.getElementById('categories-container');
+            if (!container) return;
+            let html = '';
+            for(let i=1; i<=5; i++) {
+                html += `
+                <div class="group">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-2 gap-2">
+                        <div class="flex-1 border-b border-transparent group-hover:border-[#EAE8E3] transition-colors pb-1">
+                            <input type="text" id="name-cat${i}" data-i18n="catPlaceholder" placeholder="${t('catPlaceholder')}" class="bg-transparent border-none text-sm text-[#2D2C2A] font-bold w-full focus:outline-none" onchange="updateMonthlyDashboard()">
+                        </div>
+                        <div class="flex items-center space-x-4 text-xs pb-1">
+                            <div class="flex items-center text-[#8A8782]">
+                                <span class="mr-2" data-i18n="budget">${t('budget')}</span>
+                                <input type="number" id="bud-cat${i}" placeholder="0" class="fcc-input font-num w-14 text-center" onchange="updateMonthlyDashboard()">
+                            </div>
+                            <div class="flex items-center text-[#8A8782]">
+                                <span class="mr-2" data-i18n="spent">${t('spent')}</span>
+                                <input type="number" id="exp-cat${i}" placeholder="0" class="fcc-input font-num w-16 text-center text-[#C98A8A]" onchange="updateMonthlyDashboard()">
+                            </div>
+                            <span id="stat-cat${i}" class="text-[#8B9E8B] font-num w-16 text-right"><span data-i18n="remain">${t('remain')}</span> 0.00</span>
+                        </div>
+                    </div>
+                    <div class="progress-wrapper">
+                        <div id="bar-cat${i}" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
 
         // --- DASHBOARD FUNCTIONS ---
         function loadMonthlyData() {
@@ -961,9 +1017,12 @@
                 document.getElementById('proj-bonus-inp').value = data.g_bon || '';
 
                 for(let i=1; i<=5; i++) {
-                    document.getElementById(`name-cat${i}`).value = data[`n_cat${i}`] || '';
-                    document.getElementById(`bud-cat${i}`).value = data[`b_cat${i}`] || '';
-                    document.getElementById(`exp-cat${i}`).value = data[`e_cat${i}`] || '';
+                    const nameCat = document.getElementById(`name-cat${i}`);
+                    const budCat = document.getElementById(`bud-cat${i}`);
+                    const expCat = document.getElementById(`exp-cat${i}`);
+                    if(nameCat) nameCat.value = data[`n_cat${i}`] || '';
+                    if(budCat) budCat.value = data[`b_cat${i}`] || '';
+                    if(expCat) expCat.value = data[`e_cat${i}`] || '';
                 }
                 
                 updateMonthlyDashboard(false);
@@ -978,95 +1037,7 @@
             }
         }
 
-        function updateMonthlyDashboard(showAnim = true) {
-            const data = { 
-                g_ini: getVal('gen-initial'), g_inc: getVal('gen-income'), g_fix: getVal('gen-fixed'),
-                g_bud: getVal('gen-budget'), g_bon: getVal('proj-bonus-inp')
-            };
-            
-            for(let i=1; i<=5; i++) {
-                data[`n_cat${i}`] = getStr(`name-cat${i}`);
-                data[`b_cat${i}`] = getVal(`bud-cat${i}`);
-                data[`e_cat${i}`] = getVal(`exp-cat${i}`);
-            }
-
-            data.g_sav = data.g_inc - data.g_fix - data.g_bud;
-            document.getElementById('gen-savings').value = Number(data.g_sav.toFixed(4)) || '';
-
-            localStorage.setItem(genericStorageKey, JSON.stringify(data));
-            
-            if(showAnim) {
-                const status = document.getElementById('save-status');
-                status.classList.remove('opacity-0'); setTimeout(() => status.classList.add('opacity-0'), 2000);
-            }
-
-            const updateRow = (bud, exp, barId, statId) => {
-                const remain = bud - exp; const safePct = Math.min(bud > 0 ? (exp / bud * 100) : 100, 100);
-                document.getElementById(barId).style.width = safePct + '%';
-                const statEl = document.getElementById(statId); const barEl = document.getElementById(barId);
-                if (remain >= 0) { statEl.innerHTML = `<span data-i18n="remain">余</span> ${formatMoney(remain)}`; statEl.className = 'text-[#8B9E8B] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-up`; } 
-                else { statEl.innerHTML = `<span data-i18n="overspent">超支</span> ${formatMoney(Math.abs(remain))}`; statEl.className = 'text-[#C98A8A] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-down`; }
-            };
-
-            let totalExp = 0;
-            for(let i=1; i<=5; i++) {
-                updateRow(data[`b_cat${i}`], data[`e_cat${i}`], `bar-cat${i}`, `stat-cat${i}`);
-                totalExp += data[`e_cat${i}`];
-            }
-
-            const totalBudget = data.g_bud; 
-            const totalRemain = totalBudget - totalExp; 
-            const totalPct = totalBudget > 0 ? (totalExp / totalBudget) * 100 : 0;
-            
-            const dispTotalBudget = document.getElementById('disp-total-budget');
-            if(dispTotalBudget) dispTotalBudget.innerText = formatMoney(totalBudget);
-            
-            document.getElementById('disp-total-spent').innerText = formatMoney(totalExp); 
-            document.getElementById('disp-total-pct').innerText = `${formatMoney(totalPct)}%`;
-            
-            const totalRemainEl = document.getElementById('disp-total-remain'); const totalBarEl = document.getElementById('bar-total');
-            document.getElementById('bar-total').style.width = Math.min(totalPct, 100) + '%';
-            if (totalRemain >= 0) { totalRemainEl.innerHTML = `<span data-i18n="remain">余</span> ${formatMoney(totalRemain)}`; totalRemainEl.className = 'text-[#8B9E8B] font-num font-bold'; totalBarEl.className = 'progress-bar bg-up'; } 
-            else { totalRemainEl.innerHTML = `<span data-i18n="totalExceed">总超支</span> ${formatMoney(Math.abs(totalRemain))}`; totalRemainEl.className = 'text-[#C98A8A] font-num font-bold'; totalBarEl.className = 'progress-bar bg-down'; }
-
-            let totalAssets = data.g_ini;
-            if (typeof savingsRecords !== 'undefined' && savingsRecords && savingsRecords.length > 0) {
-                totalAssets = data.g_ini + savingsRecords.reduce((sum, rec) => sum + (rec.netAmount || 0), 0);
-            }
-            
-            const dispSavingsTotal = document.getElementById('disp-savings-total');
-            if (dispSavingsTotal) dispSavingsTotal.innerText = currentCur + formatMoney(totalAssets);
-
-            updatePetStatus(totalRemain, totalBudget, totalAssets);
-            generateAIReport(data, totalRemain, totalPct, totalBudget);
-            updateMasterPlanProjections(data.g_inc, data.g_fix, data.g_bud, data.g_sav, data.g_ini, data.g_bon);
-            updatePieChart(data); 
-        }
-
-        function generateAIReport(data, totalRemain, totalPct, totalBudget) {
-            const reportContainer = document.getElementById('ai-monthly-report'); 
-            if (!reportContainer) return;
-            
-            let html = '';
-            const logicRemain = data.g_inc - data.g_fix - data.g_sav - data.g_bud;
-            if (logicRemain < 0) {
-                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiTopConflict')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiTopConflictDesc')} <span class="font-num">${formatMoney(Math.abs(logicRemain))}</span></p></div>`;
-            }
-
-            let currentTotalBudget = 0;
-            for(let i=1; i<=5; i++) currentTotalBudget += data[`b_cat${i}`];
-            if (currentTotalBudget > data.g_bud) {
-                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">Budget Overflow</p><p class="text-xs text-[#8A8782] mt-1">下方分类预算总和 (<span class="font-num">${formatMoney(currentTotalBudget)}</span>) 已超过设定的生活总盘子 (<span class="font-num">${formatMoney(data.g_bud)}</span>)，请调整以免透支。</p></div>`;
-            }
-
-            if (totalPct > 80 && totalRemain > 0) html += `<div class="border-l border-[#C2A878] pl-4 mb-3"><p class="text-xs font-bold text-[#C2A878] uppercase tracking-widest">${t('aiLivWarn')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiLivWarnDesc')}</p></div>`;
-            if (totalRemain <= 0 && totalBudget > 0) html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiMelt')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiMeltDesc')}</p></div>`;
-            
-            if(html === '') html = `<div class="border-l border-[#8B9E8B] pl-4 mb-3"><p class="text-xs font-bold text-[#8B9E8B] uppercase tracking-widest">${t('aiSafe')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiSafeDesc')}</p></div>`;
-            reportContainer.innerHTML = html;
-        }
-
-        // --- PET SYSTEM ---
+        // --- 🐾 宠物系统逻辑 (带五阶资产状态) 🐾 ---
         function getPetVisualHTML(petType, totalAssets) {
             let svgHtml = petSVGs[petType] || '';
             let overlayHtml = '';
@@ -1283,21 +1254,27 @@
         function updatePetStatus(totalRemain, totalBudget, totalAssets) {
             if (!currentPet || isPetBusy) return;
             
-            const pct = totalBudget > 0 ? (totalRemain / totalBudget) : 0;
             const petLang = petTexts[currentLang];
-            
-            let moodObj = { face: petLang.moodSurplus, text: petLang.txtSurplus, color: '#8B9E8B' }; 
-            
-            if (totalRemain < 0) {
-                moodObj = { face: petLang.moodDanger, text: petLang.txtDanger, color: '#C98A8A' }; 
-            } else if (pct < 0.2) {
-                moodObj = { face: petLang.moodWarn, text: petLang.txtWarn, color: '#C2A878' }; 
+            let moodObj = {};
+            let extraClasses = '';
+
+            if (totalAssets > 5000) {
+                moodObj = { face: "😎", text: petLang.txtRich, color: '#C2A878' };
+            } else if (totalAssets >= 500) {
+                moodObj = { face: "🥰", text: petLang.txtHappy, color: '#8B9E8B' };
+            } else if (totalAssets > 0) {
+                moodObj = { face: "💢", text: petLang.txtAngry, color: '#C98A8A' };
+                extraClasses = 'animate-shake';
+            } else if (totalAssets === 0) {
+                moodObj = { face: "💤", text: petLang.txtSleep, color: '#8A8782' };
+            } else {
+                moodObj = { face: "👻", text: petLang.txtDead, color: '#475569' };
             }
 
             const visualEl = document.getElementById('pet-visual-static');
             if (visualEl) {
                 visualEl.innerHTML = getPetVisualHTML(currentPet, totalAssets);
-                visualEl.className = `h-20 w-20 flex items-center justify-center mb-4 transition-all duration-500 ${totalRemain < 0 ? 'animate-bounce' : ''}`;
+                visualEl.className = `h-20 w-20 flex items-center justify-center mb-4 transition-all duration-500 ${extraClasses}`;
             }
             
             const wanderSprite = document.getElementById('pet-sprite');
@@ -1347,8 +1324,86 @@
             if (expBarEl) expBarEl.style.width = `${expPct}%`;
         }
 
-        // --- CHART ENGINE ---
+        function updateMonthlyDashboard(showAnim = true) {
+            const data = { 
+                g_ini: getVal('gen-initial'), g_inc: getVal('gen-income'), g_fix: getVal('gen-fixed'),
+                g_bud: getVal('gen-budget'),
+                g_bon: getVal('proj-bonus-inp')
+            };
+            
+            for(let i=1; i<=5; i++) {
+                data[`n_cat${i}`] = getStr(`name-cat${i}`);
+                data[`b_cat${i}`] = getVal(`bud-cat${i}`);
+                data[`e_cat${i}`] = getVal(`exp-cat${i}`);
+            }
+
+            data.g_sav = data.g_inc - data.g_fix - data.g_bud;
+            document.getElementById('gen-savings').value = Number(data.g_sav.toFixed(4)) || '';
+
+            localStorage.setItem(genericStorageKey, JSON.stringify(data));
+            
+            if(showAnim) {
+                const status = document.getElementById('save-status');
+                status.classList.remove('opacity-0'); setTimeout(() => status.classList.add('opacity-0'), 2000);
+            }
+
+            const updateRow = (bud, exp, barId, statId) => {
+                const remain = bud - exp; const safePct = Math.min(bud > 0 ? (exp / bud * 100) : 100, 100);
+                const barEl = document.getElementById(barId);
+                const statEl = document.getElementById(statId);
+                if(barEl) barEl.style.width = safePct + '%';
+                
+                if(statEl && barEl) {
+                    if (remain >= 0) { statEl.innerHTML = `<span data-i18n="remain">${t('remain')}</span> ${formatMoney(remain)}`; statEl.className = 'text-[#8B9E8B] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-up`; } 
+                    else { statEl.innerHTML = `<span data-i18n="overspent">${t('overspent')}</span> ${formatMoney(Math.abs(remain))}`; statEl.className = 'text-[#C98A8A] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-down`; }
+                }
+            };
+
+            let totalExp = 0;
+            for(let i=1; i<=5; i++) {
+                updateRow(data[`b_cat${i}`], data[`e_cat${i}`], `bar-cat${i}`, `stat-cat${i}`);
+                totalExp += data[`e_cat${i}`];
+            }
+
+            const totalBudget = data.g_bud; 
+            const totalRemain = totalBudget - totalExp; 
+            const totalPct = totalBudget > 0 ? (totalExp / totalBudget) * 100 : 0;
+            
+            const dispTotalBudget = document.getElementById('disp-total-budget');
+            if(dispTotalBudget) dispTotalBudget.innerText = formatMoney(totalBudget);
+            
+            const dispTotalSpent = document.getElementById('disp-total-spent');
+            if(dispTotalSpent) dispTotalSpent.innerText = formatMoney(totalExp);
+            
+            const dispTotalPct = document.getElementById('disp-total-pct');
+            if(dispTotalPct) dispTotalPct.innerText = `${formatMoney(totalPct)}%`;
+            
+            const totalRemainEl = document.getElementById('disp-total-remain'); const totalBarEl = document.getElementById('bar-total');
+            if (totalBarEl) totalBarEl.style.width = Math.min(totalPct, 100) + '%';
+            if (totalRemainEl && totalBarEl) {
+                if (totalRemain >= 0) { totalRemainEl.innerHTML = `<span data-i18n="remain">${t('remain')}</span> ${formatMoney(totalRemain)}`; totalRemainEl.className = 'text-[#8B9E8B] font-num font-bold'; totalBarEl.className = 'progress-bar bg-up'; } 
+                else { totalRemainEl.innerHTML = `<span data-i18n="totalExceed">${t('totalExceed')}</span> ${formatMoney(Math.abs(totalRemain))}`; totalRemainEl.className = 'text-[#C98A8A] font-num font-bold'; totalBarEl.className = 'progress-bar bg-down'; }
+            }
+
+            let totalAssets = data.g_ini;
+            if (typeof savingsRecords !== 'undefined' && savingsRecords && savingsRecords.length > 0) {
+                totalAssets = data.g_ini + savingsRecords.reduce((sum, rec) => sum + (rec.netAmount || 0), 0);
+            }
+            
+            const dispSavingsTotal = document.getElementById('disp-savings-total');
+            if (dispSavingsTotal) dispSavingsTotal.innerText = currentCur + formatMoney(totalAssets);
+
+            if (typeof Chart !== 'undefined') {
+                updatePetStatus(totalRemain, totalBudget, totalAssets);
+                generateAIReport(data, totalRemain, totalPct, totalBudget);
+                updateMasterPlanProjections(data.g_inc, data.g_fix, data.g_bud, data.g_sav, data.g_ini, data.g_bon);
+                updatePieChart(data); 
+            }
+        }
+
         function updatePieChart(data) {
+            if (typeof Chart === 'undefined') return;
+
             const ctxId = 'expensePieChart';
             const ctx = document.getElementById(ctxId);
             if (!ctx) return;
@@ -1371,7 +1426,7 @@
                     colors.push(palette[i-1]);
                 }
             }
-            
+
             let chartFont = currentLang === 'en' ? "'Lato', sans-serif" : "'Lato', 'Noto Sans SC', sans-serif";
 
             new Chart(ctx.getContext('2d'), {
@@ -1427,6 +1482,29 @@
             updateMonthlyDashboard(true);
         }
 
+        function generateAIReport(data, totalRemain, totalPct, totalBudget) {
+            const reportContainer = document.getElementById('ai-monthly-report'); 
+            if (!reportContainer) return;
+            
+            let html = '';
+            const logicRemain = data.g_inc - data.g_fix - data.g_sav - data.g_bud;
+            if (logicRemain < 0) {
+                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiTopConflict')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiTopConflictDesc')} <span class="font-num">${formatMoney(Math.abs(logicRemain))}</span></p></div>`;
+            }
+
+            let currentTotalBudget = 0;
+            for(let i=1; i<=5; i++) currentTotalBudget += data[`b_cat${i}`];
+            if (currentTotalBudget > data.g_bud) {
+                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">Budget Overflow</p><p class="text-xs text-[#8A8782] mt-1">下方分类预算总和 (<span class="font-num">${formatMoney(currentTotalBudget)}</span>) 已超过设定的生活总盘子 (<span class="font-num">${formatMoney(data.g_bud)}</span>)，请调整以免透支。</p></div>`;
+            }
+
+            if (totalPct > 80 && totalRemain > 0) html += `<div class="border-l border-[#C2A878] pl-4 mb-3"><p class="text-xs font-bold text-[#C2A878] uppercase tracking-widest">${t('aiLivWarn')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiLivWarnDesc')}</p></div>`;
+            if (totalRemain <= 0 && totalBudget > 0) html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiMelt')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiMeltDesc')}</p></div>`;
+            
+            if(html === '') html = `<div class="border-l border-[#8B9E8B] pl-4 mb-3"><p class="text-xs font-bold text-[#8B9E8B] uppercase tracking-widest">${t('aiSafe')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiSafeDesc')}</p></div>`;
+            reportContainer.innerHTML = html;
+        }
+
         function getNext12Months() {
             let labels = [];
             let today = new Date();
@@ -1447,7 +1525,8 @@
             document.getElementById('proj-living-inp').value = Number((bud * 12).toFixed(4)) || '';
             
             const totalAssets = ini + (sav * 12) + bon;
-            document.getElementById('proj-savings').innerText = formatMoney(totalAssets);
+            const projSav = document.getElementById('proj-savings');
+            if (projSav) projSav.innerText = formatMoney(totalAssets);
             
             if(typeof savingsRecords !== 'undefined') {
                  updateMasterChart(savingsRecords);
@@ -1455,6 +1534,8 @@
         }
 
         function updateMasterChart(savingsArr) {
+            if (typeof Chart === 'undefined') return;
+
             const ctxId = 'masterPlanChart';
             const ctx = document.getElementById(ctxId);
             if (!ctx) return;
@@ -1545,7 +1626,8 @@
                 const today = new Date();
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
-                document.getElementById('save-month-input').value = `${yyyy}-${mm}`;
+                const smInput = document.getElementById('save-month-input');
+                if(smInput) smInput.value = `${yyyy}-${mm}`;
             } catch (e) { savingsRecords = []; }
         }
 
@@ -1571,13 +1653,7 @@
                 return;
             }
 
-            draftLedger.push({
-                id: Date.now(),
-                type: currentLedgerType,
-                amount: amt,
-                desc: desc
-            });
-
+            draftLedger.push({ id: Date.now(), type: currentLedgerType, amount: amt, desc: desc });
             localStorage.setItem(draftStorageKey, JSON.stringify(draftLedger));
             document.getElementById('ledger-amount').value = '';
             document.getElementById('ledger-desc').value = '';
@@ -1595,8 +1671,7 @@
             const totalEl = document.getElementById('draft-net-total');
             if (!listEl) return;
 
-            let net = 0;
-            let html = '';
+            let net = 0; let html = '';
 
             if (draftLedger.length === 0) {
                 html = `<div class="text-center text-[#8A8782] text-[10px] py-4 italic">${t('emptyDraft')}</div>`;
@@ -1623,35 +1698,20 @@
         }
 
         function archiveLedger() {
-            if (draftLedger.length === 0) {
-                alert(t('alertDraftEmpty'));
-                return;
-            }
-
+            if (draftLedger.length === 0) { alert(t('alertDraftEmpty')); return; }
             const monthInput = document.getElementById('save-month-input').value;
             if (!monthInput) { alert(t('alertSelectMonth')); return; }
 
             const existingIndex = savingsRecords.findIndex(r => r.month === monthInput);
             if (existingIndex !== -1) {
-                if(!confirm(`${monthInput} ${t('alertOverride')}`)) {
-                    return;
-                }
+                if(!confirm(`${monthInput} ${t('alertOverride')}`)) return;
             }
 
             let netAmount = draftLedger.reduce((sum, item) => sum + (item.amount * item.type), 0);
+            const newRecord = { id: Date.now(), month: monthInput, netAmount: netAmount, details: [...draftLedger] };
 
-            const newRecord = {
-                id: Date.now(),
-                month: monthInput,
-                netAmount: netAmount,
-                details: [...draftLedger]
-            };
-
-            if (existingIndex !== -1) {
-                savingsRecords[existingIndex] = newRecord;
-            } else {
-                savingsRecords.push(newRecord);
-            }
+            if (existingIndex !== -1) savingsRecords[existingIndex] = newRecord;
+            else savingsRecords.push(newRecord);
 
             savingsRecords.sort((a, b) => new Date(b.month) - new Date(a.month));
             localStorage.setItem(savingsStorageKey, JSON.stringify(savingsRecords));
@@ -1684,11 +1744,9 @@
             const detailsEl = document.getElementById(`archive-details-${id}`);
             const iconEl = document.getElementById(`toggle-icon-${id}`);
             if (detailsEl.classList.contains('hidden')) {
-                detailsEl.classList.remove('hidden');
-                iconEl.innerText = '▲';
+                detailsEl.classList.remove('hidden'); iconEl.innerText = '▲';
             } else {
-                detailsEl.classList.add('hidden');
-                iconEl.innerText = '▼';
+                detailsEl.classList.add('hidden'); iconEl.innerText = '▼';
             }
         }
 
@@ -1722,7 +1780,7 @@
                         <div class="flex justify-between items-center p-3 cursor-pointer hover:bg-[#FAF9F6] transition-colors" onclick="toggleArchiveDetails(${record.id})">
                             <div class="flex items-center space-x-4">
                                 <span class="text-[#8A8782] text-[10px] tracking-wider font-num">${record.month}</span>
-                                <span style="color: ${safeNetAmount >= 0 ? '#8B9E8B' : '#C98A8A'}" class="text-sm font-bold font-num">${safeNetAmount >= 0 ? '+' : ''}${formatMoney(safeNetAmount)}</span>
+                                <span style="color: ${safeNetAmount >= 0 ? '#8B9E8B' : '#C98A8A'}" class="text-sm font-bold font-num">${safeNetAmount >= 0 ? '+' : ''}${formatMoney(Math.abs(safeNetAmount))}</span>
                             </div>
                             <div class="flex space-x-3 items-center">
                                 <button onclick="deleteSavingsRecord(${record.id}, event)" class="text-[10px] text-[#C98A8A] hover:text-red-600 transition-colors uppercase tracking-widest opacity-0 group-hover:opacity-100">✕</button>
@@ -1849,23 +1907,46 @@
             listEl.innerHTML = html;
         }
 
-        // --- INIT ---
         window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('lang-selector').value = currentLang;
-                document.getElementById('currency-selector').value = currentCur;
-                
-                loadMonthlyData();
-                loadWishlistHistory();
-                loadDraftLedger(); 
-                loadSavingsTracker();
-
-                initPetSystem(); 
-
-                changeLanguage(currentLang, true);
-                changeCurrency(currentCur, true);
+            // Check if Chart.js is loaded correctly, wait if necessary
+            let checkChartInterval = setInterval(() => {
+                if (typeof Chart !== 'undefined') {
+                    clearInterval(checkChartInterval);
+                    initializeSystem();
+                }
             }, 100);
+
+            // Timeout after 3 seconds if Chart.js fails to load completely
+            setTimeout(() => {
+                clearInterval(checkChartInterval);
+                if (typeof Chart === 'undefined') {
+                    console.error("Chart.js failed to load. Continuing without charts.");
+                    initializeSystem();
+                }
+            }, 3000);
         };
+
+        function initializeSystem() {
+            const langSel = document.getElementById('lang-selector');
+            const langSelModal = document.getElementById('lang-selector-modal');
+            const curSel = document.getElementById('currency-selector');
+            
+            if (langSel) langSel.value = currentLang;
+            if (langSelModal) langSelModal.value = currentLang;
+            if (curSel) curSel.value = currentCur;
+            
+            renderCategories(); 
+
+            loadMonthlyData();
+            loadWishlistHistory();
+            loadDraftLedger(); 
+            loadSavingsTracker();
+
+            initPetSystem(); 
+
+            changeLanguage(currentLang, true);
+            changeCurrency(currentCur, true);
+        }
     </script>
 </body>
 </html>
