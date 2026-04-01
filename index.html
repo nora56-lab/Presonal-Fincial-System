@@ -3,31 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人财务中央控制台 (Financial Control Center v5.3)</title>
+    <title>个人财务中央控制台 (Financial Control Center v5.4)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700;900&family=Montserrat:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* ==========================================
-           🥐 FRENCH MINIMALIST CSS 🥐
-           ========================================== */
-        
         :root {
-            --bg-color: #FAF9F6;      
-            --surface: #FFFFFF;       
-            --border-color: #EAE8E3;  
-            --text-main: #2D2C2A;     
-            --text-muted: #8A8782;    
-            --accent-gold: #C2A878;   
-            --accent-rose: #C98A8A;   
-            --accent-sage: #8B9E8B;   
-            --accent-slate: #8CA6B4;  
+            --bg-color: #FAF9F6;
+            --surface: #FFFFFF;
+            --border-color: #EAE8E3;
+            --text-main: #2D2C2A;
+            --text-muted: #8A8782;
+            --accent-gold: #C2A878;
+            --accent-rose: #C98A8A;
+            --accent-sage: #8B9E8B;
+            --accent-slate: #8CA6B4;
         }
 
-        body { 
-            font-family: 'Lato', 'Roboto', 'Noto Sans SC', sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
+        body {
+            font-family: 'Lato', 'Roboto', 'Noto Sans SC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             -webkit-font-smoothing: antialiased;
             letter-spacing: 0.02em;
             overflow-x: hidden;
@@ -43,21 +39,16 @@
             font-weight: 500;
         }
 
-        input, select, textarea {
-            background: transparent;
-            color: var(--text-main);
-        }
+        input, select, textarea { background: transparent; color: var(--text-main); }
 
-        .french-panel { 
-            background: var(--surface); 
-            border: 1px solid var(--border-color); 
+        .french-panel {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
             border-radius: 2px;
             padding: 2rem;
             transition: border-color 0.3s ease;
         }
-        .french-panel:hover {
-            border-color: #D1CEC7;
-        }
+        .french-panel:hover { border-color: #D1CEC7; }
 
         .header-glass {
             background: rgba(250, 249, 246, 0.9);
@@ -65,8 +56,8 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .tab-btn { 
-            color: var(--text-muted); 
+        .tab-btn {
+            color: var(--text-muted);
             background: transparent;
             border: none;
             border-bottom: 1px solid transparent;
@@ -78,68 +69,39 @@
             font-size: 0.75rem;
             transition: all 0.4s ease;
         }
-        .tab-btn:hover {
-            color: var(--text-main);
-        }
-        .tab-btn.active { 
-            color: var(--text-main); 
-            border-bottom: 1px solid var(--text-main);
-            font-weight: 700;
-        }
+        .tab-btn:hover { color: var(--text-main); }
+        .tab-btn.active { color: var(--text-main); border-bottom: 1px solid var(--text-main); font-weight: 700; }
 
-        .text-up { color: var(--accent-sage) !important; } 
-        .text-down { color: var(--accent-rose) !important; } 
+        .text-up { color: var(--accent-sage) !important; }
+        .text-down { color: var(--accent-rose) !important; }
 
-        .top-input { 
-            background: transparent; 
-            border: none; 
+        .top-input {
+            background: transparent;
+            border: none;
             border-bottom: 1px solid transparent;
             color: var(--text-main);
             font-size: 1.5rem;
-            padding: 0; 
-            width: 100%; 
+            padding: 0;
+            width: 100%;
             transition: all 0.3s;
         }
-        .top-input:focus, .top-input:hover { 
-            border-bottom: 1px solid var(--border-color); 
-            outline: none; 
-        }
-        .top-input[readonly]:focus, .top-input[readonly]:hover {
-            border-bottom: 1px solid transparent;
-            cursor: default;
-        }
-        .top-input::placeholder {
-            color: #D1CEC7;
-        }
+        .top-input:focus, .top-input:hover { border-bottom: 1px solid var(--border-color); outline: none; }
+        .top-input[readonly]:focus, .top-input[readonly]:hover { border-bottom: 1px solid transparent; cursor: default; }
+        .top-input::placeholder { color: #D1CEC7; }
 
-        .fcc-input { 
-            background-color: var(--surface); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-main); 
+        .fcc-input {
+            background-color: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
             padding: 0.25rem 0.5rem;
             border-radius: 2px;
             transition: border-color 0.3s ease;
         }
-        .fcc-input:focus { 
-            outline: none; 
-            border-color: var(--accent-gold); 
-        }
-        .fcc-input::placeholder {
-            color: #D1CEC7;
-            font-weight: normal;
-        }
+        .fcc-input:focus { outline: none; border-color: var(--accent-gold); }
+        .fcc-input::placeholder { color: #D1CEC7; font-weight: normal; }
 
-        .progress-wrapper {
-            background-color: #F0EEE9; 
-            height: 2px; 
-            width: 100%;
-            overflow: hidden;
-        }
-        .progress-bar { 
-            height: 100%; 
-            background-color: var(--text-main); 
-            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
+        .progress-wrapper { background-color: #F0EEE9; height: 2px; width: 100%; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: var(--text-main); transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .progress-bar.bg-down { background-color: var(--accent-rose); }
         .progress-bar.bg-up { background-color: var(--accent-sage); }
 
@@ -155,27 +117,21 @@
             transition: all 0.4s ease;
             border-radius: 1px;
         }
-        button.btn-chic:hover {
-            background-color: var(--surface);
-            color: var(--text-main);
-        }
-        
+        button.btn-chic:hover { background-color: var(--surface); color: var(--text-main); }
+
         button.btn-ghost {
             background: transparent;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
-        button.btn-ghost:hover {
-            color: var(--accent-rose);
-            border-color: var(--accent-rose);
-        }
+        button.btn-ghost:hover { color: var(--accent-rose); border-color: var(--accent-rose); }
 
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-        
+
         select.elegant-select {
             border: none;
             background: transparent;
@@ -190,61 +146,36 @@
             padding-right: 10px;
         }
         select.elegant-select:hover { color: var(--text-main); }
-        
-        /* ==========================================
-           🐾 宠物系统 CSS (游戏化交互) 🐾
-           ========================================== */
-        
+
+        /* ===== 宠物系统 CSS ===== */
         #pet-modal {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: rgba(250, 249, 246, 0.95);
             backdrop-filter: blur(10px);
             z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
             transition: opacity 0.5s ease;
         }
-        #pet-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
+        #pet-modal.active { opacity: 1; pointer-events: auto; }
+
         .pet-option {
-            width: 100px;
-            height: 100px;
-            cursor: pointer;
+            width: 100px; height: 100px; cursor: pointer;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
         }
-        .pet-option:hover {
-            transform: scale(1.2) translateY(-10px);
-        }
-        .pet-option svg {
-            width: 100%;
-            height: 100%;
-        }
+        .pet-option:hover { transform: scale(1.2) translateY(-10px); }
+        .pet-option svg { width: 100%; height: 100%; }
 
         #wandering-pet {
-            position: fixed;
-            width: 80px;
-            height: 80px;
-            z-index: 9998;
-            pointer-events: none; 
-            display: none; 
+            position: fixed; width: 80px; height: 80px;
+            z-index: 9998; pointer-events: none; display: none;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
-        #wandering-pet.active {
-            display: block;
-        }
+        #wandering-pet.active { display: block; }
 
-        #pet-flipper {
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+        #pet-flipper { transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
         @keyframes petWalk {
             0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -252,38 +183,29 @@
             50% { transform: translateY(0) rotate(0deg); }
             75% { transform: translateY(-8px) rotate(4deg); }
         }
-        .pet-walking {
-            animation: petWalk 0.5s infinite;
-        }
+        .pet-walking { animation: petWalk 0.5s infinite; }
 
         @keyframes petShake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-3px) rotate(-3deg); }
             75% { transform: translateX(3px) rotate(3deg); }
         }
-        .animate-shake {
-            animation: petShake 0.3s infinite;
-        }
+        .animate-shake { animation: petShake 0.3s infinite; }
 
         #pet-action-menu {
             transform: translateY(10px);
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
-        #pet-action-menu.active {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
+        #pet-action-menu.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 4px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative" onclick="closePetMenu()">
 
-    <!-- 🐾 启动界面：宠物领养模态框 🐾 -->
+    <!-- 宠物领养模态框 -->
     <div id="pet-modal">
-        <!-- 前置语言选择器 -->
         <div class="absolute top-6 right-6 md:top-8 md:right-8 z-50">
             <select id="lang-selector-modal" onchange="changeLanguage(this.value)" class="elegant-select bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-[#EAE8E3] shadow-sm text-xs font-bold text-main cursor-pointer outline-none">
                 <option value="zh">ZH 中文</option>
@@ -291,15 +213,12 @@
                 <option value="ru">RU Русский</option>
             </select>
         </div>
-
         <h2 class="text-3xl md:text-4xl text-main mb-3 font-bold text-center px-6 leading-snug" data-i18n="choosePetTitle">Choose Your Companion</h2>
         <p class="text-xs md:text-sm text-[#8A8782] mb-10 md:mb-12 tracking-widest uppercase text-center px-6 max-w-xl leading-relaxed" data-i18n="choosePetDesc">选择一只陪伴你记账的小生灵</p>
-        
-        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6 md:gap-8 px-6 max-w-5xl" id="pet-roster">
-        </div>
+        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6 md:gap-8 px-6 max-w-5xl" id="pet-roster"></div>
     </div>
 
-    <!-- 🐾 游荡宠物实体 🐾 -->
+    <!-- 游荡宠物实体 -->
     <div id="wandering-pet">
         <div id="pet-chat" class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white border border-[#EAE8E3] rounded-lg px-3 py-1.5 text-xs font-bold text-[#8A8782] shadow-sm opacity-0 transition-opacity whitespace-nowrap z-20 pointer-events-none"></div>
         <div id="pet-action-menu" class="absolute -top-12 left-1/2 -translate-x-1/2 bg-white/95 border border-[#EAE8E3] rounded-full px-3 py-1.5 shadow-md flex gap-3 opacity-0 pointer-events-none z-20">
@@ -326,7 +245,6 @@
                     </div>
                 </div>
             </div>
-            
             <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
                 <div class="flex space-x-4 border-r border-[#EAE8E3] pr-6">
                     <select id="lang-selector" onchange="changeLanguage(this.value)" class="elegant-select hidden md:block">
@@ -340,7 +258,6 @@
                         <option value="€">EUR</option>
                     </select>
                 </div>
-
                 <div class="flex space-x-6 w-full md:w-auto overflow-x-auto justify-center">
                     <button onclick="switchTab('tab-monthly')" id="btn-monthly" class="tab-btn active" data-i18n="tab1">Tracker</button>
                     <button onclick="switchTab('tab-masterplan')" id="btn-masterplan" class="tab-btn" data-i18n="tab2">Masterplan</button>
@@ -352,11 +269,9 @@
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-12 relative z-10">
 
-        <!-- ========================================== -->
         <!-- TAB 1: 月度追踪 -->
-        <!-- ========================================== -->
         <div id="tab-monthly" class="tab-content block space-y-10">
-            
+
             <div class="flex justify-between items-end px-2 border-b border-[#EAE8E3] pb-4">
                 <h2 class="text-xl text-main font-bold"><span data-i18n="topBase">Strategic Parameters</span></h2>
                 <div class="text-xs flex items-center space-x-4">
@@ -410,7 +325,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
                 <div class="french-panel lg:col-span-7">
                     <h3 class="text-lg text-main font-bold mb-8" data-i18n="dailyArea">Detailed Allocation</h3>
-                    
+
+                    <!-- [FIX 1] 移除对不存在的 disp-total-budget 的依赖，改为在这里直接显示生活预算 -->
                     <div class="mb-10">
                         <div class="flex justify-between text-xs uppercase tracking-widest text-[#8A8782] mb-3">
                             <span data-i18n="defenseLine">Total Budget</span>
@@ -425,28 +341,25 @@
                         </div>
                     </div>
 
-                    <div class="space-y-6" id="categories-container">
-                        <!-- 由 JS 渲染 -->
-                    </div>
+                    <div class="space-y-6" id="categories-container"></div>
+
+                    <!-- [FIX 2] 新增 AI 诊断报告容器（原代码 JS 写入此 ID 但 HTML 中不存在） -->
+                    <div id="ai-monthly-report" class="mt-8 pt-6 border-t border-[#EAE8E3] space-y-2"></div>
                 </div>
 
                 <div class="flex flex-col gap-8 lg:col-span-5">
-                    
-                    <!-- 宠物静态监视器 -->
+
+                    <!-- 宠物状态监视器 -->
                     <div class="french-panel flex flex-col items-center bg-[#FDFBF7] relative overflow-hidden">
                         <div class="absolute top-2 left-2 text-[#EAE8E3] text-2xl font-light">⌜</div>
                         <div class="absolute bottom-2 right-2 text-[#EAE8E3] text-2xl font-light">⌟</div>
-                        
                         <h3 class="text-sm text-[#8A8782] uppercase tracking-widest mb-1 w-full text-center" data-i18n="petTitle">Companion Status</h3>
                         <p class="text-[10px] text-[#D1CEC7] mb-6 w-full text-center" data-i18n="petDesc">Your Financial Pet</p>
-                        
                         <div class="h-20 w-20 flex items-center justify-center mb-4 transition-all duration-500" id="pet-visual-static"></div>
-                        
                         <div class="text-center w-full">
                             <p class="text-sm font-bold text-[#8B9E8B] mb-2" id="pet-name"></p>
                             <p class="text-xs text-[#8A8782]" id="pet-dialogue">...</p>
                         </div>
-                        
                         <div class="w-full mt-6">
                             <div class="flex justify-between text-[8px] text-[#D1CEC7] uppercase tracking-widest mb-1">
                                 <span>Level <span id="pet-level" class="font-num">1</span></span>
@@ -482,19 +395,19 @@
                         <div class="text-3xl font-light text-[#8B9E8B] font-num" id="disp-savings-total">0</div>
                     </div>
                 </div>
-                
+
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                    <!-- Left: Draft Entry -->
                     <div class="lg:col-span-5 flex flex-col">
                         <h4 class="text-[#2D2C2A] font-bold text-xs uppercase tracking-widest mb-4" data-i18n="ledgerAdd">New Entry</h4>
                         <div class="space-y-4 p-5 bg-[#FAF9F6] border border-[#EAE8E3] rounded-sm">
                             <div class="flex space-x-2">
-                                <button id="btn-type-inc" onclick="setLedgerType(1)" class="flex-1 py-2 text-[10px] font-bold border border-[#8B9E8B] bg-[#8B9E8B] text-white transition-colors" data-i18n="ledgerInc">+ 净增 (IN)</button>
-                                <button id="btn-type-dec" onclick="setLedgerType(-1)" class="flex-1 py-2 text-[10px] font-bold border border-[#EAE8E3] text-[#8A8782] bg-white transition-colors" data-i18n="ledgerDec">- 净减 (OUT)</button>
+                                <button id="btn-type-inc" onclick="setLedgerType(1)" class="flex-1 py-2 text-[10px] font-bold border border-[#8B9E8B] bg-[#8B9E8B] text-white transition-colors" data-i18n="ledgerInc">+ IN</button>
+                                <button id="btn-type-dec" onclick="setLedgerType(-1)" class="flex-1 py-2 text-[10px] font-bold border border-[#EAE8E3] text-[#8A8782] bg-white transition-colors" data-i18n="ledgerDec">- OUT</button>
                             </div>
                             <div class="flex space-x-2">
                                 <input type="number" id="ledger-amount" class="fcc-input font-num w-1/3 text-sm" placeholder="0.00">
-                                <input type="text" id="ledger-desc" class="fcc-input w-2/3 text-sm" data-i18n="ledgerDescPlaceholder" placeholder="Description...">
+                                <!-- [FIX 5] 移除 data-i18n 与 placeholder 属性的重复冲突，统一由 JS 控制 placeholder -->
+                                <input type="text" id="ledger-desc" class="fcc-input w-2/3 text-sm" placeholder="Description...">
                             </div>
                             <button onclick="addLedgerDetail()" class="w-full py-2 bg-[#2D2C2A] text-white text-xs uppercase tracking-widest hover:bg-[#8A8782] transition-colors" data-i18n="ledgerAddBtn">Add to Draft</button>
                         </div>
@@ -506,7 +419,7 @@
                             </div>
                             <div id="draft-list" class="max-h-[150px] flex-grow overflow-y-auto space-y-1 border border-[#EAE8E3] p-2 bg-white min-h-[50px] custom-scrollbar"></div>
                         </div>
-                        
+
                         <div class="mt-6 pt-4 border-t border-[#EAE8E3]">
                             <label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-2" data-i18n="savMonth">Target Month</label>
                             <div class="flex space-x-2">
@@ -515,8 +428,7 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Right: Archive History -->
+
                     <div class="lg:col-span-7 flex flex-col border-t lg:border-t-0 lg:border-l border-[#EAE8E3] pt-8 lg:pt-0 lg:pl-10">
                         <h4 class="text-[#2D2C2A] font-bold text-xs uppercase tracking-widest mb-6 flex justify-between items-center">
                             <span data-i18n="savHist">Archive</span>
@@ -530,9 +442,7 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- TAB 2: 全景推演 (The Master Plan) -->
-        <!-- ========================================== -->
+        <!-- TAB 2: 全景推演 -->
         <div id="tab-masterplan" class="tab-content hidden space-y-8">
             <div class="french-panel">
                 <div class="max-w-3xl mb-12">
@@ -559,6 +469,7 @@
                         <div class="text-[10px] text-[#8A8782] uppercase tracking-widest mb-3" data-i18n="projLiv">Yearly Living</div>
                         <div class="flex justify-center text-lg">
                             <span class="mr-1 cur-sym text-[#C2A878] font-light">£</span>
+                            <!-- [FIX 6] 此字段现在双向联动：从 Masterplan 修改会同步更新月度预算 -->
                             <input type="number" id="proj-living-inp" placeholder="0" class="top-input font-num text-center text-[#C2A878]" onchange="updateFromYearly()">
                         </div>
                     </div>
@@ -584,9 +495,7 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
         <!-- TAB 3: 心愿单 AI 决断 -->
-        <!-- ========================================== -->
         <div id="tab-wishlist" class="tab-content hidden space-y-8">
             <div class="french-panel">
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-[#EAE8E3] pb-6">
@@ -605,7 +514,7 @@
                             <div>
                                 <h4 class="text-[#8CA6B4] text-xs font-bold uppercase tracking-widest mb-4 pb-2 border-b border-[#EAE8E3]" data-i18n="itemA">Option A</h4>
                                 <div class="space-y-4">
-                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameA" class="fcc-input font-bold w-full" data-i18n="namePlace"></div>
+                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameA" class="fcc-input font-bold w-full" placeholder="Item A"></div>
                                     <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="price">Price</label><input type="number" id="priceA" class="fcc-input font-num w-full" placeholder="0"></div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="uses">Uses/Yr</label><input type="number" id="usesA" class="fcc-input font-num w-full" placeholder="0"></div>
@@ -620,11 +529,10 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div>
                                 <h4 class="text-[#C2A878] text-xs font-bold uppercase tracking-widest mb-4 pb-2 border-b border-[#EAE8E3]" data-i18n="itemB">Option B</h4>
                                 <div class="space-y-4">
-                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameB" class="fcc-input font-bold w-full" data-i18n="namePlace"></div>
+                                    <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="name">Name</label><input type="text" id="nameB" class="fcc-input font-bold w-full" placeholder="Item B"></div>
                                     <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="price">Price</label><input type="number" id="priceB" class="fcc-input font-num w-full" placeholder="0"></div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div><label class="block text-[10px] text-[#8A8782] uppercase tracking-wider mb-1" data-i18n="uses">Uses/Yr</label><input type="number" id="usesB" class="fcc-input font-num w-full" placeholder="0"></div>
@@ -643,26 +551,21 @@
 
                         <div class="pt-4 border-t border-[#EAE8E3]">
                             <h4 class="text-[#2D2C2A] text-xs font-bold uppercase tracking-widest mb-3" data-i18n="justificationTitle">The Justification</h4>
-                            <textarea id="justification" class="fcc-input w-full p-4 h-28" placeholder="Rationalize your need here..." data-i18n="justPlaceholder"></textarea>
+                            <textarea id="justification" class="fcc-input w-full p-4 h-28" placeholder="Rationalize your need here..."></textarea>
                         </div>
 
                         <div class="pt-4 text-center">
-                            <button onclick="runDecisionAI()" class="btn-chic w-full md:w-auto" data-i18n="submitBtn">
-                                Evaluate Options
-                            </button>
+                            <button onclick="runDecisionAI()" class="btn-chic w-full md:w-auto" data-i18n="submitBtn">Evaluate Options</button>
                         </div>
 
                         <div id="decision-result" class="hidden mt-10 p-8 bg-[#FAF9F6] border border-[#EAE8E3]">
                             <div class="flex justify-between items-end mb-8 border-b border-[#EAE8E3] pb-4">
                                 <h3 class="text-xl text-main font-bold" data-i18n="resultTitle">Appraisal Result</h3>
-                                <button onclick="saveToWishlistHistory()" class="btn-ghost text-[10px]" data-i18n="saveResultBtn">
-                                    Archive
-                                </button>
+                                <button onclick="saveToWishlistHistory()" class="btn-ghost text-[10px]" data-i18n="saveResultBtn">Archive</button>
                             </div>
-                            
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
                                 <div>
-                                    <h4 id="resultA-name" class="text-[#8CA6B4] font-bold text-sm mb-3" data-i18n="itemA">Option A</h4>
+                                    <h4 id="resultA-name" class="text-[#8CA6B4] font-bold text-sm mb-3">Option A</h4>
                                     <div class="flex justify-between text-xs text-[#8A8782] mb-1">
                                         <span data-i18n="cpw">CPW:</span>
                                         <span class="text-[#2D2C2A] font-bold"><span class="cur-sym text-[10px] font-normal">£</span><span id="resultA-cpw" class="font-num">0</span></span>
@@ -673,7 +576,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h4 id="resultB-name" class="text-[#C2A878] font-bold text-sm mb-3" data-i18n="itemB">Option B</h4>
+                                    <h4 id="resultB-name" class="text-[#C2A878] font-bold text-sm mb-3">Option B</h4>
                                     <div class="flex justify-between text-xs text-[#8A8782] mb-1">
                                         <span data-i18n="cpw">CPW:</span>
                                         <span class="text-[#2D2C2A] font-bold"><span class="cur-sym text-[10px] font-normal">£</span><span id="resultB-cpw" class="font-num">0</span></span>
@@ -684,7 +587,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="border-t border-[#EAE8E3] pt-6">
                                 <p id="ai-verdict-text" class="text-sm text-[#2D2C2A] leading-loose mb-4"></p>
                                 <div class="text-[10px] text-[#8A8782] italic">
@@ -699,8 +601,7 @@
                             <span data-i18n="archiveTitle">Archive</span>
                             <span id="history-count" class="text-[#8A8782] font-light font-num">0</span>
                         </h3>
-                        <input type="text" id="search-history" placeholder="Search..." class="fcc-input w-full mb-6 text-sm" oninput="renderWishlistHistory()" data-i18n="searchArch">
-                        
+                        <input type="text" id="search-history" placeholder="Search..." class="fcc-input w-full mb-6 text-sm" oninput="renderWishlistHistory()">
                         <div id="history-list" class="flex-grow overflow-y-auto space-y-px">
                             <div class="text-center text-[#8A8782] text-xs mt-12 py-8 italic" data-i18n="noArch">The archive is empty.</div>
                         </div>
@@ -727,28 +628,32 @@
             earth: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="30" fill="#B0E0E6" /><path d="M25 45 Q35 30, 45 40 Q55 50, 45 65 Q30 70, 25 45 Z" fill="#98FB98" /><path d="M65 30 Q75 35, 70 50 Q60 60, 55 45 Z" fill="#98FB98" /><circle cx="40" cy="48" r="2.5" fill="#333" /><circle cx="60" cy="48" r="2.5" fill="#333" /><path d="M45 55 Q50 60, 55 55" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`
         };
 
-        const defaultCatNames = [
-            'I. 交通出行 (Transport)', 'II. 餐饮食材 (Groceries)', 'III. 护肤消耗 (Personal Care)', 'IV. 衣物服饰 (Lifestyle)', 'V. 社交外食 (Dining Out)',
-            'I. Transport', 'II. Groceries', 'III. Personal Care', 'IV. Lifestyle', 'V. Dining Out',
-            'I. Транспорт', 'II. Продукты', 'III. Уход за собой', 'IV. Одежда и стиль', 'V. Развлечения'
-        ];
+        // [FIX 3] 为每种语言添加完整的 cat1~cat5 键名，供 changeLanguage 和 renderCategories 使用
+        const defaultCategoryNames = {
+            zh: ['I. 交通出行', 'II. 餐饮食材', 'III. 护肤消耗', 'IV. 衣物服饰', 'V. 社交外食'],
+            en: ['I. Transport', 'II. Groceries', 'III. Personal Care', 'IV. Lifestyle', 'V. Dining Out'],
+            ru: ['I. Транспорт', 'II. Продукты', 'III. Уход за собой', 'IV. Одежда', 'V. Развлечения']
+        };
 
         const petTexts = {
             zh: {
                 title: "Le Compagnon", desc: "您的财务伴侣",
-                txtRich: "它戴上了墨镜，觉得你是个富豪！", txtHappy: "存款充足，它现在非常开心！", txtAngry: "存款不足500，它焦虑得炸毛了！", txtSleep: "存款归零，它陷入了安逸的沉睡...", txtDead: "负债累累，它已经 dead 了 (RIP)...",
+                txtRich: "它戴上了墨镜，觉得你是个富豪！", txtHappy: "存款充足，它现在非常开心！",
+                txtAngry: "存款不足500，它焦虑得炸毛了！", txtSleep: "存款归零，它陷入了安逸的沉睡...", txtDead: "负债累累，它已经 dead 了 (RIP)...",
                 actEat: "美味的加餐！", actDrink: "吨吨吨...", actSleep: "Zzz...", actPlay: "好开心！",
                 lv1: "L'Enfant (幼崽)", lv2: "Le Flâneur (漫步者)", lv3: "L'Aristocrate (贵族)", lv4: "Le Baron (大亨)"
             },
             en: {
                 title: "Le Compagnon", desc: "Your Financial Companion",
-                txtRich: "It put on shades, feeling like a boss!", txtHappy: "Plenty of savings, very happy!", txtAngry: "Savings < 500, it's getting frizzy!", txtSleep: "Zero savings, sleeping peacefully...", txtDead: "In debt... It has passed away (RIP).",
+                txtRich: "It put on shades, feeling like a boss!", txtHappy: "Plenty of savings, very happy!",
+                txtAngry: "Savings < 500, it's getting frizzy!", txtSleep: "Zero savings, sleeping peacefully...", txtDead: "In debt... It has passed away (RIP).",
                 actEat: "Yummy!", actDrink: "Glug glug...", actSleep: "Zzz...", actPlay: "So fun!",
                 lv1: "L'Enfant", lv2: "Le Flâneur", lv3: "L'Aristocrate", lv4: "Le Baron"
             },
             ru: {
                 title: "Le Compagnon", desc: "Ваш питомец",
-                txtRich: "Надел очки, чувствует себя богачом!", txtHappy: "Сбережений много, он очень рад!", txtAngry: "Сбережений < 500, он нервничает!", txtSleep: "Сбережения на нуле, он спит...", txtDead: "В долгах... Он покинул нас (RIP).",
+                txtRich: "Надел очки, чувствует себя богачом!", txtHappy: "Сбережений много, он очень рад!",
+                txtAngry: "Сбережений < 500, он нервничает!", txtSleep: "Сбережения на нуле, он спит...", txtDead: "В долгах... Он покинул нас (RIP).",
                 actEat: "Вкусно!", actDrink: "Буль-буль...", actSleep: "Zzz...", actPlay: "Весело!",
                 lv1: "Котёнок", lv2: "Бродяга", lv3: "Аристократ", lv4: "Барон"
             }
@@ -757,19 +662,19 @@
         const i18n = {
             zh: {
                 appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
-                tab1: "月度追踪", tab2: "全景推演", tab3: "决断引擎", choosePetTitle: "选择您的财务伴侣", choosePetDesc: "选择一只陪伴你记账的小生灵",
+                tab1: "月度追踪", tab2: "全景推演", tab3: "决断引擎",
+                choosePetTitle: "选择您的财务伴侣", choosePetDesc: "选择一只陪伴你记账的小生灵",
                 topBase: "战略基石 (参数设定)", saveStatus: "已保存", resetBtn: "重置",
-                iniTitle: "初始底仓", iniDesc: "推演起步金", incTitle: "月度总入账", incDesc: "固定薪水", 
-                fixRent: "刚性支出", fixRentDesc: "房租等绝对开销", savTitle: "战略储蓄", savDesc: "系统自算结余", 
-                budTitle: "生活预算", budDesc: "机动支出总上限",
-                dailyArea: "预算精细化拆解", defenseLine: "可用预算总额", remain: "结余", overspent: "超支", totalOut: "当期流出:", totalPct: "消耗率:",
+                iniTitle: "初始底仓", incTitle: "月度总入账", fixRent: "刚性支出",
+                savTitle: "战略储蓄", budTitle: "生活预算",
+                dailyArea: "预算精细化拆解", defenseLine: "可用预算总额",
+                remain: "结余", overspent: "超支", totalOut: "当期流出:", totalPct: "消耗率:",
                 budget: "预", spent: "花", aiReport: "财务体检报告",
                 pieTitle: "支出结构图谱", pieDesc: "真实资金流向分布",
                 petTitle: "Companion Status", petDesc: "你的专属小宠物",
-                savTracker: "月度封账记录", savDesc2: "记录月末真实留存，绘制属于您的复利曲线。", savTotal: "当前净资产总额",
-                savNew: "新增封账", savMonth: "归档月份", savAmt: "净增金额", savBtn: "确认归档",
-                savHist: "历史档案", clearHist: "清空", noHist: "暂无归档记录。", undo: "撤销",
-                planTitle: "全景复利推演", planNote: "💡 修改此处数据将自动反向同步至月度面板。", planDesc: "红线: 实际走势  |  灰线: 理论基准",
+                savTotal: "当前净资产总额",
+                savHist: "历史档案", clearHist: "清空", noHist: "暂无归档记录。",
+                planTitle: "全景复利推演", planDesc: "红线: 实际走势  |  灰线: 理论基准",
                 projInc: "年度入账", projFix: "年度刚需", projLiv: "年度生活", projBonus: "外快收益", projSav: "期末预期总额",
                 chartTitle: "实际资产表现 vs 理论基准线", chartActual: "实际打卡 (红)", chartTheory: "理论基准 (灰)",
                 wishTitle: "消费理智决断", wishWarn: "冲击率基于月度储蓄目标计算", wishDesc: "写下您的理由，系统将基于性价比给出客观建议。",
@@ -779,92 +684,112 @@
                 cpw: "单次使用成本:", impact: "储蓄消耗率:", sysRead: "系统寄语: ",
                 archiveTitle: "决策档案馆", searchArch: "检索...", noArch: "档案库空置。",
                 aiTopConflict: "底层逻辑异常", aiTopConflictDesc: "设定的收入无法覆盖刚性支出与生活费。资金缺口: ",
-                aiLivWarn: "预算消耗过快", aiLivWarnDesc: "生活费消耗已越过安全线，请减缓支出频率。", aiMelt: "预算熔断", aiMeltDesc: "已触发超支，请立即开启极简生存模式。",
+                aiLivWarn: "预算消耗过快", aiLivWarnDesc: "生活费消耗已越过安全线，请减缓支出频率。",
+                aiMelt: "预算熔断", aiMeltDesc: "已触发超支，请立即开启极简生存模式。",
                 aiSafe: "系统健康", aiSafeDesc: "现金流稳定，请保持当前优雅的消费节奏。",
-                alertSelectMonth: "请选择有效月份及金额", alertOverride: "已存在记录。是否覆盖？", alertClearAll: "确认清空所有历史档案？此操作不可逆。", alertEnterItem: "请填写完整的品项信息。", alertSaved: "已归档。", alertReset: "即将恢复默认设置，确认重置？",
+                alertSelectMonth: "请选择有效月份及金额", alertOverride: "已存在记录。是否覆盖？",
+                alertClearAll: "确认清空所有历史档案？此操作不可逆。", alertEnterItem: "请填写完整的品项信息。",
+                alertSaved: "已归档。", alertReset: "即将恢复默认设置，确认重置？",
                 winDataA: "更具性价比：[A] (CPW更低)", winDataB: "更具性价比：[B] (CPW更低)", winTie: "数据平局。请遵从内心真实渴望。",
-                wishWarnText: "警报：两项均超过月储蓄的50%，将对财务系统造成重创。", wishWait: "建议：标价较高，请搁置72小时后再做定夺。", wishOk: "安全：在预算承受范围内，若非冲动可允许购入。",
+                wishWarnText: "警报：两项均超过月储蓄的50%，将对财务系统造成重创。",
+                wishWait: "建议：标价较高，请搁置72小时后再做定夺。", wishOk: "安全：在预算承受范围内，若非冲动可允许购入。",
                 totalExceed: "全局超支", petDeadAlert: "宠物已经 dead 了 (RIP)，无法互动...", petSleepAlert: "宠物正在沉睡，除了陪它睡觉外不要吵醒它...",
                 catPlaceholder: "自定义分类", namePlace: "自定义名称", changePetBtn: "更换宠物",
                 ledgerTitle: "月度净资产账单明细", ledgerDesc: "记录本月流水，并确认打包归档。", ledgerAdd: "记录一笔",
                 ledgerInc: "+ 净增 (IN)", ledgerDec: "- 净减 (OUT)", ledgerDescPlaceholder: "备注...",
                 ledgerAddBtn: "存入本月草稿", ledgerDraft: "本月未归档明细", ledgerArchiveBtn: "归档本月所有明细",
+                savMonth: "归档月份",
                 alertDraftEmpty: "草稿为空，请先添加明细。", emptyDraft: "暂无未归档明细"
             },
             en: {
                 appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
-                tab1: "Tracker", tab2: "Masterplan", tab3: "Appraise", choosePetTitle: "Choose Your Companion", choosePetDesc: "Select a little companion for your financial journey",
+                tab1: "Tracker", tab2: "Masterplan", tab3: "Appraise",
+                choosePetTitle: "Choose Your Companion", choosePetDesc: "Select a little companion for your financial journey",
                 topBase: "Strategic Parameters", saveStatus: "Saved", resetBtn: "Reset",
-                iniTitle: "Initial Base", iniDesc: "Starting point", incTitle: "Monthly Income", incDesc: "Fixed inflow", 
-                fixRent: "Fixed Outflow", fixRentDesc: "Rent & rigid costs", savTitle: "Target Savings", savDesc: "Auto-calculated", 
-                budTitle: "Living Budget", budDesc: "Total flexible limit",
-                dailyArea: "Detailed Allocation", defenseLine: "Total Budget", remain: "Left", overspent: "Over", totalOut: "Outflow:", totalPct: "Consumed:",
+                iniTitle: "Initial Base", incTitle: "Monthly Income", fixRent: "Fixed Outflow",
+                savTitle: "Target Savings", budTitle: "Living Budget",
+                dailyArea: "Detailed Allocation", defenseLine: "Total Budget",
+                remain: "Left", overspent: "Over", totalOut: "Outflow:", totalPct: "Consumed:",
                 budget: "Bud.", spent: "Spn.", aiReport: "System Diagnostics",
                 pieTitle: "Expense Structure", pieDesc: "Visual breakdown of outflows",
                 petTitle: "Companion Status", petDesc: "Your little pet",
-                savTracker: "Monthly Savings Record", savDesc2: "Log true savings to build the compound curve.", savTotal: "Net Asset Value",
-                savNew: "Add Entry", savMonth: "Month", savAmt: "Amount", savBtn: "Commit Record",
-                savHist: "Archive", clearHist: "Format", noHist: "The archive is empty.", undo: "Undo",
-                planTitle: "The Masterplan Radar", planNote: "💡 Inputs here sync backwards to the Tracker.", planDesc: "Actual vs. Theoretical Trajectory",
+                savTotal: "Net Asset Value",
+                savHist: "Archive", clearHist: "Format", noHist: "The archive is empty.",
+                planTitle: "The Masterplan Radar", planDesc: "Actual vs. Theoretical Trajectory",
                 projInc: "Yearly Income", projFix: "Yearly Fixed", projLiv: "Yearly Living", projBonus: "Extra Yield", projSav: "Term Asset Target",
                 chartTitle: "Actual Trajectory vs Theoretical Baseline", chartActual: "Actual Assets", chartTheory: "Theoretical Target",
                 wishTitle: "Rational Appraiser", wishWarn: "Impact based on target savings", wishDesc: "Submit attributes & justification for an objective verdict.",
                 itemA: "Option A", itemB: "Option B", name: "Item", price: "Price", uses: "Uses/Yr", years: "Lifespan", emotion: "Desire (1-10)",
                 justificationTitle: "The Justification", justPlaceholder: "Rationalize your need here...",
                 submitBtn: "Evaluate Options", resultTitle: "Appraisal Result", saveResultBtn: "Archive",
-                cpw: "CPW:", impact: "Impact:", sysRead: "Note: ", archiveTitle: "Archive", searchArch: "Search...", noArch: "Archive is empty.",
+                cpw: "CPW:", impact: "Impact:", sysRead: "Note: ",
+                archiveTitle: "Archive", searchArch: "Search...", noArch: "Archive is empty.",
                 aiTopConflict: "Structural Deficit", aiTopConflictDesc: "Income cannot cover fixed + living costs. Shortfall: ",
-                aiLivWarn: "High Consumption", aiLivWarnDesc: "Budget > 80% consumed. Slow down.", aiMelt: "Budget Breached", aiMeltDesc: "Overspent. Enter minimal survival mode.",
+                aiLivWarn: "High Consumption", aiLivWarnDesc: "Budget > 80% consumed. Slow down.",
+                aiMelt: "Budget Breached", aiMeltDesc: "Overspent. Enter minimal survival mode.",
                 aiSafe: "Healthy Cashflow", aiSafeDesc: "Metrics are balanced. Maintain the elegant pace.",
-                alertSelectMonth: "Select a month & amount.", alertOverride: " record exists. Overwrite?", alertClearAll: "Erase all records forever?", alertEnterItem: "Enter item details.", alertSaved: "Archived.", alertReset: "Reset to defaults?",
+                alertSelectMonth: "Select a month & amount.", alertOverride: "Record exists. Overwrite?",
+                alertClearAll: "Erase all records forever?", alertEnterItem: "Enter item details.",
+                alertSaved: "Archived.", alertReset: "Reset to defaults?",
                 winDataA: "Better Value: [A] (Lower CPW)", winDataB: "Better Value: [B] (Lower CPW)", winTie: "Tie in value. Follow your genuine desire.",
                 wishWarnText: "ALERT: Both exceed 50% of savings goal.", wishWait: "ADVICE: High cost. Enforce 72h cooldown.", wishOk: "SAFE: Within acceptable limits. Proceed if justified.",
-                totalExceed: "Total Deficit", petDeadAlert: "The pet has passed away (RIP), cannot interact...", petSleepAlert: "The pet is sleeping, don't wake it up except to sleep with it...",
+                totalExceed: "Total Deficit", petDeadAlert: "The pet has passed away (RIP), cannot interact...", petSleepAlert: "The pet is sleeping, don't wake it up...",
                 catPlaceholder: "Category", namePlace: "Name", changePetBtn: "Change Pet",
                 ledgerTitle: "Monthly Asset Ledger", ledgerDesc: "Record net changes and archive monthly.", ledgerAdd: "New Entry",
                 ledgerInc: "+ IN", ledgerDec: "- OUT", ledgerDescPlaceholder: "Details...",
-                ledgerAddBtn: "Add to Draft", ledgerDraft: "Current Draft", ledgerArchiveBtn: "Archive Month", alertDraftEmpty: "Draft is empty.", emptyDraft: "No items in draft."
+                ledgerAddBtn: "Add to Draft", ledgerDraft: "Current Draft", ledgerArchiveBtn: "Archive Month",
+                savMonth: "Target Month",
+                alertDraftEmpty: "Draft is empty.", emptyDraft: "No items in draft."
             },
             ru: {
                 appTitle: "L'Élégance Financière", appSub: "Financial Control Center",
-                tab1: "Трекер", tab2: "План", tab3: "Оценка", choosePetTitle: "Выберите компаньона", choosePetDesc: "Выберите маленького спутника для ваших финансов",
+                tab1: "Трекер", tab2: "План", tab3: "Оценка",
+                choosePetTitle: "Выберите компаньона", choosePetDesc: "Выберите маленького спутника для ваших финансов",
                 topBase: "Стратегия", saveStatus: "Сохранено", resetBtn: "Сброс",
-                iniTitle: "База", iniDesc: "Старт", incTitle: "Доход", incDesc: "Приток", 
-                fixRent: "Обязат.", fixRentDesc: "Жесткие траты", savTitle: "Сбережения", savDesc: "Авторасчет", 
-                budTitle: "Бюджет", budDesc: "Общий лимит на жизнь",
-                dailyArea: "Распределение", defenseLine: "Общий бюджет", remain: "Ост.", overspent: "Сверх", totalOut: "Ушло:", totalPct: "Исп:",
-                budget: "План", spent: "Факт", aiReport: "Диагностика", pieTitle: "Структура расходов", pieDesc: "Распределение",
+                iniTitle: "База", incTitle: "Доход", fixRent: "Обязат.",
+                savTitle: "Сбережения", budTitle: "Бюджет",
+                dailyArea: "Распределение", defenseLine: "Общий бюджет",
+                remain: "Ост.", overspent: "Сверх", totalOut: "Ушло:", totalPct: "Исп:",
+                budget: "План", spent: "Факт", aiReport: "Диагностика",
+                pieTitle: "Структура расходов", pieDesc: "Распределение",
                 petTitle: "Статус питомца", petDesc: "Ваш компаньон",
-                savTracker: "Фиксация сбережений", savDesc2: "Вносите остаток для графика.", savTotal: "Чистые активы",
-                savNew: "Запись", savMonth: "Месяц", savAmt: "Сумма", savBtn: "Внести",
-                savHist: "Архив", clearHist: "Очистить", noHist: "Архив пуст.", undo: "Удалить",
-                planTitle: "Радар плана", planNote: "💡 Изменения синхронизируются.", planDesc: "Факт vs Теория",
+                savTotal: "Чистые активы",
+                savHist: "Архив", clearHist: "Очистить", noHist: "Архив пуст.",
+                planTitle: "Радар плана", planDesc: "Факт vs Теория",
                 projInc: "Доход в год", projFix: "Обязат. в год", projLiv: "Жизнь в год", projBonus: "Экстра", projSav: "Цель",
                 chartTitle: "Фактические активы vs План", chartActual: "Факт", chartTheory: "План",
                 wishTitle: "Рациональная оценка", wishWarn: "Влияние на цель", wishDesc: "Обоснуйте, система даст совет.",
                 itemA: "Вариант A", itemB: "Вариант B", name: "Имя", price: "Цена", uses: "Исп/год", years: "Срок(лет)", emotion: "Желание",
-                justificationTitle: "Обоснование", justPlaceholder: "Зачем это нужно?...", submitBtn: "Оценить", resultTitle: "Результат", saveResultBtn: "В архив",
-                cpw: "Цена/исп:", impact: "Влияние:", sysRead: "Система: ", archiveTitle: "Архив", searchArch: "Поиск...", noArch: "Пусто.",
-                aiTopConflict: "Дефицит", aiTopConflictDesc: "Доход меньше расходов: ", aiLivWarn: "Внимание", aiLivWarnDesc: "Бюджет > 80%.", aiMelt: "Перерасход", aiMeltDesc: "Бюджет исчерпан.",
+                justificationTitle: "Обоснование", justPlaceholder: "Зачем это нужно?...",
+                submitBtn: "Оценить", resultTitle: "Результат", saveResultBtn: "В архив",
+                cpw: "Цена/исп:", impact: "Влияние:", sysRead: "Система: ",
+                archiveTitle: "Архив", searchArch: "Поиск...", noArch: "Пусто.",
+                aiTopConflict: "Дефицит", aiTopConflictDesc: "Доход меньше расходов: ",
+                aiLivWarn: "Внимание", aiLivWarnDesc: "Бюджет > 80%.",
+                aiMelt: "Перерасход", aiMeltDesc: "Бюджет исчерпан.",
                 aiSafe: "Норма", aiSafeDesc: "Финансы стабильны.",
-                alertSelectMonth: "Укажите данные.", alertOverride: " Перезаписать?", alertClearAll: "Очистить?", alertEnterItem: "Заполните поля.", alertSaved: "Сохранено.", alertReset: "Сбросить?",
+                alertSelectMonth: "Укажите данные.", alertOverride: "Перезаписать?",
+                alertClearAll: "Очистить?", alertEnterItem: "Заполните поля.",
+                alertSaved: "Сохранено.", alertReset: "Сбросить?",
                 winDataA: "Выгоднее: [A]", winDataB: "Выгоднее: [B]", winTie: "Ничья. Слушайте сердце.",
                 wishWarnText: "АЛЕРТ: > 50% сбережений.", wishWait: "СОВЕТ: Дорого. Ждите 72ч.", wishOk: "БЕЗОПАСНО: Можно брать.",
                 totalExceed: "Дефицит", petDeadAlert: "Питомец уже мертв (RIP), взаимодействие невозможно...", petSleepAlert: "Питомец спит, не будите его...",
                 catPlaceholder: "Категория", namePlace: "Название", changePetBtn: "Сменить",
                 ledgerTitle: "Детали баланса", ledgerDesc: "Записывайте изменения и архивируйте.", ledgerAdd: "Запись",
                 ledgerInc: "+ ДОХОД", ledgerDec: "- РАСХОД", ledgerDescPlaceholder: "Описание...",
-                ledgerAddBtn: "Добавить", ledgerDraft: "Черновик", ledgerArchiveBtn: "В архив", alertDraftEmpty: "Черновик пуст.", emptyDraft: "Нет записей."
+                ledgerAddBtn: "Добавить", ledgerDraft: "Черновик", ledgerArchiveBtn: "В архив",
+                savMonth: "Месяц",
+                alertDraftEmpty: "Черновик пуст.", emptyDraft: "Нет записей."
             }
         };
 
         // --- GLOBAL VARIABLES ---
         let currentLang = localStorage.getItem('fcc_lang') || 'zh';
         let currentCur = localStorage.getItem('fcc_cur') || '£';
-        let expPieChart = null; 
+        let expPieChart = null;
         let myChart = null;
         let savingsRecords = [];
-        
+
         let currentPet = localStorage.getItem('fcc_selected_pet');
         let wanderingInterval = null;
         let isPetMenuOpen = false;
@@ -872,64 +797,68 @@
 
         let draftLedger = [];
         const draftStorageKey = 'fcc_draft_ledger_v_final';
-        let currentLedgerType = 1; 
+        let currentLedgerType = 1;
 
         const genericStorageKey = 'fcc_french_monthly_vfinal';
         const savingsStorageKey = 'fcc_french_savings_v_final';
         const wishlistStorageKey = 'fcc_french_wishlist_v4';
 
-        const defaultMonthly = { 
+        const defaultMonthly = {
             g_ini: 0, g_inc: 0, g_fix: 0, g_bud: 0, g_bon: 0,
             n_cat1: '', n_cat2: '', n_cat3: '', n_cat4: '', n_cat5: '',
             b_cat1: 0, b_cat2: 0, b_cat3: 0, b_cat4: 0, b_cat5: 0,
-            e_cat1: 0, e_cat2: 0, e_cat3: 0, e_cat4: 0, e_cat5: 0 
+            e_cat1: 0, e_cat2: 0, e_cat3: 0, e_cat4: 0, e_cat5: 0
         };
 
         let wishlistHistory = [];
         let currentDecision = null;
 
         // --- HELPER FUNCTIONS ---
-        function formatMoney(amount) { 
-            return Number(parseFloat(amount).toFixed(4)).toString(); 
-        }
-
-        function t(key) { return i18n[currentLang][key] || i18n['zh'][key] || key; }
+        function formatMoney(amount) { return Number(parseFloat(amount).toFixed(4)).toString(); }
+        function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) ? i18n[currentLang][key] : (i18n['zh'][key] || key); }
 
         function changeLanguage(lang, updateData = true) {
             currentLang = lang;
             localStorage.setItem('fcc_lang', lang);
-            
-            // 同步模态框和顶部导航栏的语言选择器
+
             const selMain = document.getElementById('lang-selector');
             const selModal = document.getElementById('lang-selector-modal');
             if (selMain) selMain.value = lang;
             if (selModal) selModal.value = lang;
-            
+
             if (lang === 'en') {
                 document.body.style.fontFamily = "'Lato', 'Roboto', sans-serif";
-                document.querySelectorAll('.serif').forEach(el => el.style.fontFamily = "'Playfair Display', serif");
             } else if (lang === 'ru') {
                 document.body.style.fontFamily = "'Roboto', 'Lato', sans-serif";
             } else {
                 document.body.style.fontFamily = "'Lato', 'Roboto', 'Noto Sans SC', sans-serif";
-                document.querySelectorAll('.serif').forEach(el => el.style.fontFamily = "'Playfair Display', 'Noto Sans SC', serif");
             }
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                    if (el.placeholder) el.placeholder = t(key);
+                    if (el.placeholder !== undefined) el.placeholder = t(key);
                 } else {
                     el.innerHTML = t(key);
                 }
             });
 
-            for(let i=1; i<=5; i++) {
-                let catInput = document.getElementById(`name-cat${i}`);
-                if (catInput && defaultCatNames.includes(catInput.value)) {
-                    catInput.value = t(`cat${i}`);
+            // [FIX 4] 分类名称国际化：仅当用户没有自定义时才替换为默认名称
+            const defaultNamesForAllLangs = Object.values(defaultCategoryNames).flat();
+            for (let i = 1; i <= 5; i++) {
+                const catInput = document.getElementById(`name-cat${i}`);
+                if (catInput) {
+                    const currentVal = catInput.value.trim();
+                    // 如果当前值是空的，或是任意语言的默认名称，则自动替换
+                    if (currentVal === '' || defaultNamesForAllLangs.includes(currentVal)) {
+                        catInput.value = defaultCategoryNames[lang][i - 1];
+                    }
                 }
             }
+
+            // 同步更新 ledger-desc placeholder（已从 HTML 移除 data-i18n，统一由 JS 控制）
+            const ledgerDescEl = document.getElementById('ledger-desc');
+            if (ledgerDescEl) ledgerDescEl.placeholder = t('ledgerDescPlaceholder');
 
             if (updateData) {
                 updateMonthlyDashboard(false);
@@ -954,46 +883,37 @@
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
-            document.querySelectorAll('.tab-btn').forEach(el => { 
-                el.classList.remove('active'); 
-            });
-            document.getElementById(tabId).classList.remove('hidden'); 
+            document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('active'); });
+            document.getElementById(tabId).classList.remove('hidden');
             document.getElementById(tabId).classList.add('block');
-            
             const btn = document.getElementById('btn-' + tabId.split('-')[1]);
-            btn.classList.add('active'); 
+            if (btn) btn.classList.add('active');
         }
 
-        const getVal = (id) => {
-            const el = document.getElementById(id);
-            return el ? parseFloat(el.value) || 0 : 0;
-        };
-        const getStr = (id) => {
-            const el = document.getElementById(id);
-            return el ? el.value || '' : '';
-        };
+        const getVal = (id) => { const el = document.getElementById(id); return el ? parseFloat(el.value) || 0 : 0; };
+        const getStr = (id) => { const el = document.getElementById(id); return el ? el.value || '' : ''; };
 
         function renderCategories() {
             const container = document.getElementById('categories-container');
             if (!container) return;
             let html = '';
-            for(let i=1; i<=5; i++) {
+            for (let i = 1; i <= 5; i++) {
                 html += `
                 <div class="group">
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-2 gap-2">
                         <div class="flex-1 border-b border-transparent group-hover:border-[#EAE8E3] transition-colors pb-1">
-                            <input type="text" id="name-cat${i}" data-i18n="catPlaceholder" placeholder="${t('catPlaceholder')}" class="bg-transparent border-none text-sm text-[#2D2C2A] font-bold w-full focus:outline-none" onchange="updateMonthlyDashboard()">
+                            <input type="text" id="name-cat${i}" placeholder="${t('catPlaceholder')}" class="bg-transparent border-none text-sm text-[#2D2C2A] font-bold w-full focus:outline-none" onchange="updateMonthlyDashboard()">
                         </div>
                         <div class="flex items-center space-x-4 text-xs pb-1">
                             <div class="flex items-center text-[#8A8782]">
-                                <span class="mr-2" data-i18n="budget">${t('budget')}</span>
+                                <span class="mr-2">${t('budget')}</span>
                                 <input type="number" id="bud-cat${i}" placeholder="0" class="fcc-input font-num w-14 text-center" onchange="updateMonthlyDashboard()">
                             </div>
                             <div class="flex items-center text-[#8A8782]">
-                                <span class="mr-2" data-i18n="spent">${t('spent')}</span>
+                                <span class="mr-2">${t('spent')}</span>
                                 <input type="number" id="exp-cat${i}" placeholder="0" class="fcc-input font-num w-16 text-center text-[#C98A8A]" onchange="updateMonthlyDashboard()">
                             </div>
-                            <span id="stat-cat${i}" class="text-[#8B9E8B] font-num w-16 text-right"><span data-i18n="remain">${t('remain')}</span> 0.00</span>
+                            <span id="stat-cat${i}" class="text-[#8B9E8B] font-num w-16 text-right"><span>${t('remain')}</span> 0.00</span>
                         </div>
                     </div>
                     <div class="progress-wrapper">
@@ -1009,35 +929,35 @@
             try {
                 const saved = localStorage.getItem(genericStorageKey);
                 const data = saved ? JSON.parse(saved) : defaultMonthly;
-                
+
                 document.getElementById('gen-initial').value = data.g_ini || '';
                 document.getElementById('gen-income').value = data.g_inc || '';
                 document.getElementById('gen-fixed').value = data.g_fix || '';
                 document.getElementById('gen-budget').value = data.g_bud || '';
                 document.getElementById('proj-bonus-inp').value = data.g_bon || '';
 
-                for(let i=1; i<=5; i++) {
+                for (let i = 1; i <= 5; i++) {
                     const nameCat = document.getElementById(`name-cat${i}`);
                     const budCat = document.getElementById(`bud-cat${i}`);
                     const expCat = document.getElementById(`exp-cat${i}`);
-                    if(nameCat) nameCat.value = data[`n_cat${i}`] || '';
-                    if(budCat) budCat.value = data[`b_cat${i}`] || '';
-                    if(expCat) expCat.value = data[`e_cat${i}`] || '';
+                    if (nameCat) nameCat.value = data[`n_cat${i}`] || '';
+                    if (budCat) budCat.value = data[`b_cat${i}`] || '';
+                    if (expCat) expCat.value = data[`e_cat${i}`] || '';
                 }
-                
+
                 updateMonthlyDashboard(false);
             } catch (e) { updateMonthlyDashboard(false); }
         }
 
         function resetMonthlyData() {
-            if(confirm(t('alertReset'))) {
-                localStorage.removeItem(genericStorageKey); 
+            if (confirm(t('alertReset'))) {
+                localStorage.removeItem(genericStorageKey);
                 loadMonthlyData();
                 changeLanguage(currentLang, true);
             }
         }
 
-        // --- 🐾 宠物系统逻辑 (带五阶资产状态) 🐾 ---
+        // --- 宠物系统 ---
         function getPetVisualHTML(petType, totalAssets) {
             let svgHtml = petSVGs[petType] || '';
             let overlayHtml = '';
@@ -1058,18 +978,12 @@
                 svgStyle = 'transform: scaleY(-1); filter: grayscale(1) opacity(0.7);';
             }
 
-            return `
-                <div class="relative w-full h-full flex items-center justify-center transition-all duration-500" style="${svgStyle}">
-                    ${svgHtml}
-                    ${overlayHtml}
-                </div>
-            `;
+            return `<div class="relative w-full h-full flex items-center justify-center transition-all duration-500" style="${svgStyle}">${svgHtml}${overlayHtml}</div>`;
         }
 
         function initPetSystem() {
             const roster = document.getElementById('pet-roster');
             roster.innerHTML = '';
-            
             Object.keys(petSVGs).forEach(petType => {
                 const div = document.createElement('div');
                 div.className = 'pet-option';
@@ -1082,7 +996,7 @@
                 document.getElementById('pet-modal').classList.add('active');
             } else {
                 startWanderingPet();
-                updateMonthlyDashboard(false); 
+                updateMonthlyDashboard(false);
             }
         }
 
@@ -1091,31 +1005,27 @@
             localStorage.setItem('fcc_selected_pet', type);
             document.getElementById('pet-modal').classList.remove('active');
             startWanderingPet();
-            updateMonthlyDashboard(false); 
+            updateMonthlyDashboard(false);
         }
 
         function startWanderingPet() {
             const wanderEl = document.getElementById('wandering-pet');
             if (!currentPet) return;
-            
             wanderEl.classList.add('active');
-            if (wanderingInterval) clearInterval(wanderingInterval);
-            
+            if (wanderingInterval) clearTimeout(wanderingInterval);
+
             let posX = window.innerWidth / 2;
             let posY = window.innerHeight / 2;
             wanderEl.style.transform = `translate(${posX}px, ${posY}px)`;
-            
+
             let currentFlipped = false;
 
             function move() {
-                if (isPetBusy) {
-                    wanderingInterval = setTimeout(move, 2000);
-                    return;
-                }
+                if (isPetBusy) { wanderingInterval = setTimeout(move, 2000); return; }
 
                 let totalAssets = getVal('gen-initial');
-                if (typeof savingsRecords !== 'undefined' && savingsRecords && savingsRecords.length > 0) {
-                    totalAssets += savingsRecords.reduce((sum, rec) => sum + (rec.netAmount || 0), 0); 
+                if (savingsRecords && savingsRecords.length > 0) {
+                    totalAssets += savingsRecords.reduce((sum, rec) => sum + (rec.netAmount || 0), 0);
                 }
 
                 if (totalAssets <= 0) {
@@ -1123,27 +1033,25 @@
                     const targetY = window.innerHeight - 120;
                     wanderEl.style.transition = `transform 3s ease-in-out`;
                     wanderEl.style.transform = `translate(${targetX}px, ${targetY}px)`;
-                    
                     const sprite = document.getElementById('pet-sprite');
-                    if(sprite) sprite.classList.remove('pet-walking', 'animate-shake');
-
+                    if (sprite) sprite.classList.remove('pet-walking', 'animate-shake');
                     wanderingInterval = setTimeout(move, 5000);
                     return;
                 }
 
                 const maxX = window.innerWidth - 100;
-                const maxY = window.innerHeight - 100; 
+                const maxY = window.innerHeight - 100;
                 const targetX = Math.max(20, Math.random() * maxX);
-                const targetY = Math.max(20, Math.random() * Math.min(maxY, window.innerHeight * 0.8)); 
-                
-                const isFlipped = targetX < posX; 
+                const targetY = Math.max(20, Math.random() * Math.min(maxY, window.innerHeight * 0.8));
+
+                const isFlipped = targetX < posX;
                 const dist = Math.hypot(targetX - posX, targetY - posY);
-                const speed = 60; 
+                const speed = 60;
                 const duration = Math.max(1, dist / speed);
-                
+
                 wanderEl.style.transition = `transform ${duration}s linear`;
                 wanderEl.style.transform = `translate(${targetX}px, ${targetY}px)`;
-                
+
                 const flipper = document.getElementById('pet-flipper');
                 if (flipper && currentFlipped !== isFlipped) {
                     flipper.style.transition = 'transform 0.15s ease-out';
@@ -1154,28 +1062,22 @@
                     }, 150);
                     currentFlipped = isFlipped;
                 }
-                
+
                 const sprite = document.getElementById('pet-sprite');
-                if(sprite) {
-                    sprite.classList.add('pet-walking');
-                    sprite.classList.remove('animate-shake');
-                }
-                
-                posX = targetX;
-                posY = targetY;
-                
+                if (sprite) { sprite.classList.add('pet-walking'); sprite.classList.remove('animate-shake'); }
+
+                posX = targetX; posY = targetY;
+
                 setTimeout(() => {
-                    if(sprite) {
+                    if (sprite) {
                         sprite.classList.remove('pet-walking');
-                        if (totalAssets > 0 && totalAssets < 500) {
-                            sprite.classList.add('animate-shake');
-                        }
+                        if (totalAssets > 0 && totalAssets < 500) { sprite.classList.add('animate-shake'); }
                     }
                 }, duration * 1000);
 
                 wanderingInterval = setTimeout(move, duration * 1000 + 4000 + Math.random() * 4000);
             }
-            
+
             setTimeout(move, 500);
         }
 
@@ -1197,10 +1099,7 @@
             if (isPetMenuOpen) {
                 isPetMenuOpen = false;
                 const menu = document.getElementById('pet-action-menu');
-                if(menu) {
-                    menu.classList.add('opacity-0', 'pointer-events-none');
-                    menu.classList.remove('opacity-100', 'pointer-events-auto');
-                }
+                if (menu) { menu.classList.add('opacity-0', 'pointer-events-none'); menu.classList.remove('opacity-100', 'pointer-events-auto'); }
             }
         }
 
@@ -1209,187 +1108,169 @@
             closePetMenu();
 
             let totalAssets = getVal('gen-initial');
-            if (typeof savingsRecords !== 'undefined' && savingsRecords) {
-                totalAssets += savingsRecords.reduce((sum, rec) => sum + (rec.netAmount || 0), 0); 
+            if (savingsRecords) {
+                totalAssets += savingsRecords.reduce((sum, rec) => sum + (rec.netAmount || 0), 0);
             }
 
-            if (totalAssets < 0) {
-                alert(t('petDeadAlert'));
-                return;
-            } else if (totalAssets === 0 && action !== 'sleep') {
-                alert(t('petSleepAlert'));
-                return;
-            }
+            if (totalAssets < 0) { alert(t('petDeadAlert')); return; }
+            else if (totalAssets === 0 && action !== 'sleep') { alert(t('petSleepAlert')); return; }
 
             isPetBusy = true;
             const chat = document.getElementById('pet-chat');
             const petLang = petTexts[currentLang];
 
-            let msg = '';
             let emote = '';
-            if(action === 'eat') { msg = petLang.actEat; emote = '🍖 냠냠...'; }
-            if(action === 'drink') { msg = petLang.actDrink; emote = '💧 咕噜咕噜...'; }
-            if(action === 'sleep') { msg = petLang.actSleep; emote = '💤 Zzz...'; }
-            if(action === 'play') { msg = petLang.actPlay; emote = '🎾 开心！'; }
+            let msg = '';
+            if (action === 'eat') { msg = petLang.actEat; emote = '🍖 yum...'; }
+            if (action === 'drink') { msg = petLang.actDrink; emote = '💧 glug...'; }
+            if (action === 'sleep') { msg = petLang.actSleep; emote = '💤 Zzz...'; }
+            if (action === 'play') { msg = petLang.actPlay; emote = '🎾 !'; }
 
             chat.innerText = emote;
             chat.style.opacity = '1';
-
             const dialogueEl = document.getElementById('pet-dialogue');
-            if(dialogueEl) dialogueEl.innerText = msg;
+            if (dialogueEl) dialogueEl.innerText = msg;
 
             const flipper = document.getElementById('pet-flipper');
-            if(flipper && totalAssets > 0) {
-                flipper.classList.add('animate-bounce');
-            }
-            
+            if (flipper && totalAssets > 0) flipper.classList.add('animate-bounce');
+
             setTimeout(() => {
-                if(flipper) flipper.classList.remove('animate-bounce');
+                if (flipper) flipper.classList.remove('animate-bounce');
                 chat.style.opacity = '0';
                 isPetBusy = false;
-                updateMonthlyDashboard(false); 
+                updateMonthlyDashboard(false);
             }, 3000);
         }
 
         function updatePetStatus(totalRemain, totalBudget, totalAssets) {
             if (!currentPet || isPetBusy) return;
-            
+
             const petLang = petTexts[currentLang];
             let moodObj = {};
             let extraClasses = '';
 
-            if (totalAssets > 5000) {
-                moodObj = { face: "😎", text: petLang.txtRich, color: '#C2A878' };
-            } else if (totalAssets >= 500) {
-                moodObj = { face: "🥰", text: petLang.txtHappy, color: '#8B9E8B' };
-            } else if (totalAssets > 0) {
-                moodObj = { face: "💢", text: petLang.txtAngry, color: '#C98A8A' };
-                extraClasses = 'animate-shake';
-            } else if (totalAssets === 0) {
-                moodObj = { face: "💤", text: petLang.txtSleep, color: '#8A8782' };
-            } else {
-                moodObj = { face: "👻", text: petLang.txtDead, color: '#475569' };
-            }
+            if (totalAssets > 5000) { moodObj = { face: "😎", text: petLang.txtRich, color: '#C2A878' }; }
+            else if (totalAssets >= 500) { moodObj = { face: "🥰", text: petLang.txtHappy, color: '#8B9E8B' }; }
+            else if (totalAssets > 0) { moodObj = { face: "💢", text: petLang.txtAngry, color: '#C98A8A' }; extraClasses = 'animate-shake'; }
+            else if (totalAssets === 0) { moodObj = { face: "💤", text: petLang.txtSleep, color: '#8A8782' }; }
+            else { moodObj = { face: "👻", text: petLang.txtDead, color: '#475569' }; }
 
             const visualEl = document.getElementById('pet-visual-static');
             if (visualEl) {
                 visualEl.innerHTML = getPetVisualHTML(currentPet, totalAssets);
                 visualEl.className = `h-20 w-20 flex items-center justify-center mb-4 transition-all duration-500 ${extraClasses}`;
             }
-            
+
             const wanderSprite = document.getElementById('pet-sprite');
             if (wanderSprite) {
                 wanderSprite.innerHTML = getPetVisualHTML(currentPet, totalAssets);
-                if (totalAssets > 0 && totalAssets < 500) {
-                    wanderSprite.classList.add('animate-shake');
-                } else {
-                    wanderSprite.classList.remove('animate-shake');
-                }
+                if (totalAssets > 0 && totalAssets < 500) wanderSprite.classList.add('animate-shake');
+                else wanderSprite.classList.remove('animate-shake');
             }
-            
+
             const dialogueEl = document.getElementById('pet-dialogue');
-            if (dialogueEl) {
-                dialogueEl.innerText = moodObj.face + " " + moodObj.text;
-                dialogueEl.style.color = moodObj.color;
-            }
+            if (dialogueEl) { dialogueEl.innerText = moodObj.face + " " + moodObj.text; dialogueEl.style.color = moodObj.color; }
 
             let levelInfo = { lv: 1, name: petLang.lv1, next: 500 };
-            if (totalAssets > 5000) {
-                levelInfo = { lv: 4, name: petLang.lv4, next: 10000 };
-            } else if (totalAssets >= 1000) {
-                levelInfo = { lv: 3, name: petLang.lv3, next: 5000 };
-            } else if (totalAssets >= 500) {
-                levelInfo = { lv: 2, name: petLang.lv2, next: 1000 };
-            }
+            if (totalAssets > 5000) levelInfo = { lv: 4, name: petLang.lv4, next: 10000 };
+            else if (totalAssets >= 1000) levelInfo = { lv: 3, name: petLang.lv3, next: 5000 };
+            else if (totalAssets >= 500) levelInfo = { lv: 2, name: petLang.lv2, next: 1000 };
 
             const nameEl = document.getElementById('pet-name');
-            if (nameEl) nameEl.innerText = levelInfo.name;
-            
             const levelEl = document.getElementById('pet-level');
-            if (levelEl) levelEl.innerText = levelInfo.lv;
-            
             const goalEl = document.getElementById('pet-next-goal');
+            if (nameEl) nameEl.innerText = levelInfo.name;
+            if (levelEl) levelEl.innerText = levelInfo.lv;
             if (goalEl) goalEl.innerText = formatMoney(levelInfo.next);
-            
+
             let prevCap = 0;
-            if(levelInfo.lv === 2) prevCap = 500;
-            if(levelInfo.lv === 3) prevCap = 1000;
-            if(levelInfo.lv === 4) prevCap = 5000;
-            
+            if (levelInfo.lv === 2) prevCap = 500;
+            if (levelInfo.lv === 3) prevCap = 1000;
+            if (levelInfo.lv === 4) prevCap = 5000;
             const expRange = levelInfo.next - prevCap;
             const expGained = totalAssets - prevCap;
             let expPct = Math.min(Math.max((expGained / expRange) * 100, 0), 100);
-            
             const expBarEl = document.getElementById('pet-exp-bar');
             if (expBarEl) expBarEl.style.width = `${expPct}%`;
         }
 
         function updateMonthlyDashboard(showAnim = true) {
-            const data = { 
+            const data = {
                 g_ini: getVal('gen-initial'), g_inc: getVal('gen-income'), g_fix: getVal('gen-fixed'),
-                g_bud: getVal('gen-budget'),
-                g_bon: getVal('proj-bonus-inp')
+                g_bud: getVal('gen-budget'), g_bon: getVal('proj-bonus-inp')
             };
-            
-            for(let i=1; i<=5; i++) {
+
+            for (let i = 1; i <= 5; i++) {
                 data[`n_cat${i}`] = getStr(`name-cat${i}`);
                 data[`b_cat${i}`] = getVal(`bud-cat${i}`);
                 data[`e_cat${i}`] = getVal(`exp-cat${i}`);
             }
 
             data.g_sav = data.g_inc - data.g_fix - data.g_bud;
-            document.getElementById('gen-savings').value = Number(data.g_sav.toFixed(4)) || '';
+            const savEl = document.getElementById('gen-savings');
+            if (savEl) savEl.value = Number(data.g_sav.toFixed(4)) || '';
 
             localStorage.setItem(genericStorageKey, JSON.stringify(data));
-            
-            if(showAnim) {
+
+            if (showAnim) {
                 const status = document.getElementById('save-status');
-                status.classList.remove('opacity-0'); setTimeout(() => status.classList.add('opacity-0'), 2000);
+                if (status) { status.classList.remove('opacity-0'); setTimeout(() => status.classList.add('opacity-0'), 2000); }
             }
 
             const updateRow = (bud, exp, barId, statId) => {
-                const remain = bud - exp; const safePct = Math.min(bud > 0 ? (exp / bud * 100) : 100, 100);
+                const remain = bud - exp;
+                const safePct = Math.min(bud > 0 ? (exp / bud * 100) : (exp > 0 ? 100 : 0), 100);
                 const barEl = document.getElementById(barId);
                 const statEl = document.getElementById(statId);
-                if(barEl) barEl.style.width = safePct + '%';
-                
-                if(statEl && barEl) {
-                    if (remain >= 0) { statEl.innerHTML = `<span data-i18n="remain">${t('remain')}</span> ${formatMoney(remain)}`; statEl.className = 'text-[#8B9E8B] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-up`; } 
-                    else { statEl.innerHTML = `<span data-i18n="overspent">${t('overspent')}</span> ${formatMoney(Math.abs(remain))}`; statEl.className = 'text-[#C98A8A] text-xs font-bold w-16 text-right font-num'; barEl.className = `progress-bar bg-down`; }
+                if (barEl) barEl.style.width = safePct + '%';
+                if (statEl && barEl) {
+                    if (remain >= 0) {
+                        statEl.innerHTML = `<span>${t('remain')}</span> ${formatMoney(remain)}`;
+                        statEl.className = 'text-[#8B9E8B] text-xs font-bold w-16 text-right font-num';
+                        barEl.className = 'progress-bar bg-up';
+                    } else {
+                        statEl.innerHTML = `<span>${t('overspent')}</span> ${formatMoney(Math.abs(remain))}`;
+                        statEl.className = 'text-[#C98A8A] text-xs font-bold w-16 text-right font-num';
+                        barEl.className = 'progress-bar bg-down';
+                    }
                 }
             };
 
             let totalExp = 0;
-            for(let i=1; i<=5; i++) {
+            for (let i = 1; i <= 5; i++) {
                 updateRow(data[`b_cat${i}`], data[`e_cat${i}`], `bar-cat${i}`, `stat-cat${i}`);
                 totalExp += data[`e_cat${i}`];
             }
 
-            const totalBudget = data.g_bud; 
-            const totalRemain = totalBudget - totalExp; 
+            const totalBudget = data.g_bud;
+            const totalRemain = totalBudget - totalExp;
             const totalPct = totalBudget > 0 ? (totalExp / totalBudget) * 100 : 0;
-            
-            const dispTotalBudget = document.getElementById('disp-total-budget');
-            if(dispTotalBudget) dispTotalBudget.innerText = formatMoney(totalBudget);
-            
+
             const dispTotalSpent = document.getElementById('disp-total-spent');
-            if(dispTotalSpent) dispTotalSpent.innerText = formatMoney(totalExp);
-            
             const dispTotalPct = document.getElementById('disp-total-pct');
-            if(dispTotalPct) dispTotalPct.innerText = `${formatMoney(totalPct)}%`;
-            
-            const totalRemainEl = document.getElementById('disp-total-remain'); const totalBarEl = document.getElementById('bar-total');
+            if (dispTotalSpent) dispTotalSpent.innerText = formatMoney(totalExp);
+            if (dispTotalPct) dispTotalPct.innerText = `${formatMoney(totalPct)}%`;
+
+            const totalRemainEl = document.getElementById('disp-total-remain');
+            const totalBarEl = document.getElementById('bar-total');
             if (totalBarEl) totalBarEl.style.width = Math.min(totalPct, 100) + '%';
             if (totalRemainEl && totalBarEl) {
-                if (totalRemain >= 0) { totalRemainEl.innerHTML = `<span data-i18n="remain">${t('remain')}</span> ${formatMoney(totalRemain)}`; totalRemainEl.className = 'text-[#8B9E8B] font-num font-bold'; totalBarEl.className = 'progress-bar bg-up'; } 
-                else { totalRemainEl.innerHTML = `<span data-i18n="totalExceed">${t('totalExceed')}</span> ${formatMoney(Math.abs(totalRemain))}`; totalRemainEl.className = 'text-[#C98A8A] font-num font-bold'; totalBarEl.className = 'progress-bar bg-down'; }
+                if (totalRemain >= 0) {
+                    totalRemainEl.innerHTML = `<span>${t('remain')}</span> ${formatMoney(totalRemain)}`;
+                    totalRemainEl.className = 'text-[#8B9E8B] font-num font-bold';
+                    totalBarEl.className = 'progress-bar bg-up';
+                } else {
+                    totalRemainEl.innerHTML = `<span>${t('totalExceed')}</span> ${formatMoney(Math.abs(totalRemain))}`;
+                    totalRemainEl.className = 'text-[#C98A8A] font-num font-bold';
+                    totalBarEl.className = 'progress-bar bg-down';
+                }
             }
 
             let totalAssets = data.g_ini;
-            if (typeof savingsRecords !== 'undefined' && savingsRecords && savingsRecords.length > 0) {
+            if (savingsRecords && savingsRecords.length > 0) {
                 totalAssets = data.g_ini + savingsRecords.reduce((sum, rec) => sum + (rec.netAmount || 0), 0);
             }
-            
+
             const dispSavingsTotal = document.getElementById('disp-savings-total');
             if (dispSavingsTotal) dispSavingsTotal.innerText = currentCur + formatMoney(totalAssets);
 
@@ -1397,13 +1278,12 @@
                 updatePetStatus(totalRemain, totalBudget, totalAssets);
                 generateAIReport(data, totalRemain, totalPct, totalBudget);
                 updateMasterPlanProjections(data.g_inc, data.g_fix, data.g_bud, data.g_sav, data.g_ini, data.g_bon);
-                updatePieChart(data); 
+                updatePieChart(data);
             }
         }
 
         function updatePieChart(data) {
             if (typeof Chart === 'undefined') return;
-
             const ctxId = 'expensePieChart';
             const ctx = document.getElementById(ctxId);
             if (!ctx) return;
@@ -1411,19 +1291,18 @@
             let existingChart = Chart.getChart(ctxId);
             if (existingChart) existingChart.destroy();
 
-            let labels = [t('fixRent').split('(')[0].trim()]; 
+            let labels = [t('fixRent').split('(')[0].trim()];
             let values = [data.g_fix];
-            let colors = ['#EAE8E3']; 
+            let colors = ['#EAE8E3'];
 
             const palette = ['#C2A878', '#8B9E8B', '#C98A8A', '#8CA6B4', '#8A8782'];
 
-            for(let i=1; i<=5; i++) {
-                if(data[`e_cat${i}`] > 0) {
-                    let catName = data[`n_cat${i}`].split(' ')[1] || data[`n_cat${i}`]; 
-                    if (catName.trim() === '') catName = t(`cat${i}`);
-                    labels.push(catName); 
+            for (let i = 1; i <= 5; i++) {
+                if (data[`e_cat${i}`] > 0) {
+                    let catName = data[`n_cat${i}`] || defaultCategoryNames[currentLang][i - 1];
+                    labels.push(catName);
                     values.push(data[`e_cat${i}`]);
-                    colors.push(palette[i-1]);
+                    colors.push(palette[i - 1]);
                 }
             }
 
@@ -1433,13 +1312,7 @@
                 type: 'doughnut',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: colors,
-                        borderWidth: 2,
-                        borderColor: '#FFFFFF',
-                        hoverOffset: 2
-                    }]
+                    datasets: [{ data: values, backgroundColor: colors, borderWidth: 2, borderColor: '#FFFFFF', hoverOffset: 2 }]
                 },
                 options: {
                     responsive: true,
@@ -1448,20 +1321,14 @@
                     plugins: {
                         legend: { position: 'bottom', labels: { color: '#8A8782', font: { size: 10, family: chartFont }, boxWidth: 10, padding: 15, usePointStyle: true } },
                         tooltip: {
-                            backgroundColor: '#FFFFFF',
-                            titleColor: '#2D2C2A',
-                            bodyColor: '#8A8782',
-                            borderColor: '#EAE8E3',
-                            borderWidth: 1,
-                            titleFont: { family: chartFont, size: 11 },
-                            bodyFont: { family: "'Montserrat', sans-serif", size: 11 },
-                            padding: 10,
-                            cornerRadius: 2,
+                            backgroundColor: '#FFFFFF', titleColor: '#2D2C2A', bodyColor: '#8A8782',
+                            borderColor: '#EAE8E3', borderWidth: 1, titleFont: { family: chartFont, size: 11 },
+                            bodyFont: { family: "'Montserrat', sans-serif", size: 11 }, padding: 10, cornerRadius: 2,
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     let label = context.label || '';
-                                    if (label) { label += ' · '; }
-                                    if (context.parsed !== null) { label += currentCur + formatMoney(context.parsed); }
+                                    if (label) label += ' · ';
+                                    if (context.parsed !== null) label += currentCur + formatMoney(context.parsed);
                                     return label;
                                 }
                             }
@@ -1472,36 +1339,47 @@
             });
         }
 
+        // [FIX 6] updateFromYearly 现在完整地同步年度→月度，包括 gen-budget
         function updateFromYearly() {
             const yInc = parseFloat(document.getElementById('proj-income-inp').value) || 0;
             const yFix = parseFloat(document.getElementById('proj-fixed-inp').value) || 0;
-            
+            const yLiv = parseFloat(document.getElementById('proj-living-inp').value) || 0;
+
             document.getElementById('gen-income').value = Number((yInc / 12).toFixed(4)) || '';
             document.getElementById('gen-fixed').value = Number((yFix / 12).toFixed(4)) || '';
-            
+            document.getElementById('gen-budget').value = Number((yLiv / 12).toFixed(4)) || '';
+
             updateMonthlyDashboard(true);
         }
 
         function generateAIReport(data, totalRemain, totalPct, totalBudget) {
-            const reportContainer = document.getElementById('ai-monthly-report'); 
+            // [FIX 2] 此元素现在已存在于 HTML 中
+            const reportContainer = document.getElementById('ai-monthly-report');
             if (!reportContainer) return;
-            
+
             let html = '';
-            const logicRemain = data.g_inc - data.g_fix - data.g_sav - data.g_bud;
+            const logicRemain = data.g_inc - data.g_fix - data.g_bud;
             if (logicRemain < 0) {
                 html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiTopConflict')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiTopConflictDesc')} <span class="font-num">${formatMoney(Math.abs(logicRemain))}</span></p></div>`;
             }
 
             let currentTotalBudget = 0;
-            for(let i=1; i<=5; i++) currentTotalBudget += data[`b_cat${i}`];
-            if (currentTotalBudget > data.g_bud) {
-                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">Budget Overflow</p><p class="text-xs text-[#8A8782] mt-1">下方分类预算总和 (<span class="font-num">${formatMoney(currentTotalBudget)}</span>) 已超过设定的生活总盘子 (<span class="font-num">${formatMoney(data.g_bud)}</span>)，请调整以免透支。</p></div>`;
+            for (let i = 1; i <= 5; i++) currentTotalBudget += data[`b_cat${i}`];
+            if (currentTotalBudget > data.g_bud && data.g_bud > 0) {
+                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">Budget Overflow</p><p class="text-xs text-[#8A8782] mt-1">Sub-category budgets (<span class="font-num">${formatMoney(currentTotalBudget)}</span>) exceed total living budget (<span class="font-num">${formatMoney(data.g_bud)}</span>).</p></div>`;
             }
 
-            if (totalPct > 80 && totalRemain > 0) html += `<div class="border-l border-[#C2A878] pl-4 mb-3"><p class="text-xs font-bold text-[#C2A878] uppercase tracking-widest">${t('aiLivWarn')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiLivWarnDesc')}</p></div>`;
-            if (totalRemain <= 0 && totalBudget > 0) html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiMelt')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiMeltDesc')}</p></div>`;
-            
-            if(html === '') html = `<div class="border-l border-[#8B9E8B] pl-4 mb-3"><p class="text-xs font-bold text-[#8B9E8B] uppercase tracking-widest">${t('aiSafe')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiSafeDesc')}</p></div>`;
+            if (totalPct > 80 && totalRemain > 0) {
+                html += `<div class="border-l border-[#C2A878] pl-4 mb-3"><p class="text-xs font-bold text-[#C2A878] uppercase tracking-widest">${t('aiLivWarn')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiLivWarnDesc')}</p></div>`;
+            }
+            if (totalRemain <= 0 && totalBudget > 0) {
+                html += `<div class="border-l border-[#C98A8A] pl-4 mb-3"><p class="text-xs font-bold text-[#C98A8A] uppercase tracking-widest">${t('aiMelt')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiMeltDesc')}</p></div>`;
+            }
+
+            if (html === '') {
+                html = `<div class="border-l border-[#8B9E8B] pl-4 mb-3"><p class="text-xs font-bold text-[#8B9E8B] uppercase tracking-widest">${t('aiSafe')}</p><p class="text-xs text-[#8A8782] mt-1">${t('aiSafeDesc')}</p></div>`;
+            }
+
             reportContainer.innerHTML = html;
         }
 
@@ -1509,10 +1387,10 @@
             let labels = [];
             let today = new Date();
             let langMap = { 'zh': 'zh-CN', 'en': 'en-GB', 'ru': 'ru-RU' };
-            for(let i=0; i<12; i++) {
+            for (let i = 0; i < 12; i++) {
                 let d = new Date(today.getFullYear(), today.getMonth() + i, 1);
                 labels.push({
-                    key: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,
+                    key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
                     display: d.toLocaleString(langMap[currentLang], { month: 'short', year: '2-digit' })
                 });
             }
@@ -1523,19 +1401,18 @@
             document.getElementById('proj-income-inp').value = Number((inc * 12).toFixed(4)) || '';
             document.getElementById('proj-fixed-inp').value = Number((fix * 12).toFixed(4)) || '';
             document.getElementById('proj-living-inp').value = Number((bud * 12).toFixed(4)) || '';
-            
+
             const totalAssets = ini + (sav * 12) + bon;
             const projSav = document.getElementById('proj-savings');
             if (projSav) projSav.innerText = formatMoney(totalAssets);
-            
-            if(typeof savingsRecords !== 'undefined') {
-                 updateMasterChart(savingsRecords);
+
+            if (typeof savingsRecords !== 'undefined') {
+                updateMasterChart(savingsRecords);
             }
         }
 
         function updateMasterChart(savingsArr) {
             if (typeof Chart === 'undefined') return;
-
             const ctxId = 'masterPlanChart';
             const ctx = document.getElementById(ctxId);
             if (!ctx) return;
@@ -1546,34 +1423,32 @@
             const targetSav = getVal('gen-savings');
             const initialAsset = getVal('gen-initial');
             const bonus = getVal('proj-bonus-inp');
-            const bonusPerMonth = bonus / 12; 
-            
+            const bonusPerMonth = bonus / 12;
+
             const monthData = getNext12Months();
             const monthKeys = monthData.map(m => m.key);
             const displayLabels = monthData.map(m => m.display);
 
-            let projectedData = []; let pAsset = initialAsset; 
-            for(let i=0; i<12; i++) { pAsset += (targetSav + bonusPerMonth); projectedData.push(pAsset); } 
+            let projectedData = []; let pAsset = initialAsset;
+            for (let i = 0; i < 12; i++) { pAsset += (targetSav + bonusPerMonth); projectedData.push(pAsset); }
 
             let actualData = []; let cumulative = initialAsset; let lastRecordedIndex = -1;
 
-            for(let i=0; i<monthKeys.length; i++) {
-                if(savingsArr.find(r => r.month === monthKeys[i])) {
-                    lastRecordedIndex = i;
-                }
+            for (let i = 0; i < monthKeys.length; i++) {
+                if (savingsArr.find(r => r.month === monthKeys[i])) { lastRecordedIndex = i; }
             }
 
-            for(let i=0; i<monthKeys.length; i++) {
+            for (let i = 0; i < monthKeys.length; i++) {
                 if (i <= lastRecordedIndex) {
                     let record = savingsArr.find(r => r.month === monthKeys[i]);
-                    let added = record ? (record.netAmount || 0) : 0; 
+                    let added = record ? (record.netAmount || 0) : 0;
                     cumulative += added;
                     actualData.push(cumulative);
                 } else {
-                    actualData.push(null); 
+                    actualData.push(null);
                 }
             }
-            
+
             let chartFont = currentLang === 'en' ? "'Lato', sans-serif" : "'Lato', 'Noto Sans SC', sans-serif";
 
             myChart = new Chart(ctx.getContext('2d'), {
@@ -1581,27 +1456,20 @@
                 data: {
                     labels: displayLabels,
                     datasets: [
-                        {
-                            label: t('chartActual'), data: actualData, borderColor: '#C98A8A', 
-                            backgroundColor: 'transparent', borderWidth: 2, 
-                            pointBackgroundColor: '#FFFFFF', pointBorderColor: '#C98A8A', 
-                            pointRadius: 3, fill: false, tension: 0.4
-                        },
-                        {
-                            label: t('chartTheory'), data: projectedData, borderColor: '#EAE8E3', borderDash: [5, 5],
-                            borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4
-                        }
+                        { label: t('chartActual'), data: actualData, borderColor: '#C98A8A', backgroundColor: 'transparent', borderWidth: 2, pointBackgroundColor: '#FFFFFF', pointBorderColor: '#C98A8A', pointRadius: 3, fill: false, tension: 0.4 },
+                        { label: t('chartTheory'), data: projectedData, borderColor: '#EAE8E3', borderDash: [5, 5], borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4 }
                     ]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { position: 'top', align: 'end', labels: { font: { family: chartFont, size: 10 }, color: '#8A8782', boxWidth: 10, usePointStyle: true } },
                         tooltip: { backgroundColor: '#FFFFFF', titleColor: '#2D2C2A', bodyColor: '#8A8782', borderColor: '#EAE8E3', borderWidth: 1, padding: 10, cornerRadius: 2, titleFont: { family: chartFont }, bodyFont: { family: "'Montserrat', sans-serif" } }
                     },
-                    scales: { 
-                        y: { grid: { color: '#F0EEE9', drawBorder: false }, border: { dash: [4, 4] }, beginAtZero: true, ticks: { font: { family: "'Montserrat', sans-serif", size: 10 }, color: '#8A8782' } }, 
-                        x: { grid: { display: false }, ticks: { font: { family: chartFont, size: 10 }, color: '#8A8782' } } 
+                    scales: {
+                        y: { grid: { color: '#F0EEE9', drawBorder: false }, border: { dash: [4, 4] }, beginAtZero: true, ticks: { font: { family: "'Montserrat', sans-serif", size: 10 }, color: '#8A8782' } },
+                        x: { grid: { display: false }, ticks: { font: { family: chartFont, size: 10 }, color: '#8A8782' } }
                     }
                 }
             });
@@ -1622,12 +1490,12 @@
                 savingsRecords = saved ? JSON.parse(saved) : [];
                 savingsRecords.sort((a, b) => new Date(b.month) - new Date(a.month));
                 renderSavingsTracker();
-                
+
                 const today = new Date();
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const smInput = document.getElementById('save-month-input');
-                if(smInput) smInput.value = `${yyyy}-${mm}`;
+                if (smInput) smInput.value = `${yyyy}-${mm}`;
             } catch (e) { savingsRecords = []; }
         }
 
@@ -1647,11 +1515,8 @@
         function addLedgerDetail() {
             const amt = parseFloat(document.getElementById('ledger-amount').value);
             const desc = document.getElementById('ledger-desc').value.trim();
-            
-            if (isNaN(amt) || amt <= 0 || !desc) {
-                alert(t('alertSelectMonth')); 
-                return;
-            }
+
+            if (isNaN(amt) || amt <= 0 || !desc) { alert(t('alertSelectMonth')); return; }
 
             draftLedger.push({ id: Date.now(), type: currentLedgerType, amount: amt, desc: desc });
             localStorage.setItem(draftStorageKey, JSON.stringify(draftLedger));
@@ -1687,14 +1552,15 @@
                             <span class="text-[10px] text-[#2D2C2A] truncate">${item.desc}</span>
                         </div>
                         <button onclick="deleteDraftDetail(${item.id})" class="text-[10px] text-[#C98A8A] opacity-0 group-hover:opacity-100 transition-opacity shrink-0 px-2 py-1">✕</button>
-                    </div>
-                    `;
+                    </div>`;
                 });
             }
 
             listEl.innerHTML = html;
-            totalEl.innerText = (net >= 0 ? '+' : '') + formatMoney(net);
-            totalEl.style.color = net >= 0 ? '#8B9E8B' : '#C98A8A';
+            if (totalEl) {
+                totalEl.innerText = (net >= 0 ? '+' : '') + formatMoney(net);
+                totalEl.style.color = net >= 0 ? '#8B9E8B' : '#C98A8A';
+            }
         }
 
         function archiveLedger() {
@@ -1704,7 +1570,7 @@
 
             const existingIndex = savingsRecords.findIndex(r => r.month === monthInput);
             if (existingIndex !== -1) {
-                if(!confirm(`${monthInput} ${t('alertOverride')}`)) return;
+                if (!confirm(`${monthInput} ${t('alertOverride')}`)) return;
             }
 
             let netAmount = draftLedger.reduce((sum, item) => sum + (item.amount * item.type), 0);
@@ -1715,13 +1581,12 @@
 
             savingsRecords.sort((a, b) => new Date(b.month) - new Date(a.month));
             localStorage.setItem(savingsStorageKey, JSON.stringify(savingsRecords));
-            
+
             draftLedger = [];
             localStorage.setItem(draftStorageKey, JSON.stringify(draftLedger));
             renderDraftLedger();
-            
             renderSavingsTracker();
-            updateMonthlyDashboard(false); 
+            updateMonthlyDashboard(false);
         }
 
         function deleteSavingsRecord(id, event) {
@@ -1729,14 +1594,15 @@
             savingsRecords = savingsRecords.filter(r => r.id !== id);
             localStorage.setItem(savingsStorageKey, JSON.stringify(savingsRecords));
             renderSavingsTracker();
-            updateMonthlyDashboard(false); 
+            updateMonthlyDashboard(false);
         }
 
         function clearSavingsHistory() {
-            if(confirm(t('alertClearAll'))) {
-                savingsRecords = []; localStorage.setItem(savingsStorageKey, JSON.stringify(savingsRecords)); 
+            if (confirm(t('alertClearAll'))) {
+                savingsRecords = [];
+                localStorage.setItem(savingsStorageKey, JSON.stringify(savingsRecords));
                 renderSavingsTracker();
-                updateMonthlyDashboard(false); 
+                updateMonthlyDashboard(false);
             }
         }
 
@@ -1744,9 +1610,9 @@
             const detailsEl = document.getElementById(`archive-details-${id}`);
             const iconEl = document.getElementById(`toggle-icon-${id}`);
             if (detailsEl.classList.contains('hidden')) {
-                detailsEl.classList.remove('hidden'); iconEl.innerText = '▲';
+                detailsEl.classList.remove('hidden'); if (iconEl) iconEl.innerText = '▲';
             } else {
-                detailsEl.classList.add('hidden'); iconEl.innerText = '▼';
+                detailsEl.classList.add('hidden'); if (iconEl) iconEl.innerText = '▼';
             }
         }
 
@@ -1755,13 +1621,13 @@
             if (!listEl) return;
 
             let html = '';
-            
+
             if (savingsRecords.length === 0) {
                 html = `<div class="text-center text-[#8A8782] text-xs py-10 italic">${t('noHist')}</div>`;
             } else {
                 savingsRecords.forEach(record => {
                     let detailsHtml = '';
-                    if (record.details) {
+                    if (record.details && record.details.length > 0) {
                         record.details.forEach(item => {
                             const sign = item.type === 1 ? '+' : '-';
                             const color = item.type === 1 ? '#8B9E8B' : '#C98A8A';
@@ -1769,9 +1635,10 @@
                                 <div class="flex justify-between items-center py-1">
                                     <span style="color: ${color}" class="font-num text-[10px] font-bold w-12 shrink-0">${sign}${formatMoney(item.amount)}</span>
                                     <span class="text-[10px] text-[#8A8782] truncate text-right w-full">${item.desc}</span>
-                                </div>
-                            `;
+                                </div>`;
                         });
+                    } else {
+                        detailsHtml = '<span class="text-[10px] text-[#8A8782]">—</span>';
                     }
 
                     const safeNetAmount = record.netAmount || 0;
@@ -1784,11 +1651,11 @@
                             </div>
                             <div class="flex space-x-3 items-center">
                                 <button onclick="deleteSavingsRecord(${record.id}, event)" class="text-[10px] text-[#C98A8A] hover:text-red-600 transition-colors uppercase tracking-widest opacity-0 group-hover:opacity-100">✕</button>
-                                <span class="text-[8px] text-[#8A8782] w-4 text-center transition-transform" id="toggle-icon-${record.id}">▼</span>
+                                <span class="text-[8px] text-[#8A8782] w-4 text-center" id="toggle-icon-${record.id}">▼</span>
                             </div>
                         </div>
                         <div id="archive-details-${record.id}" class="hidden bg-[#FAF9F6] p-3 border-t border-[#EAE8E3] space-y-1">
-                            ${detailsHtml || '<span class="text-[10px] text-[#8A8782]">无明细</span>'}
+                            ${detailsHtml}
                         </div>
                     </div>`;
                 });
@@ -1809,7 +1676,7 @@
         function runDecisionAI() {
             const getName = (id) => document.getElementById(id).value || 'Item';
             const justification = document.getElementById('justification').value || '...';
-            const targetSav = getVal('gen-savings') || 1; 
+            const targetSav = getVal('gen-savings') || 1;
 
             const itemA = { name: getName('nameA'), price: getVal('priceA'), uses: getVal('usesA'), years: getVal('yearsA'), emotion: getVal('emotionA') };
             const itemB = { name: getName('nameB'), price: getVal('priceB'), uses: getVal('usesB'), years: getVal('yearsB'), emotion: getVal('emotionB') };
@@ -1819,20 +1686,22 @@
             const calcMetrics = (item) => {
                 const totalUses = item.uses * item.years;
                 const cpw = totalUses > 0 ? (item.price / totalUses) : item.price;
-                const savingsImpact = (item.price / targetSav) * 100;
+                const savingsImpact = (item.price / Math.abs(targetSav)) * 100;
                 return { totalUses, cpw, savingsImpact };
             };
 
-            const metricsA = calcMetrics(itemA); const metricsB = calcMetrics(itemB);
+            const metricsA = calcMetrics(itemA);
+            const metricsB = calcMetrics(itemB);
 
             document.getElementById('decision-result').classList.remove('hidden');
-            
+
             const updateResultUI = (suffix, item, metrics) => {
                 document.getElementById(`result${suffix}-name`).innerText = item.name;
                 document.getElementById(`result${suffix}-cpw`).innerText = formatMoney(metrics.cpw);
                 document.getElementById(`result${suffix}-impact-text`).innerText = formatMoney(metrics.savingsImpact) + '%';
             };
-            updateResultUI('A', itemA, metricsA); updateResultUI('B', itemB, metricsB);
+            updateResultUI('A', itemA, metricsA);
+            updateResultUI('B', itemB, metricsB);
 
             let verdict = ""; let winnerStr = "";
             if (metricsA.savingsImpact > 50 && metricsB.savingsImpact > 50) verdict += `<span class="text-[#C98A8A] font-bold">${t('wishWarnText')}</span><br><br>`;
@@ -1840,11 +1709,10 @@
             if (metricsA.cpw < metricsB.cpw) winnerStr = t('winDataA').replace('[A]', itemA.name);
             else if (metricsB.cpw < metricsA.cpw) winnerStr = t('winDataB').replace('[B]', itemB.name);
             else winnerStr = t('winTie');
-            
-            verdict += winnerStr + "<br><br>";
 
+            verdict += winnerStr + "<br><br>";
             const expensiveItem = Math.max(itemA.price, itemB.price);
-            if (expensiveItem > (targetSav * 0.2)) verdict += t('wishWait');
+            if (expensiveItem > (Math.abs(targetSav) * 0.2)) verdict += t('wishWait');
             else verdict += t('wishOk');
 
             document.getElementById('ai-verdict-text').innerHTML = verdict;
@@ -1859,9 +1727,10 @@
 
         function saveToWishlistHistory() {
             if (!currentDecision) return;
-            wishlistHistory.unshift(currentDecision); 
+            wishlistHistory.unshift(currentDecision);
             localStorage.setItem(wishlistStorageKey, JSON.stringify(wishlistHistory));
-            renderWishlistHistory(); alert(t('alertSaved'));
+            renderWishlistHistory();
+            alert(t('alertSaved'));
         }
 
         function deleteHistory(id) {
@@ -1875,10 +1744,11 @@
             const searchInput = document.getElementById('search-history');
             const countEl = document.getElementById('history-count');
             if (!listEl || !searchInput || !countEl) return;
-            
+
             const searchVal = searchInput.value.toLowerCase();
-            const filtered = wishlistHistory.filter(h => 
-                h.itemA.name.toLowerCase().includes(searchVal) || h.itemB.name.toLowerCase().includes(searchVal) || 
+            const filtered = wishlistHistory.filter(h =>
+                h.itemA.name.toLowerCase().includes(searchVal) ||
+                h.itemB.name.toLowerCase().includes(searchVal) ||
                 (h.just && h.just.toLowerCase().includes(searchVal))
             );
 
@@ -1896,19 +1766,15 @@
                         <span class="text-[10px] font-light text-[#D1CEC7] uppercase tracking-widest mx-1">vs</span>
                         <span class="text-xs font-bold text-[#C2A878] truncate w-[45%] text-right">(<span class="font-num">${currentCur}${formatMoney(record.itemB.price)}</span>) ${record.itemB.name}</span>
                     </div>
-                    <div class="text-xs text-[#2D2C2A] mb-2 font-medium">
-                        ${record.winner}
-                    </div>
-                    <div class="text-[11px] text-[#8A8782] italic leading-relaxed">
-                        " ${record.just || '...'} "
-                    </div>
+                    <div class="text-xs text-[#2D2C2A] mb-2 font-medium">${record.winner}</div>
+                    <div class="text-[11px] text-[#8A8782] italic leading-relaxed">" ${record.just || '...'} "</div>
                 </div>`;
             });
             listEl.innerHTML = html;
         }
 
+        // --- INIT ---
         window.onload = () => {
-            // Check if Chart.js is loaded correctly, wait if necessary
             let checkChartInterval = setInterval(() => {
                 if (typeof Chart !== 'undefined') {
                     clearInterval(checkChartInterval);
@@ -1916,11 +1782,10 @@
                 }
             }, 100);
 
-            // Timeout after 3 seconds if Chart.js fails to load completely
             setTimeout(() => {
                 clearInterval(checkChartInterval);
                 if (typeof Chart === 'undefined') {
-                    console.error("Chart.js failed to load. Continuing without charts.");
+                    console.error("Chart.js failed to load.");
                     initializeSystem();
                 }
             }, 3000);
@@ -1930,20 +1795,17 @@
             const langSel = document.getElementById('lang-selector');
             const langSelModal = document.getElementById('lang-selector-modal');
             const curSel = document.getElementById('currency-selector');
-            
+
             if (langSel) langSel.value = currentLang;
             if (langSelModal) langSelModal.value = currentLang;
             if (curSel) curSel.value = currentCur;
-            
-            renderCategories(); 
 
+            renderCategories();
             loadMonthlyData();
             loadWishlistHistory();
-            loadDraftLedger(); 
+            loadDraftLedger();
             loadSavingsTracker();
-
-            initPetSystem(); 
-
+            initPetSystem();
             changeLanguage(currentLang, true);
             changeCurrency(currentCur, true);
         }
